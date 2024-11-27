@@ -1,0 +1,102 @@
+name: Docker Image Publish
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Docker image tag list, multiple tag are separated by comma, e.g. latest'
+        required: true
+        type: string
+        default: 'latest'
+      docker_context:
+        description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
+        required: true
+        type: string
+        default: '.'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker image tag list, multiple tag are separated by comma, e.g. latest'
+        required: true
+        type: string
+        default: 'latest'
+      docker_context:
+        description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
+        required: true
+        type: string
+        default: '.'
+
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+    outputs:
+      IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
+      IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
+      BUILD_TRIGGER_DESCRIPTION: ${{ steps.set_vars.outputs.BUILD_TRIGGER_DESCRIPTION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Check context exist
+        run: |
+          if [ ! -d ${{ github.event.inputs.docker_context }} ]; then
+            echo "Docker context ${{ github.event.inputs.docker_context }} does not exist"
+            exit 1
+          fi
+      - name: Set vars
+        id: set_vars
+        run: |
+          {
+            echo "IMAGE_FULL_NAME=${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.tag }}"
+            echo "IMAGE_NAME=$(echo ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'))"
+            echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.tag }}"
+          } >> $GITHUB_OUTPUT
+
+  docker-release:
+    name: Publish Docker images
+    needs: [setup]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Build trigger description
+        run: |
+          echo "The image full name is ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
+          echo "The image name is ${{ needs.setup.outputs.IMAGE_NAME }}"
+          echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Log in to ALIYUNCS
+        uses: docker/login-action@v3
+        with:
+          registry: registry.cn-beijing.aliyuncs.com
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ALIYUNCS_PASSWORD }}
+
+      - name: Docker build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ github.event.inputs.docker_context }}
+          push: true
+          tags: |
+            ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
+            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
+          platforms: |
+            linux/amd64
+            linux/arm64
+            linux/arm/v7

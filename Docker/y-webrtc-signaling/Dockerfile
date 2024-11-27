@@ -1,0 +1,22 @@
+FROM node:16 as builder
+
+ENV WORKDIR=/app
+
+WORKDIR $WORKDIR
+
+RUN apt-get update && apt-get install -y git && \
+    git clone --depth=1 git@github.com:lobehub/y-webrtc-signaling.git $WORKDIR
+
+RUN npm install
+
+FROM node:16-slim
+
+ENV WORKDIR=/app
+
+WORKDIR $WORKDIR
+
+COPY --from=builder $WORKDIR .
+
+EXPOSE 4444
+
+CMD ["node", "index.js"]
