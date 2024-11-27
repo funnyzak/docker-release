@@ -33,7 +33,6 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
     outputs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
@@ -69,7 +68,7 @@ jobs:
           echo "The image full name is ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
           echo "The image name is ${{ needs.setup.outputs.IMAGE_NAME }}"
           echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
-          echo "The docker context is ${{ github.event.inputs.docker_context }}"
+          echo "The"
 
       - name: Checkout
         uses: actions/checkout@v4
