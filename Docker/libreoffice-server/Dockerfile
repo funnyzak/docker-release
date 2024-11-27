@@ -4,18 +4,15 @@ ENV LANG=C.UTF-8
 ENV TZ Asia/Shanghai
 
 RUN \
-    apk add nodejs npm git && \
-    apk add cups-libs fontconfig ttf-dejavu && \
-    apk del --purge \
-    rm -rf \
-    /tmp/*
+    apk add --no-cache nodejs npm git cups-libs fontconfig ttf-dejavu && \
+    rm -rf /tmp/*
 
-RUN mkdir -p /app
-RUN chmod -R 777 /app
+RUN mkdir -p /app && chmod -R 777 /app
+
 VOLUME /app
 
-RUN git clone https://github.com/funnyzak/libreoffice-server.git /app/nodeapp
-RUN npm ci --prefix /app/nodeapp
+RUN git clone https://github.com/funnyzak/libreoffice-server.git /app/nodeapp && \
+    npm ci --prefix /app/nodeapp
 
 WORKDIR /app/nodeapp
 

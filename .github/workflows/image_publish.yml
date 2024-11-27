@@ -12,6 +12,11 @@ on:
         required: true
         type: string
         default: './Docker/y-webrtc-signaling'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64,linux/arm/v7'
   workflow_dispatch:
     inputs:
       docker_tag:
@@ -24,6 +29,11 @@ on:
         required: true
         type: string
         default: './Docker/y-webrtc-signaling'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64,linux/arm/v7'
 
 permissions:
   packages: write
@@ -86,6 +96,7 @@ jobs:
           echo "The image name is ${{ needs.setup.outputs.IMAGE_NAME }}"
           echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
           echo "The docker context is ${{ needs.setup.outputs.DOCKER_CONTEXT }}"
+          echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -123,10 +134,7 @@ jobs:
             ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-          platforms: |
-            linux/amd64
-            linux/arm64
-            linux/arm/v7
+          platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
 
       - name: Send Apprise Notification
         run: |
