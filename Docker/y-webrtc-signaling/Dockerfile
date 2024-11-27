@@ -5,7 +5,7 @@ ENV WORKDIR=/app
 WORKDIR $WORKDIR
 
 RUN apt-get update && apt-get install -y git && \
-    git clone --depth=1 git@github.com:lobehub/y-webrtc-signaling.git $WORKDIR
+    git clone --depth=1 https://github.com/lobehub/y-webrtc-signaling.git $WORKDIR
 
 RUN npm install
 
