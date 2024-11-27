@@ -41,16 +41,3 @@ jobs:
       docker_context: ${{ github.workspace }}/${{ matrix.dockerfile_context }}
       tag: nightly
     secrets: inherit
-
-
-  log_results:
-    needs: run_docker_build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Log Build Results
-        run: |
-          if [[ ${{ needs.run_docker_build.result }} == 'success' ]]; then
-            echo "Docker builds completed successfully."
-          else
-            echo "Some Docker builds failed. Please check the logs for more information."
-          fi
