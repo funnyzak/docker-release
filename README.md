@@ -1,16 +1,16 @@
 # Docker 镜像发布
 
-此项目主要用于发布各种 Docker 镜像。
-
-所有 Docker 镜像均包含中国镜像地址，前缀为：`registry.cn-beijing.aliyuncs.com`。
+项目主要用于发布各种 Docker 镜像。
 
 ## 目录
 
-所有 Docker 镜像的构建目录位于 `./Docker` 目录下。
+所有 Docker 镜像的构建目录位于 `./Docker` 目录下，也可以下载对应的目录自行构建。
 
 - `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` Docker 镜像。
 
-## 镜像
+## 镜像说明
+
+所有镜像均发布在 Docker Hub 上，并提供国内镜像地址：`registry.cn-beijing.aliyuncs.com`。此外，镜像也同步发布在 GitHub Container Registry (`ghcr.io`) 上。
 
 ### y-webrtc-signaling
 
@@ -22,11 +22,14 @@
 
 ```bash
 docker pull funnyzak/y-webrtc-signaling:latest
-# 中国镜像地址
+# GitHub 
+docker pull ghcr.io/funnyzak/y-webrtc-signaling:latest
+# Aliyun
 docker pull registry.cn-beijing.aliyuncs.com/funnyzak/y-webrtc-signaling:latest
 ```
 
-部署示例
+部署示例：
+
 <details>
 
 Docker 部署示例：
