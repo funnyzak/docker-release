@@ -9,6 +9,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 - `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` 镜像。
 - `./Docker/abracadabra-web`: 构建 `funnyzak/abracadabra-web:latest` 镜像。
 - `./Docker/libreoffice-server`: 构建 `funnyzak/libreoffice-server:latest` 镜像。
+- `./Docker/request-hub`: 构建 `funnyzak/request-hub:latest` 镜像。
 
 ## 镜像
 
@@ -21,6 +22,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 - `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像 ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))。
 - `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像 ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))。
 - `funnyzak/libreoffice-server:latest`: LibreOffice-Server 镜像 ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))。
+- `funnyzak/request-hub:latest`: Request-Hub 镜像 ([Hub](https://hub.docker.com/r/funnyzak/request-hub))。
 
 ---
 
@@ -171,6 +173,67 @@ services:
 </details>
 
 更多信息请查看 [LibreOffice-Server](Docker/libreoffice-server/README.md)。
+
+---
+
+### Request-Hub
+
+[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/request-hub/latest)](https://hub.docker.com/r/funnyzak/request-hub/tags)
+![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub)
+![Docker Version](https://img.shields.io/docker/v/funnyzak/request-hub/latest)
+
+拉取镜像：
+<details>
+
+```bash
+docker pull funnyzak/request-hub:latest
+# GitHub
+docker pull ghcr.io/funnyzak/request-hub:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/request-hub:latest
+```
+
+</details>
+
+部署示例：
+
+<details>
+
+Docker 部署示例：
+```bash
+docker run -d --name request-hub -p 8080:8080 funnyzak/request-hub:latest
+```
+
+Docker Compose 部署示例：
+```yaml
+version: '3.1'
+services:
+  requesthub:
+    image: funnyzak/request-hub
+    container_name: requesthub
+    restart: always
+    environment:
+        - TZ=Asia/Shanghai
+        - LANG=C.UTF-8
+        - CONFIG_YML=/config.yml
+        - NO_WEB=false
+        - PORT=54321
+        - MAX_REQUESTS=1024
+        - USER_NAME=hello
+        - PASSWORD=world
+    volumes:
+      - ./config.yml:/config.yml
+    ports:
+      - 80:54321
+```
+
+部署后，如下图：
+
+![Request-Hub](Docker/request-hub/request-hub-demo.jpg)
+
+</details>
+
+更多信息请查看 [Request-Hub](Docker/request-hub/README.md)。
 
 ## 贡献
 
