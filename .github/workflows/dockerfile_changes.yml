@@ -27,21 +27,18 @@ jobs:
         id: get-dockerfiles
         run: |
           echo "List of Dockerfiles changed: ${{ steps.changed-files.outputs.all_changed_files }}"
-          dockerfile_paths=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0))')
-          {
-            echo "dockerfile_paths=${dockerfile_paths}"
-          } >> $GITHUB_OUTPUT
+          echo "dockerfile_paths=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | if length == 0 then "[]" else . end | tojson')" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ needs.check_dockerfiles.outputs.dockerfile_paths != '[]' }}
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) != '[]' }}
     strategy:
       matrix:
         dockerfiles: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Get Dockerfile Context
         run: |
@@ -56,4 +53,11 @@ jobs:
           tag: nightly
 
       - name: Log Completed Docker Build
+        if: success()
         run: echo "Docker build for ${{ matrix.dockerfiles }} completed successfully."
+
+      - name: Log Failed Docker Build
+        if: failure()
+        run: |
+          echo "Docker build for ${{ matrix.dockerfiles }} failed."
+          echo "Please check the logs for more information."
