@@ -47,17 +47,16 @@ jobs:
 
       - name: Debug
         run: |
-          echo "Print all properties: ${{ toJson(github) }} ${{ toJson(inputs) }}"
-          
+          echo "Print github context: ${{ toJson(github) }}"
+          echo "Print inputs: ${{ toJson(inputs) }}"
+
       - name: Determine Docker Context
         id: determine-context
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             DOCKER_CONTEXT="${{ github.event.inputs.docker_context }}"
-          elif [ "${{ github.event_name }}" == "workflow_call" ]; then
-            DOCKER_CONTEXT="${{ inputs.docker_context }}"
           else
-            DOCKER_CONTEXT="./Docker/y-webrtc-signaling"
+            DOCKER_CONTEXT="${{ inputs.docker_context }}"
           fi
           echo "docker_context=$DOCKER_CONTEXT" >> $GITHUB_OUTPUT
 
