@@ -28,6 +28,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 
 拉取镜像：
 <details>
+  
 ```bash
 docker pull funnyzak/y-webrtc-signaling:latest
 # GitHub 
@@ -39,6 +40,7 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/y-webrtc-signaling:latest
 
 部署示例：
 <details>
+  
 Docker 部署示例：
 ```bash
 docker run -d --name y-webrtc-signaling -p 4444:4444 funnyzak/y-webrtc-signaling:latest
