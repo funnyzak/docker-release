@@ -6,7 +6,7 @@
 
 ## 目录
 
-所有 Docker 镜像的构建目录位于 `./Docker` 目录下。子目录会不断增加，以支持更多的 Docker 镜像构建。
+所有 Docker 镜像的构建目录位于 `./Docker` 目录下。
 
 - `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` Docker 镜像。
 
