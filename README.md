@@ -227,6 +227,10 @@ services:
       - 80:54321
 ```
 
+部署后，如下图：
+
+![Request-Hub](Docker/request-hub/request-hub-demo.jpg)
+
 </details>
 
 更多信息请查看 [Request-Hub](Docker/request-hub/README.md)。
