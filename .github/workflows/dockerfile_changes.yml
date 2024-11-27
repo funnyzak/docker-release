@@ -12,7 +12,7 @@ jobs:
       dockerfile_paths: ${{ steps.get-dockerfiles.outputs.dockerfile_paths }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -26,22 +26,34 @@ jobs:
       - name: Set Output for Dockerfile Paths
         id: get-dockerfiles
         run: |
+          echo "List of Dockerfiles changed: ${{ steps.changed-files.outputs.all_changed_files }}"
           dockerfile_paths=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0))')
-          echo "::set-output name=dockerfile_paths::$dockerfile_paths"
+          {
+            echo "dockerfile_paths=${dockerfile_paths}"
+          } >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
     if: ${{ needs.check_dockerfiles.outputs.dockerfile_paths != '[]' }}
     strategy:
       matrix:
-        dockerfile_context: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) }}
+        dockerfiles: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Get Dockerfile Context
+        run: |
+          dockerfile_context=$(dirname "${{ matrix.dockerfiles }}")
+          echo "dockerfile_context=${dockerfile_context}" >> $GITHUB_ENV
+          echo "Dockerfile context set to $dockerfile_context"
+
       - name: Run Workflow Call for Each Dockerfile
         uses: ./.github/workflows/image_publish.yml
         with:
-          docker_context: ${{ matrix.dockerfile_context }}
+          docker_context: ${{ env.dockerfile_context }}
           tag: nightly
+
+      - name: Log Completed Docker Build
+        run: echo "Docker build for ${{ matrix.dockerfiles }} completed successfully."
