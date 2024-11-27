@@ -1,12 +1,21 @@
-FROM golang:1.16-alpine AS builder
+FROM golang:1.21-alpine AS builder
 
-RUN apk add --no-cache git && \
+WORKDIR /build
+
+RUN apk add --no-cache git
+
+RUN go mod init requesthub && \
     go get github.com/kyledayton/requesthub && \
+    go build -o requesthub && \
     rm -rf /tmp/* /var/cache/apk/*
 
-FROM scratch AS final
+FROM alpine:3.19 AS final
 
-COPY --from=builder /go/bin/requesthub /usr/local/bin/requesthub
+RUN apk add --no-cache ca-certificates tzdata
+
+WORKDIR /app
+
+COPY --from=builder /build/requesthub /usr/local/bin/requesthub
 
 ENV LANG=C.UTF-8 \
     CONFIG_YML= \
@@ -18,4 +27,9 @@ ENV LANG=C.UTF-8 \
 
 EXPOSE 54321
 
-CMD ["requesthub", "-config", "${CONFIG_YML}", "-noweb=${NO_WEB}", "-p=${PORT}", "-password=${PASSWORD}", "-r=${MAX_REQUESTS}", "-username=${USER_NAME}"]
+CMD requesthub -config "$CONFIG_YML" \
+    -noweb="$NO_WEB" \
+    -p="$PORT" \
+    -password="$PASSWORD" \
+    -r="$MAX_REQUESTS" \
+    -username="$USER_NAME"

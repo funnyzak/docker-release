@@ -50,7 +50,7 @@ For example:
 
 ```bash
 docker run -d --name request-hub --restart always \
--p 80:54321 funnyzak/request-hub
+-p 54321:54321 funnyzak/request-hub
 ```
 
 Or, if you prefer compose:
