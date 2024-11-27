@@ -28,18 +28,18 @@ jobs:
 
       - id: set-matrix
         run: |
-          CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | map({dockerfile_context: (. | sub("/[^/]+$"; ""))}) | {include: .}' | jq -c .)
+          CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | map({dockerfile_context: (. | sub("/[^/]+$"; ""))}) | jq -c .)
           echo "List of Dockerfile contexts: $CONTEXTS"
           echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).include[0] }}
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile_context[0] }}
     strategy:
       matrix: ${{fromJson(needs.check_dockerfiles.outputs.matrix)}}
-    uses: funnyzak/image-publish/.github/workflows/image_publish.yml@main
+    uses: ./.github/workflows/image_publish.yml
     with:
-      docker_context: ${{ github.workspace }}/${{ matrix.include.dockerfile_context }}
+      docker_context: ${{ github.workspace }}/${{ matrix.dockerfile_context }}
       tag: nightly
     secrets: inherit
 
