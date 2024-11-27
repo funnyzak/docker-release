@@ -9,7 +9,7 @@ jobs:
   check_dockerfiles:
     runs-on: ubuntu-latest
     outputs:
-      dockerfile_paths: ${{ steps.get-dockerfiles.outputs.dockerfile_paths }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,26 +23,26 @@ jobs:
           files: |
             **/Dockerfile
 
-      - name: Set Output for Dockerfile Paths
-        id: get-dockerfiles
+      - name: Set matrix
+        id: set-matrix
         run: |
-          echo "List of Dockerfiles changed: ${{ steps.changed-files.outputs.all_changed_files }}"
-          echo "dockerfile_paths=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | if length == 0 then "[]" else . end | tojson')" >> $GITHUB_OUTPUT
+          DOCKERFILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | {dockerfile: .}' | jq -c .)
+          echo "Generated matrix: $DOCKERFILES"
+          echo "matrix=$DOCKERFILES" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) != '[]' }}
-    strategy:
-      matrix:
-        dockerfiles: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) }}
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile[0] }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.check_dockerfiles.outputs.matrix)}}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Get Dockerfile Context
         run: |
-          dockerfile_context=$(dirname "${{ matrix.dockerfiles }}")
+          dockerfile_context=$(dirname "${{ matrix.dockerfile }}")
           echo "dockerfile_context=${dockerfile_context}" >> $GITHUB_ENV
           echo "Dockerfile context set to $dockerfile_context"
 
@@ -54,10 +54,10 @@ jobs:
 
       - name: Log Completed Docker Build
         if: success()
-        run: echo "Docker build for ${{ matrix.dockerfiles }} completed successfully."
+        run: echo "Docker build for ${{ matrix.dockerfile }} completed successfully."
 
       - name: Log Failed Docker Build
         if: failure()
         run: |
-          echo "Docker build for ${{ matrix.dockerfiles }} failed."
+          echo "Docker build for ${{ matrix.dockerfile }} failed."
           echo "Please check the logs for more information."
