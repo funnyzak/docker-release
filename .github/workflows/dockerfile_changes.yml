@@ -49,7 +49,7 @@ jobs:
           echo "Dockerfile context set to $dockerfile_context"
 
       - name: Run Workflow Call for Each Dockerfile
-        uses: .github/workflows/image_publish.yml
+        uses: ./.github/workflows/image_publish.yml
         with:
           docker_context: ${{ env.dockerfile_context }}
           tag: nightly
