@@ -45,11 +45,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Debug
-        run: |
-          echo "Print github context: ${{ toJson(github) }}"
-          echo "Print inputs: ${{ toJson(inputs) }}"
-
       - name: Determine Docker Context
         id: determine-context
         run: |
