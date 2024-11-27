@@ -4,20 +4,21 @@
 
 ## 目录
 
-所有 Docker 镜像的构建目录位于 `./Docker` 目录下，也可以下载对应的目录自行构建。
+Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行构建。
 
-- `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` Docker 镜像。
+- `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` 镜像。
+- `./Docker/abracadabra-web`: 构建 `funnyzak/abracadabra-web:latest` 镜像。
 
 ## 镜像
 
-所有镜像均发布在 Docker Hub 上，并提供国内镜像地址：`registry.cn-beijing.aliyuncs.com`。此外，镜像也同步发布在 GitHub Container Registry (`ghcr.io`) 上。
+镜像已发布至 Docker Hub，并提供国内镜像地址：`registry.cn-beijing.aliyuncs.com`，同时同步至 GitHub Container Registry (`ghcr.io`)。
 
-所有镜像均提供 `latest` 标签，以及 `nightly` 标签（如果有的话）,其他版本请查看 Docker Hub 或 GitHub Container Registry 页面。
+镜像提供 `latest` 和 `nightly` 标签（如有）。其他版本请参见 Docker Hub 或 GitHub Container Registry 页面。
 
-当前已有镜像如下：
+现有镜像如下：
 
-- `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像 ([Docker Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))。
-- `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像 ([Docker Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))。
+- `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像 ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))。
+- `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像 ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))。
 
 ### y-webrtc-signaling
 
@@ -82,6 +83,7 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 
 部署示例：
 <details>
+
 Docker 部署示例：
 ```bash
 docker run -d --name abracadabra-web -p 8080:80 funnyzak/abracadabra-web:latest
@@ -100,6 +102,11 @@ services:
     ports:
       - "8080:80"
 ```
+
+启动后，如下图：
+
+![Abracadabra_demo](Docker/abracadabra-web/abracadabra-demo.png)
+
 </details>
 
 更多信息请查看 [Abracadabra_demo](Docker/abracadabra-web/README.md)。
