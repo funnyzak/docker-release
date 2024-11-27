@@ -8,6 +8,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 
 - `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` 镜像。
 - `./Docker/abracadabra-web`: 构建 `funnyzak/abracadabra-web:latest` 镜像。
+- `./Docker/libreoffice-server`: 构建 `funnyzak/libreoffice-server:latest` 镜像。
 
 ## 镜像
 
@@ -19,6 +20,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 
 - `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像 ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))。
 - `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像 ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))。
+- `funnyzak/libreoffice-server:latest`: LibreOffice-Server 镜像 ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))。
 
 ### y-webrtc-signaling
 
@@ -112,6 +114,58 @@ services:
 </details>
 
 更多信息请查看 [Abracadabra_demo](Docker/abracadabra-web/README.md)。
+
+### LibreOffice-Server
+
+[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-server/latest)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags)
+![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server)
+![Docker Version](https://img.shields.io/docker/v/funnyzak/libreoffice-server/latest)
+
+拉取镜像：
+<details>
+
+```bash
+docker pull funnyzak/libreoffice-server:latest
+# GitHub
+docker pull ghcr.io/funnyzak/libreoffice-server:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/libreoffice-server:latest
+```
+
+</details>
+
+部署示例：
+
+<details>
+
+Docker 部署示例：
+```bash
+docker run -d --name libreoffice -p 3000:3000 -p 3001:8038 funnyzak/libreoffice-server:latest
+```
+
+Docker Compose 部署示例：
+```yaml
+
+version: "3.1"
+services:
+  libreoffice:
+    image: funnyzak/libreoffice-server
+    container_name: libreoffice
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
+    # volumes:
+    #   - ./media/fonts:/usr/share/fonts/custom # 自定义字体
+    ports:
+      - 3000:3000 # libreoffice web editor
+      - 3001:8038 # web api
+    restart: unless-stopped
+```
+
+</details>
+
+更多信息请查看 [LibreOffice-Server](Docker/libreoffice-server/README.md)。
 
 ## 贡献
 
