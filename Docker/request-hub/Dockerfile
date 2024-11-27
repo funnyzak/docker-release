@@ -16,7 +16,6 @@ ENV LANG=C.UTF-8 \
     USER_NAME= \
     PASSWORD=
 
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
+EXPOSE 54321
 
-ENTRYPOINT ["entrypoint.sh"]
+CMD ["requesthub", "-config", "${CONFIG_YML}", "-noweb=${NO_WEB}", "-p=${PORT}", "-password=${PASSWORD}", "-r=${MAX_REQUESTS}", "-username=${USER_NAME}"]
