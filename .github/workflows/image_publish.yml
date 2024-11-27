@@ -33,6 +33,7 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
+    # if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
     outputs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
@@ -41,13 +42,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          fetch-depth: 0
+          
       - name: Check context exist
         run: |
           if [ ! -d ${{ github.event.inputs.docker_context }} ]; then
             echo "Docker context ${{ github.event.inputs.docker_context }} does not exist"
             exit 1
           fi
+      - name: Debug
+        run: |
+          echo "github event inputs: ${{ github.event.inputs }}"
+          echo "github event: ${{ github.event_name }}"
+          echo "github event: ${{ github.event }}"
+          echo "List all vars: $(cat $GITHUB_OUTPUT)"
+
       - name: Set vars
         id: set_vars
         run: |
@@ -56,6 +65,7 @@ jobs:
             echo "IMAGE_NAME=$(echo ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'))"
             echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.tag }}"
           } >> $GITHUB_OUTPUT
+        
 
   docker-release:
     name: Publish Docker images
@@ -73,7 +83,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
