@@ -38,11 +38,16 @@ jobs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
       BUILD_TRIGGER_DESCRIPTION: ${{ steps.set_vars.outputs.BUILD_TRIGGER_DESCRIPTION }}
+      DOCKER_CONTEXT: ${{ steps.determine-context.outputs.docker_context }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Debug
+        run: |
+          echo "Print all properties: ${{ toJson(github) }} ${{ toJson(inputs) }}"
           
       - name: Determine Docker Context
         id: determine-context
@@ -86,7 +91,7 @@ jobs:
           echo "The image full name is ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
           echo "The image name is ${{ needs.setup.outputs.IMAGE_NAME }}"
           echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
-          echo "The"
+          echo "The docker context is ${{ needs.setup.outputs.DOCKER_CONTEXT }}"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -118,7 +123,7 @@ jobs:
       - name: Docker build and push
         uses: docker/build-push-action@v3
         with:
-          context: ${{ github.event.inputs.docker_context }}
+          context: ${{ needs.setup.outputs.DOCKER_CONTEXT }}
           push: true
           tags: |
             ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
