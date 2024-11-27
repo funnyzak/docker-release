@@ -17,16 +17,19 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: tj-actions/changed-files@v45
+      - name: Get changed files
+        uses: tj-actions/changed-files@v45
         id: changed-files
         with:
           files: '**/Dockerfile'
 
-      - id: set-matrix
+      - name: Set matrix
+        id: set-matrix
         run: |
           CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | {dockerfile_context: map(sub("/[^/]+$"; ""))}' | jq -c .)
           echo "List of Dockerfile contexts: $CONTEXTS"
