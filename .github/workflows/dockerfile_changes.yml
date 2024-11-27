@@ -5,59 +5,44 @@ on:
     paths:
       - '**/Dockerfile'
 
+
+permissions:
+  contents: write
+  packages: write
+
+
 jobs:
   check_dockerfiles:
     runs-on: ubuntu-latest
     outputs:
-      dockerfile_paths: ${{ steps.get-dockerfiles.outputs.dockerfile_paths }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Get Changed Files
-        id: changed-files
+      - name: Get changed files
         uses: tj-actions/changed-files@v45
+        id: changed-files
         with:
-          files: |
-            **/Dockerfile
+          files: '**/Dockerfile'
 
-      - name: Set Output for Dockerfile Paths
-        id: get-dockerfiles
+      - name: Set matrix
+        id: set-matrix
         run: |
-          echo "List of Dockerfiles changed: ${{ steps.changed-files.outputs.all_changed_files }}"
-          echo "dockerfile_paths=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | if length == 0 then "[]" else . end | tojson')" >> $GITHUB_OUTPUT
+          echo "All changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
+          CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split(" ") | map(select(length>0)) | {dockerfile_context: map(sub("/[^/]+$"; ""))}' | jq -c .)
+          echo "List of Dockerfile contexts: $CONTEXTS"
+          echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) != '[]' }}
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile_context.length }} > 0
     strategy:
-      matrix:
-        dockerfiles: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Get Dockerfile Context
-        run: |
-          dockerfile_context=$(dirname "${{ matrix.dockerfiles }}")
-          echo "dockerfile_context=${dockerfile_context}" >> $GITHUB_ENV
-          echo "Dockerfile context set to $dockerfile_context"
-
-      - name: Run Workflow Call for Each Dockerfile
-        uses: ./.github/workflows/image_publish.yml
-        with:
-          docker_context: ${{ env.dockerfile_context }}
-          tag: nightly
-
-      - name: Log Completed Docker Build
-        if: success()
-        run: echo "Docker build for ${{ matrix.dockerfiles }} completed successfully."
-
-      - name: Log Failed Docker Build
-        if: failure()
-        run: |
-          echo "Docker build for ${{ matrix.dockerfiles }} failed."
-          echo "Please check the logs for more information."
+      matrix: ${{ fromJson(needs.check_dockerfiles.outputs.matrix) }}
+    uses: ./.github/workflows/image_publish.yml
+    with:
+      docker_context: ${{ matrix.dockerfile_context }}
+      docker_tag: nightly
+    secrets: inherit

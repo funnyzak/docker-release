@@ -2,8 +2,8 @@ name: Docker Image Publish
 on:
   workflow_call:
     inputs:
-      tag:
-        description: 'Docker image tag list, multiple tag are separated by comma, e.g. latest'
+      docker_tag:
+        description: 'Docker image tag, e.g. latest'
         required: true
         type: string
         default: 'latest'
@@ -11,11 +11,11 @@ on:
         description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
         required: true
         type: string
-        default: '.'
+        default: './Docker/y-webrtc-signaling'
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Docker image tag list, multiple tag are separated by comma, e.g. latest'
+      docker_tag:
+        description: 'Docker image tag, e.g. latest'
         required: true
         type: string
         default: 'latest'
@@ -33,30 +33,46 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event_name == 'push'
     outputs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
       BUILD_TRIGGER_DESCRIPTION: ${{ steps.set_vars.outputs.BUILD_TRIGGER_DESCRIPTION }}
+      DOCKER_CONTEXT: ${{ steps.determine-context.outputs.docker_context }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Determine Docker Context
+        id: determine-context
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            DOCKER_CONTEXT="${{ github.event.inputs.docker_context }}"
+          else
+            DOCKER_CONTEXT="${{ inputs.docker_context }}"
+          fi
+          echo "docker_context=$DOCKER_CONTEXT" >> $GITHUB_OUTPUT
+
       - name: Check context exist
         run: |
-          if [ ! -d ${{ github.event.inputs.docker_context }} ]; then
-            echo "Docker context ${{ github.event.inputs.docker_context }} does not exist"
+          if [ ! -d "${{ steps.determine-context.outputs.docker_context }}" ]; then
+            echo "Docker context ${{ steps.determine-context.outputs.docker_context }} does not exist"
             exit 1
           fi
+
       - name: Set vars
         id: set_vars
         run: |
+          CONTEXT="${{ steps.determine-context.outputs.docker_context }}"
+          TAG="${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
           {
-            echo "IMAGE_FULL_NAME=${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.tag }}"
-            echo "IMAGE_NAME=$(echo ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'))"
-            echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.tag }}"
+            echo "IMAGE_FULL_NAME=${{ github.actor }}/$(basename $CONTEXT):$TAG"
+            echo "IMAGE_NAME=${{ github.actor }}/$(basename $CONTEXT)"
+            echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image ${{ github.actor }}/$(basename $CONTEXT):$TAG"
           } >> $GITHUB_OUTPUT
+        
 
   docker-release:
     name: Publish Docker images
@@ -69,12 +85,12 @@ jobs:
           echo "The image full name is ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
           echo "The image name is ${{ needs.setup.outputs.IMAGE_NAME }}"
           echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
-          echo "The docker context is ${{ github.event.inputs.docker_context }}"
+          echo "The docker context is ${{ needs.setup.outputs.DOCKER_CONTEXT }}"
 
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref }}
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -101,7 +117,7 @@ jobs:
       - name: Docker build and push
         uses: docker/build-push-action@v3
         with:
-          context: ${{ github.event.inputs.docker_context }}
+          context: ${{ needs.setup.outputs.DOCKER_CONTEXT }}
           push: true
           tags: |
             ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
