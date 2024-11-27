@@ -8,6 +8,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 
 - `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` 镜像。
 - `./Docker/abracadabra-web`: 构建 `funnyzak/abracadabra-web:latest` 镜像。
+- `./Docker/libreoffice-server`: 构建 `funnyzak/libreoffice-server:latest` 镜像。
 
 ## 镜像
 
@@ -19,6 +20,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 
 - `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像 ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))。
 - `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像 ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))。
+- `funnyzak/libreoffice-server:latest`: LibreOffice-Server 镜像 ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))。
 
 ### y-webrtc-signaling
 
