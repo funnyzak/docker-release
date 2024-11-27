@@ -17,6 +17,8 @@ WORKDIR $WORKDIR
 
 COPY --from=builder $WORKDIR .
 
+HEALTHCHECK --interval=5s --timeout=3s --start-period=5s --retries=3 CMD wget -q -O - http://localhost:4444 || exit 1
+
 EXPOSE 4444
 
 CMD ["node", "index.js"]
