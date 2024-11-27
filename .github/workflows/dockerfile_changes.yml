@@ -28,6 +28,7 @@ jobs:
       - id: set-matrix
         run: |
           CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | map({dockerfile_context: (. | sub("/[^/]+$"; ""))}) | {include: .}' | jq -c .)
+          echo "List of Dockerfile contexts: $CONTEXTS"
           echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
 
   run_docker_build:
