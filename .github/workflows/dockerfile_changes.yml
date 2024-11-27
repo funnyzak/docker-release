@@ -11,55 +11,38 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Get Changed Files
+      - uses: tj-actions/changed-files@v45
         id: changed-files
-        uses: tj-actions/changed-files@v45
         with:
-          files: |
-            **/Dockerfile
+          files: '**/Dockerfile'
 
-      - name: Set matrix
-        id: set-matrix
+      - id: set-matrix
         run: |
           DOCKERFILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | {dockerfile: .}' | jq -c .)
-          echo "Generated matrix: $DOCKERFILES"
           echo "matrix=$DOCKERFILES" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
     if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile[0] }}
-    runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.check_dockerfiles.outputs.matrix)}}
+    uses: funnyzak/image-publish/.github/workflows/image_publish.yml@main
+    with:
+      docker_context: ${{ github.workspace }}/${{ dirname(matrix.dockerfile) }}
+      tag: nightly
+
+  log_results:
+    needs: run_docker_build
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get Dockerfile Context
+      - name: Log Build Results
         run: |
-          dockerfile_context=$(dirname "${{ matrix.dockerfile }}")
-          echo "dockerfile_context=${dockerfile_context}" >> $GITHUB_ENV
-          echo "Dockerfile context set to $dockerfile_context"
-
-      - name: Run Workflow Call for Each Dockerfile
-        uses: funnyzak/image-publish/.github/workflows/image_publish.yml@main
-        with:
-          docker_context: ${{ env.dockerfile_context }}
-          tag: nightly
-
-      - name: Log Completed Docker Build
-        if: success()
-        run: echo "Docker build for ${{ matrix.dockerfile }} completed successfully."
-
-      - name: Log Failed Docker Build
-        if: failure()
-        run: |
-          echo "Docker build for ${{ matrix.dockerfile }} failed."
-          echo "Please check the logs for more information."
+          if [[ ${{ needs.run_docker_build.result }} == 'success' ]]; then
+            echo "Docker builds completed successfully."
+          else
+            echo "Some Docker builds failed. Please check the logs for more information."
+          fi
