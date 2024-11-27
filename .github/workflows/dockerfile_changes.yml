@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-      dockerfile_context_length: ${{ steps.set-matrix.outputs.dockerfile_context_length }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,11 +31,9 @@ jobs:
           CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | {dockerfile_context: map(sub("/[^/]+$"; ""))}' | jq -c .)
           echo "List of Dockerfile contexts: $CONTEXTS"
           echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
-          echo "dockerfile_context_length=$(echo $CONTEXTS | jq -r '.dockerfile_context | length')" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ needs.check_dockerfiles.outputs.dockerfile_context_length > 0 }}
     strategy:
       matrix: ${{fromJson(needs.check_dockerfiles.outputs.matrix)}}
     uses: ./.github/workflows/image_publish.yml
