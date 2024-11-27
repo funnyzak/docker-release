@@ -113,6 +113,58 @@ services:
 
 更多信息请查看 [Abracadabra_demo](Docker/abracadabra-web/README.md)。
 
+### LibreOffice-Server
+
+[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-server/latest)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags)
+![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server)
+![Docker Version](https://img.shields.io/docker/v/funnyzak/libreoffice-server/latest)
+
+拉取镜像：
+<details>
+
+```bash
+docker pull funnyzak/libreoffice-server:latest
+# GitHub
+docker pull ghcr.io/funnyzak/libreoffice-server:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/libreoffice-server:latest
+```
+
+</details>
+
+部署示例：
+
+<details>
+
+Docker 部署示例：
+```bash
+docker run -d --name libreoffice -p 3000:3000 -p 3001:8038 funnyzak/libreoffice-server:latest
+```
+
+Docker Compose 部署示例：
+```yaml
+
+version: "3.1"
+services:
+  libreoffice:
+    image: funnyzak/libreoffice-server
+    container_name: libreoffice
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
+    # volumes:
+    #   - ./media/fonts:/usr/share/fonts/custom # 自定义字体
+    ports:
+      - 3000:3000 # libreoffice web editor
+      - 3001:8038 # web api
+    restart: unless-stopped
+```
+
+</details>
+
+更多信息请查看 [LibreOffice-Server](Docker/libreoffice-server/README.md)。
+
 ## 贡献
 
 欢迎贡献更多的 Docker 镜像构建目录。
