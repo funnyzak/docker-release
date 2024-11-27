@@ -100,3 +100,10 @@ jobs:
             linux/amd64
             linux/arm64
             linux/arm/v7
+
+      - name: Send Apprise Notification
+        run: |
+          curl -X POST \
+            -F "tag=office,ntfy" \
+            -F "body=${{ github.event_name }}: ${{ github.repository }} ${{ github.sha }} ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }} Link: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}" \
+            "${{ secrets.APPRISE_HTTP_URL }}"
