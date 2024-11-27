@@ -23,8 +23,11 @@ on:
         description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
         required: true
         type: string
-        default: '.'
+        default: './Docker/y-webrtc-signaling'
 
+permissions:
+  packages: write
+  contents: read
 
 jobs:
   setup:
