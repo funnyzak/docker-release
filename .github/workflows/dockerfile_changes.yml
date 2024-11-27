@@ -36,9 +36,9 @@ jobs:
     needs: check_dockerfiles
     if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile_context.length }} > 0
     strategy:
-      matrix: ${{fromJson(needs.check_dockerfiles.outputs.matrix)}}
+      matrix: ${{ fromJson(needs.check_dockerfiles.outputs.matrix) }}
     uses: ./.github/workflows/image_publish.yml
     with:
-      docker_context: ${{ github.workspace }}/${{ matrix.dockerfile_context }}
-      tag: nightly
+      docker_context: ${{ matrix.dockerfile_context }}
+      docker_tag: nightly
     secrets: inherit

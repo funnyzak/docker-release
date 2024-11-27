@@ -2,7 +2,7 @@ name: Docker Image Publish
 on:
   workflow_call:
     inputs:
-      tag:
+      docker_tag:
         description: 'Docker image tag list, multiple tag are separated by comma, e.g. latest'
         required: true
         type: string
@@ -11,10 +11,10 @@ on:
         description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
         required: true
         type: string
-        default: '.'
+        default: './Docker/y-webrtc-signaling'
   workflow_dispatch:
     inputs:
-      tag:
+      docker_tag:
         description: 'Docker image tag list, multiple tag are separated by comma, e.g. latest'
         required: true
         type: string
@@ -33,7 +33,7 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
-    # if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event_name == 'push'
     outputs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
@@ -61,9 +61,9 @@ jobs:
         id: set_vars
         run: |
           {
-            echo "IMAGE_FULL_NAME=${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.tag }}"
+            echo "IMAGE_FULL_NAME=${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.docker_tag }}"
             echo "IMAGE_NAME=$(echo ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'))"
-            echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.tag }}"
+            echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image ${{ github.actor }}/$(echo ${{ github.event.inputs.docker_context }} | awk -F '/' '{print $NF}'):${{ github.event.inputs.docker_tag }}"
           } >> $GITHUB_OUTPUT
         
 
