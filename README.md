@@ -8,14 +8,14 @@
 
 - `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` Docker 镜像。
 
-## 镜像说明
+## 镜像
 
 所有镜像均发布在 Docker Hub 上，并提供国内镜像地址：`registry.cn-beijing.aliyuncs.com`。此外，镜像也同步发布在 GitHub Container Registry (`ghcr.io`) 上。
 
 当前镜像包含：
 
-- `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像。
-- `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像。
+- `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像 ([Docker Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))。
+- `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像 ([Docker Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))。
 
 ### y-webrtc-signaling
 
@@ -53,8 +53,6 @@ services:
     network_mode: bridge
     ports:
       - "4444:4444"
-    environment:
-      - PORT=4444
 ```
 </details>
 
