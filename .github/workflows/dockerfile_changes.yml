@@ -31,7 +31,7 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | map(sub("/[^/]+$"; "")) | unique | {dockerfile_context: .}' | jq -c .)
+          CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | map(sub("/[^/]+$"; "")) | unique | map(@sh) | {dockerfile_context: .}' | jq -c .)
           echo "List of Dockerfile contexts: $CONTEXTS"
           echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
 
