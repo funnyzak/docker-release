@@ -22,17 +22,17 @@ jobs:
 
       - id: set-matrix
         run: |
-          DOCKERFILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | {dockerfile: .}' | jq -c .)
-          echo "matrix=$DOCKERFILES" >> $GITHUB_OUTPUT
+          CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0)) | map({dockerfile_context: (. | sub("/[^/]+$"; ""))}) | {include: .}' | jq -c .)
+          echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile[0] }}
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).include[0] }}
     strategy:
       matrix: ${{fromJson(needs.check_dockerfiles.outputs.matrix)}}
     uses: funnyzak/image-publish/.github/workflows/image_publish.yml@main
     with:
-      docker_context: ${{ github.workspace }}/${{ dirname(matrix.dockerfile) }}
+      docker_context: ${{ github.workspace }}/${{ matrix.include.dockerfile_context }}
       tag: nightly
 
   log_results:
