@@ -12,6 +12,11 @@
 
 所有镜像均发布在 Docker Hub 上，并提供国内镜像地址：`registry.cn-beijing.aliyuncs.com`。此外，镜像也同步发布在 GitHub Container Registry (`ghcr.io`) 上。
 
+当前镜像包含：
+
+- `funnyzak/y-webrtc-signaling:latest`: y-webrtc-signaling 信令服务器镜像。
+- `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像。
+
 ### y-webrtc-signaling
 
 ![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/y-webrtc-signaling/latest)
@@ -54,6 +59,52 @@ services:
 </details>
 
 更多信息请查看 [y-webrtc-signaling](./Docker/y-webrtc-signaling/README.md)。
+
+
+
+
+
+### 魔曰 Demo
+
+![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/abracadabra-web/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/abracadabra-web)
+![Docker Version](https://img.shields.io/docker/v/funnyzak/abracadabra-web/latest)
+
+拉取镜像：`docker pull funnyzak/abracadabra-web:latest`
+
+```bash
+docker pull funnyzak/abracadabra-web:latest
+# GitHub
+docker pull ghcr.io/funnyzak/abracadabra-web:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
+```
+
+部署示例：
+
+<details>
+
+Docker 部署示例：
+```bash
+docker run -d --name abracadabra-web -p 8080:80 funnyzak/abracadabra-web:latest
+```
+
+Docker Compose 部署示例：
+```yaml
+version: '3.1'
+
+services:
+  abracadabra-web:
+    container_name: abracadabra-web
+    image: funnyzak/abracadabra-web:latest
+    restart: always
+    network_mode: bridge
+    ports:
+      - "8080:80"
+```
+</details>
+
+更多信息请查看 [Abracadabra_demo](Docker/abracadabra-web/README.md)。
 
 ## 贡献
 

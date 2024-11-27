@@ -1,0 +1,47 @@
+name: Check Dockerfile Changes
+
+on:
+  push:
+    paths:
+      - '**/Dockerfile'
+
+jobs:
+  check_dockerfiles:
+    runs-on: ubuntu-latest
+    outputs:
+      dockerfile_paths: ${{ steps.get-dockerfiles.outputs.dockerfile_paths }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **/Dockerfile
+
+      - name: Set Output for Dockerfile Paths
+        id: get-dockerfiles
+        run: |
+          dockerfile_paths=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split("\n") | map(select(length>0))')
+          echo "::set-output name=dockerfile_paths::$dockerfile_paths"
+
+  run_docker_build:
+    needs: check_dockerfiles
+    if: ${{ needs.check_dockerfiles.outputs.dockerfile_paths != '[]' }}
+    strategy:
+      matrix:
+        dockerfile_context: ${{ fromJson(needs.check_dockerfiles.outputs.dockerfile_paths) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Workflow Call for Each Dockerfile
+        uses: ./.github/workflows/image_publish.yml
+        with:
+          docker_context: ${{ matrix.dockerfile_context }}
+          tag: nightly
