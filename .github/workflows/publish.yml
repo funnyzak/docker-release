@@ -94,12 +94,10 @@ jobs:
           echo "The docker image name is ${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
           echo "The build args are ${{ github.event.inputs.build_args || inputs.build_args }}"
           echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
-          echo "The docker file is ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}"
 
       - name: Determine Docker Context
         id: determine-context
         run: |
-        
           echo "BUILD_CONTEXT=${{ github.event.inputs.build_context || inputs.build_context }}" >> $GITHUB_OUTPUT
 
       - name: Check context exist
@@ -144,7 +142,6 @@ jobs:
           echo "Build platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
           echo "Docker tag: ${{ needs.setup.outputs.IMAGE_TAG }}"
-
 
       - name: Checkout
         uses: actions/checkout@v4
