@@ -2,12 +2,12 @@ name: Docker Image Publish
 on:
   workflow_call:
     inputs:
-      docker_tag:
+      build_tag:
         description: 'Docker image tag, e.g. latest'
         required: true
         type: string
         default: 'latest'
-      docker_context:
+      build_context:
         description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
         required: true
         type: string
@@ -24,12 +24,12 @@ on:
         default: 'linux/amd64,linux/arm64,linux/arm/v7'
   workflow_dispatch:
     inputs:
-      docker_tag:
+      build_tag:
         description: 'Docker image tag, e.g. latest'
         required: true
         type: string
         default: 'latest'
-      docker_context:
+      build_context:
         description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
         required: true
         type: string
@@ -58,7 +58,7 @@ jobs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
       BUILD_TRIGGER_DESCRIPTION: ${{ steps.set_vars.outputs.BUILD_TRIGGER_DESCRIPTION }}
-      DOCKER_CONTEXT: ${{ steps.determine-context.outputs.docker_context }}
+      BUILD_CONTEXT: ${{ steps.determine-context.outputs.build_context }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -69,24 +69,24 @@ jobs:
         id: determine-context
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            DOCKER_CONTEXT="${{ github.event.inputs.docker_context }}"
+            BUILD_CONTEXT="${{ github.event.inputs.build_context }}"
           else
-            DOCKER_CONTEXT="${{ inputs.docker_context }}"
+            BUILD_CONTEXT="${{ inputs.build_context }}"
           fi
-          echo "docker_context=$DOCKER_CONTEXT" >> $GITHUB_OUTPUT
+          echo "build_context=$BUILD_CONTEXT" >> $GITHUB_OUTPUT
 
       - name: Check context exist
         run: |
-          if [ ! -d "${{ steps.determine-context.outputs.docker_context }}" ]; then
-            echo "Docker context ${{ steps.determine-context.outputs.docker_context }} does not exist"
+          if [ ! -d "${{ steps.determine-context.outputs.build_context }}" ]; then
+            echo "Docker context ${{ steps.determine-context.outputs.build_context }} does not exist"
             exit 1
           fi
 
       - name: Set vars
         id: set_vars
         run: |
-          CONTEXT="${{ steps.determine-context.outputs.docker_context }}"
-          TAG="${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
+          CONTEXT="${{ steps.determine-context.outputs.build_context }}"
+          TAG="${{ github.event.inputs.build_tag || inputs.build_tag }}"
           {
             echo "IMAGE_FULL_NAME=${{ github.actor }}/$(basename $CONTEXT):$TAG"
             echo "IMAGE_NAME=${{ github.actor }}/$(basename $CONTEXT)"
@@ -105,7 +105,7 @@ jobs:
           echo "The image full name is ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
           echo "The image name is ${{ needs.setup.outputs.IMAGE_NAME }}"
           echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
-          echo "The docker context is ${{ needs.setup.outputs.DOCKER_CONTEXT }}"
+          echo "The docker context is ${{ needs.setup.outputs.BUILD_CONTEXT }}"
           echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
           echo "The docker args are ${{ github.event.inputs.build_args || inputs.build_args }}"
 
@@ -151,15 +151,14 @@ jobs:
       - name: Docker build and push
         uses: docker/build-push-action@v6
         with:
-          context: ${{ needs.setup.outputs.DOCKER_CONTEXT }}
+          context: ${{ needs.setup.outputs.BUILD_CONTEXT }}
           push: true
           tags: |
             ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
           platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
-          build-args: ｜
-            ${{ steps.convert-args.outputs.BUILD_ARGS }}
+          build-args: ${{ steps.convert-args.outputs.BUILD_ARGS }}
 
       - name: Send Apprise Notification
         run: |
