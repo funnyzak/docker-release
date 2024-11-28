@@ -8,30 +8,31 @@ on:
         type: string
         default: 'latest'
       build_context:
-        description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
+        description: 'Docker build context, default is current directory, e.g. ./Docker/request-hub'
         required: true
         type: string
-        default: './Docker/y-webrtc-signaling'
-      docker_image_name:
-        description: 'Docker image name, e.g. y-webrtc-signaling, default is the last part of the build context'
-        required: false
-        default: ''
-        type: string
+        default: './Docker/request-hub'
       docker_file_name:
-        description: 'Docker file name in the build context, e.g. Dockerfile'
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
         required: false
         type: string
         default: 'Dockerfile'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64'
+      docker_image_name:
+        description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
+        required: false
+        default: ''
+        type: string
       build_args:
         description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
         required: false
         type: string
-        default: ''
-      build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
-        required: false
-        type: string
-        default: 'linux/amd64,linux/arm64,linux/arm/v7'
+        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
+        
   workflow_dispatch:
     inputs:
       docker_tag:
@@ -40,30 +41,30 @@ on:
         type: string
         default: 'latest'
       build_context:
-        description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
+        description: 'Docker build context, default is current directory, e.g. ./Docker/request-hub'
         required: true
         type: string
-        default: './Docker/y-webrtc-signaling'
-      docker_image_name:
-        description: 'Docker image name, e.g. y-webrtc-signaling, default is the last part of the build context'
-        required: false
-        default: ''
-        type: string
+        default: './Docker/request-hub'
       docker_file_name:
-        description: 'Docker file name in the build context, e.g. Dockerfile'
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
         required: false
         type: string
         default: 'Dockerfile'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64'
+      docker_image_name:
+        description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
+        required: false
+        default: ''
+        type: string
       build_args:
         description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
         required: false
         type: string
-        default: ''
-      build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
-        required: false
-        type: string
-        default: 'linux/amd64,linux/arm64,linux/arm/v7'
+        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
 
 permissions:
   packages: write
