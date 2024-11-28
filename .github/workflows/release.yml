@@ -186,13 +186,8 @@ jobs:
       - name: Split Build Args
         id: split_build_args
         run: |
-          # IFS=',' read -r -a build_args <<< "${{ needs.setup.outputs.BUILD_ARGS }}"
-          # formatted_build_args=$(printf "%s\n" "${build_args[@]}" | sed 's/^/    /')
-          # echo "Formatted build args: $formatted_build_args"
-          # echo "BUILD_ARGS=$formatted_build_args" >> $GITHUB_OUTPUT
-          
           IFS=',' read -r -a build_args <<< "${{ needs.setup.outputs.BUILD_ARGS }}"
-          for i in {1..5}; do
+          for i in {1..7}; do
             eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
             echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
           done
@@ -214,7 +209,8 @@ jobs:
             ${{ steps.split_build_args.outputs.BUILD_ARGS_3 }}
             ${{ steps.split_build_args.outputs.BUILD_ARGS_4 }}
             ${{ steps.split_build_args.outputs.BUILD_ARGS_5 }}
-
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_6 }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_7 }}
 
       - name: Send Apprise Notification
         run: |
