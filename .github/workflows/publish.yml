@@ -58,7 +58,7 @@ jobs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
       BUILD_TRIGGER_DESCRIPTION: ${{ steps.set_vars.outputs.BUILD_TRIGGER_DESCRIPTION }}
-      BUILD_CONTEXT: ${{ steps.determine-context.outputs.build_context }}
+      BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -69,16 +69,15 @@ jobs:
         id: determine-context
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            BUILD_CONTEXT="${{ github.event.inputs.build_context }}"
+            BUILD_CONTEXT="${{ github.event.inputs.build_context }}" >> $GITHUB_OUTPUT
           else
-            BUILD_CONTEXT="${{ inputs.build_context }}"
+            BUILD_CONTEXT="${{ inputs.build_context }}" >> $GITHUB_OUTPUT
           fi
-          echo "build_context=$BUILD_CONTEXT" >> $GITHUB_OUTPUT
 
       - name: Check context exist
         run: |
-          if [ ! -d "${{ steps.determine-context.outputs.build_context }}" ]; then
-            echo "Docker context ${{ steps.determine-context.outputs.build_context }} does not exist"
+          if [ ! -d "${{ steps.determine-context.outputs.BUILD_CONTEXT }}" ]; then
+            echo "Docker context ${{ steps.determine-context.outputs.BUILD_CONTEXT }} does not exist"
             exit 1
           fi
 

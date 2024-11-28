@@ -42,7 +42,6 @@ jobs:
         id: set-matrix
         run: |
           ALL_DOCKER_FILES=$(find "${{ github.event.inputs.search_path }}" -name Dockerfile -printf '%h\n' | sort -u)
-          echo "All Dockerfile contexts: $ALL_DOCKER_FILES"
           CONTEXTS=$(jq -n --arg contexts "$ALL_DOCKER_FILES" '$contexts | split("\n") | map(select(length>0)) | {dockerfile_context: .}' ｜ jq -c .)
           echo "List of Dockerfile contexts: $CONTEXTS"
           echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
