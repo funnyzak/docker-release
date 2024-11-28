@@ -42,7 +42,6 @@ RUN set -eux \
 COPY --from=build /opt/canal/${CANAL_DIR_NAME} /opt/canal/${CANAL_DIR_NAME}
 
 WORKDIR /opt/canal/${CANAL_DIR_NAME}
-
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
