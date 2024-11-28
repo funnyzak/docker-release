@@ -10,6 +10,7 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 - `./Docker/abracadabra-web`: 构建 `funnyzak/abracadabra-web:latest` 镜像。
 - `./Docker/libreoffice-server`: 构建 `funnyzak/libreoffice-server:latest` 镜像。
 - `./Docker/request-hub`: 构建 `funnyzak/request-hub:latest` 镜像。
+- `./Docker/canal`: 构建 `funnyzak/canal-adapter:latest`、`funnyzak/canal-deployer:latest`、`funnyzak/canal-admin:latest` 镜像。
 
 ## 镜像
 
@@ -23,6 +24,9 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 - `funnyzak/abracadabra-web:latest`: Abracadabra_demo 魔曰 Demo 镜像 ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))。
 - `funnyzak/libreoffice-server:latest`: LibreOffice-Server 镜像 ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))。
 - `funnyzak/request-hub:latest`: Request-Hub 镜像 ([Hub](https://hub.docker.com/r/funnyzak/request-hub))。
+- `funnyzak/canal-adapter:latest`: Canal-Adaptor 镜像 ([Hub](https://hub.docker.com/r/funnyzak/canal-adapter))。
+- `funnyzak/canal-deployer:latest`: Canal-Deployer 镜像 ([Hub](https://hub.docker.com/r/funnyzak/canal-deployer))。
+- `funnyzak/canal-admin:latest`: Canal-Admin 镜像 ([Hub](https://hub.docker.com/r/funnyzak/canal-admin))。
 
 ---
 
@@ -236,6 +240,48 @@ services:
 </details>
 
 更多信息请查看 [Request-Hub](Docker/request-hub/README.md)。
+
+---
+
+### Canal
+
+Canal 是阿里巴巴 MySQL 数据库 binlog 增量订阅&消费组件。
+
+当前提供三个镜像：
+
+![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-adapter/latest?label=Canal-Adapter)
+![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-adapter?label=Canal-Adapter)
+![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-adapter/latest?label=Canal-Adapter)
+
+![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-deployer/latest?label=Canal-Deployer)
+![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-deployer?label=Canal-Deployer)
+![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-deployer/latest?label=Canal-Deployer)
+
+![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-admin/latest?label=Canal-Admin)
+![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-admin?label=Canal-Admin)
+![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-admin/latest?label=Canal-Admin)
+
+拉取镜像：
+
+<details>
+
+```bash
+docker pull funnyzak/canal-adapter:latest
+docker pull funnyzak/canal-deployer:latest
+docker pull funnyzak/canal-admin:latest
+# GitHub
+docker pull ghcr.io/funnyzak/canal-adapter:latest
+docker pull ghcr.io/funnyzak/canal-deployer:latest
+docker pull ghcr.io/funnyzak/canal-admin:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-adapter:latest
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-deployer:latest
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-admin:latest
+```
+
+</details>
+
+更多信息请参考 [Canal 官方仓库](https://github.com/alibaba/canal/releases)。
 
 ## 贡献
 
