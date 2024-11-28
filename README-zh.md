@@ -1,8 +1,9 @@
 # 镜像发布
 
-用于发布各种 Docker 镜像。
+构建镜像并发布至 Docker Hub、GitHub Container Registry 和阿里云镜像服务。
 
-镜像已发布至 Docker Hub，并提供国内镜像地址：`registry.cn-beijing.aliyuncs.com`，同时同步至 GitHub Container Registry (`ghcr.io`)。
+阿里云镜像地址：`registry.cn-beijing.aliyuncs.com`  
+GitHub Container Registry 地址：`ghcr.io`
 
 ## 镜像
 

@@ -1,8 +1,10 @@
 # Docker Release
 
-Used for publishing various Docker images.
+Build images and publish to Docker Hub, GitHub Container Registry, and AliCloud Image Service.
 
-The images have been released to Docker Hub, and the domestic mirror address, `registry.cn-beijing.aliyuncs.com`, is provided.  Meanwhile, they are also synchronized to the GHCR Container Registry (`ghcr.io`).
+Aliyun mirror address: `registry.cn-beijing.aliyuncs.com`.
+
+GitHub Container Registry address: `ghcr.io`
 
 ## Images
 
