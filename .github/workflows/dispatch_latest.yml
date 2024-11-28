@@ -28,7 +28,6 @@ permissions:
   contents: write
   packages: write
 
-
 jobs:
   setup:
     runs-on: ubuntu-latest
