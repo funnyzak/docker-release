@@ -1,6 +1,7 @@
-FROM scratch
+FROM --platform=$BUILDPLATFORM scratch
 
-ENV TARGETPLATFORM=${TARGETPLATFORM:-linux/amd64}
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 
 COPY helloworld_amd64 /helloworld_amd64
 COPY helloworld_arm64 /helloworld_arm64
