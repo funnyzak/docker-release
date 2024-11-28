@@ -34,6 +34,7 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       build_context: './Docker/canal/canal-adapter'
+      docker_image_name: canal-adapter
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=adapter,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
@@ -44,6 +45,7 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       build_context: './Docker/canal/canal-adapter'
+      docker_image_name: canal-admin
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=admin,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
@@ -54,6 +56,7 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       build_context: './Docker/canal/canal-adapter'
+      docker_image_name: canal-deployer
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=deployer,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
