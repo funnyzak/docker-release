@@ -11,7 +11,7 @@ RUN apk add --no-cache curl tar \
     && tar -xzf ${CANAL_DOWNLOAD_NAME}.tar.gz -C /opt/canal/${CANAL_COMPONENT_NAME} \
     && rm ${CANAL_DOWNLOAD_NAME}.tar.gz
 
-FROM openjdk:11-jre AS runtime
+FROM openjdk:11-jre-slim AS runtime
 
 ARG CANAL_COMPONENT_VERSION=1.1.7
 ENV CANAL_COMPONENT_NAME=canal-adapter
