@@ -32,7 +32,7 @@ jobs:
         id: set-matrix
         run: |
           echo "All changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
-          DOCKER_FILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split(" ") | map(select(length>0)) | {dockerfile: .}' | jq -c .)
+          DOCKER_FILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split(" ") | map(select(length>0)) | {dockerfile: map(.)}' | jq -c .)
           echo "List of Dockerfile: $DOCKER_FILES"
           echo "matrix=$DOCKER_FILES" >> $GITHUB_OUTPUT
 

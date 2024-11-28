@@ -94,6 +94,7 @@ jobs:
           echo "The docker image name is ${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
           echo "The build args are ${{ github.event.inputs.build_args || inputs.build_args }}"
           echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
+          echo "The docker file is ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}"
 
       - name: Determine Docker Context
         id: determine-context
