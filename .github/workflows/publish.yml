@@ -65,6 +65,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Output inputs
+        run: |
+          echo "The build tag is ${{ github.event.inputs.build_tag || inputs.build_tag }}"
+          echo "The build context is ${{ github.event.inputs.build_context || inputs.build_context }}"
+          echo "The build args are ${{ github.event.inputs.build_args || inputs.build_args }}"
+          echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
+
       - name: Determine Docker Context
         id: determine-context
         run: |
