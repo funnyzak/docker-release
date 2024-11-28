@@ -51,7 +51,7 @@ jobs:
     if: ${{ fromJson(needs.setup.outputs.matrix).dockerfile_context.length }} > 0
     strategy:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
-    uses: ./.github/workflows/publish.yml
+    uses: ./.github/workflows/release.yml
     with:
       build_context: ${{ matrix.dockerfile_context }}
       docker_tag: ${{ github.event.inputs.build_tag }}

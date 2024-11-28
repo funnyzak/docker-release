@@ -41,7 +41,7 @@ jobs:
     if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile.length }} > 0
     strategy:
       matrix: ${{ fromJson(needs.check_dockerfiles.outputs.matrix) }}
-    uses: ./.github/workflows/publish.yml
+    uses: ./.github/workflows/release.yml
     with:
       docker_file_name: $(echo ${{ matrix.dockerfile }} | awk -F'/' '{print $NF}')
       build_context: $(dirname ${{ matrix.dockerfile }})
