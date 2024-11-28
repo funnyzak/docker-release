@@ -11,6 +11,17 @@ RUN apk add --no-cache git && \
 
 FROM alpine:3.19 AS final
 
+ARG BUILD_DATE
+ARG VERSION=
+
+LABEL org.label-schema.name="requesthub" \
+      org.label-schema.description="requesthub" \
+      org.label-schema.version="${VERSION}" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vendor="Leon<silenceace@gmail.com>" \
+      org.label-schema.url="https://github.com/funnyzak/docker-publish"
+      
+      
 RUN apk add --no-cache ca-certificates tzdata
 
 WORKDIR /app
