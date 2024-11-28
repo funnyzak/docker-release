@@ -200,6 +200,6 @@ jobs:
       - name: Send Apprise Notification
         run: |
           curl -X POST \
-            -F "tag=office,ycgo" \
-            -F "body=事件: ${{ github.event_name }} 仓库: ${{ github.repository }} 提交: ${{ github.sha }} 描述: ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }} Hub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}" \
+            -F "tag=devops" \
+            -F "body=Event: ${{ github.event_name }} Repository: ${{ github.repository }} Commit: ${{ github.sha }} Description: ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }} Docker Hub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags" \
             "${{ secrets.APPRISE_HTTP_URL }}"
