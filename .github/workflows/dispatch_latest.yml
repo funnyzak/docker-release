@@ -21,7 +21,7 @@ on:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64'
         required: false
         type: string
-        default: 'linux/amd64,linux/arm64,linux/arm/v7'
+        default: 'linux/amd64,linux/arm64'
 
 permissions:
   contents: write
