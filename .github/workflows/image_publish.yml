@@ -145,10 +145,11 @@ jobs:
           else
             BUILD_ARGS=()
           fi
-          echo "BUILD_ARGS=${BUILD_ARGS[*]}" >> $GITHUB_OUTPUT
+          formatted_build_args=$(printf "%s\n" "${build_args[@]}" | sed 's/^/    /')
+          echo "BUILD_ARGS=${formatted_build_args}" >> $GITHUB_OUTPUT
 
       - name: Docker build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: ${{ needs.setup.outputs.DOCKER_CONTEXT }}
           push: true
@@ -157,7 +158,8 @@ jobs:
             registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
           platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
-          build-args: ${{ steps.convert-args.outputs.BUILD_ARGS }}
+          build-args: ｜
+            ${{ steps.convert-args.outputs.BUILD_ARGS }}
 
       - name: Send Apprise Notification
         run: |

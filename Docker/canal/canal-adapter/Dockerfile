@@ -22,8 +22,7 @@ LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.version="${CANAL_COMPONENT_VERSION}" \
       org.label-schema.description="${CANAL_COMPONENT_NAME}" \
       org.label-schema.url="https://yycc.dev" \
-      org.label-schema.build-date="${BUILD_DATE}" \
-      org.label-schema.schema-version="${CANAL_COMPONENT_VERSION}"
+      org.label-schema.build-date="${BUILD_DATE}"
 
 ENV TZ=Asia/Shanghai \
     LC_ALL=C.UTF-8 \
