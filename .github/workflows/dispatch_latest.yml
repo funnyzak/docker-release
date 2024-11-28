@@ -1,13 +1,12 @@
-name: Dispatch all Dockerfile version
-
+name: Dispatch some Docker
 on:
   workflow_dispatch:
     inputs:
       search_path:
-        description: 'Search path for Dockerfile, e.g. .'
+        description: 'Search path for Dockerfile, e.g. ./Docker'
         required: true
         type: string
-        default: '.'
+        default: './Docker'
       build_tag:
         description: 'Docker image tag, e.g. latest'
         required: false
@@ -17,7 +16,7 @@ on:
         description: 'Docker build args list, e.g. BUILD_DATE=$(date +%Y-%m-%d),VERSION=1.0.0'
         required: false
         type: string
-        default: ''
+        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
       build_platforms:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
         required: false
@@ -44,9 +43,9 @@ jobs:
         run: |
           ALL_DOCKER_FILES=$(find "${{ github.event.inputs.search_path }}" -name Dockerfile -printf '%h\n' | sort -u)
           echo "All Dockerfile contexts: $ALL_DOCKER_FILES"
-          CONTEXTS=$(jq -n --arg contexts "$ALL_DOCKER_FILES" '$contexts | split("\n") | map(select(length>0)) | {dockerfile_context: .}')
+          CONTEXTS=$(jq -n --arg contexts "$ALL_DOCKER_FILES" '$contexts | split("\n") | map(select(length>0)) | {dockerfile_context: .}' ｜ jq -c .)
           echo "List of Dockerfile contexts: $CONTEXTS"
-          echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
+          echo "matrix=$CONTEXTS" >> $GITHUB_ENV
 
   docker_build:
     needs: setup
