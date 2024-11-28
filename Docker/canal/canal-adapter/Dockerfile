@@ -24,7 +24,7 @@ LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="canal-${CANAL_NAME}" \
       org.label-schema.version="${VERSION}" \
       org.label-schema.description="canal-${CANAL_NAME}" \
-      org.label-schema.url="https://github.com/funnyzak/docker-publish" \
+      org.label-schema.url="https://github.com/funnyzak/docker-release" \
       org.label-schema.build-date="${BUILD_DATE}"
 
 ENV TZ=Asia/Shanghai \
