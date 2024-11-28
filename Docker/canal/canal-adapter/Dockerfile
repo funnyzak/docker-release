@@ -32,12 +32,12 @@ RUN set -eux \
     && apt-get update && apt-get install -y --no-install-recommends file tzdata \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY --from=build /opt/canal/${CANAL_COMPONENT_NAME} /opt/canal/${CANAL_COMPONENT_NAME}
+COPY --from=build /opt/canal/${CANAL_COMPONENT_NAME} /opt/canal/${CANAL_COMPONENT_NAME}-${CANAL_COMPONENT_VERSION}}
 
-WORKDIR /opt/canal/${CANAL_COMPONENT_NAME}
+WORKDIR /opt/canal/${CANAL_COMPONENT_NAME}-${CANAL_COMPONENT_VERSION}
 
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /opt/canal/${CANAL_COMPONENT_NAME}-${CANAL_COMPONENT_VERSION}/entrypoint.sh
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /opt/canal/${CANAL_COMPONENT_NAME}-${CANAL_COMPONENT_VERSION}/entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
