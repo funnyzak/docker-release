@@ -46,7 +46,7 @@ jobs:
           echo "All Dockerfile contexts: $ALL_DOCKER_FILES"
           CONTEXTS=$(jq -n --arg contexts "$ALL_DOCKER_FILES" '$contexts | split("\n") | map(select(length>0)) | {dockerfile_context: .}')
           echo "List of Dockerfile contexts: $CONTEXTS"
-          echo "matrix=$CONTEXTS" >> $GITHUB_ENV
+          echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
 
   docker_build:
     needs: setup
