@@ -1,4 +1,4 @@
-name: Docker Image Publish
+name: Release Image
 on:
   workflow_call:
     inputs:

@@ -1,4 +1,4 @@
-name: Dispatch some Docker
+name: Dispatch Release Images
 on:
   workflow_dispatch:
     inputs:

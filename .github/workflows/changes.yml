@@ -1,4 +1,4 @@
-name: Check Dockerfile Changes
+name: Dockerfile Changes
 
 on:
   push:
