@@ -54,7 +54,7 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       build_context: ${{ matrix.dockerfile_context }}
-      build_tag: ${{ github.event.inputs.build_tag }}
+      docker_tag: ${{ github.event.inputs.build_tag }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit
