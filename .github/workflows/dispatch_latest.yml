@@ -1,13 +1,12 @@
-name: Dispatch all Dockerfile version
-
+name: Dispatch some Docker
 on:
   workflow_dispatch:
     inputs:
       search_path:
-        description: 'Search path for Dockerfile, e.g. .'
+        description: 'Search path for Dockerfile, e.g. ./Docker'
         required: true
         type: string
-        default: '.'
+        default: './Docker'
       build_tag:
         description: 'Docker image tag, e.g. latest'
         required: false
@@ -17,12 +16,12 @@ on:
         description: 'Docker build args list, e.g. BUILD_DATE=$(date +%Y-%m-%d),VERSION=1.0.0'
         required: false
         type: string
-        default: ''
+        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
       build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
-        default: 'linux/amd64,linux/arm64,linux/arm/v7'
+        default: 'linux/amd64,linux/arm64'
 
 permissions:
   contents: write
@@ -42,10 +41,10 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          ALL_DOCKER_FILES=$(find ${{ github.event.inputs.search_path }} -name Dockerfile | xargs -I {} dirname {} | sort -u)
-          CONTEXTS=$(echo '${ ALL_DOCKER_FILES }' | jq -R -s 'split("\n") | map(select(length>0)) | {dockerfile_context: map(sub("/[^/]+$"; ""))}' | jq -c .)
+          ALL_DOCKER_FILES=$(find "${{ github.event.inputs.search_path }}" -name Dockerfile -printf '%h\n' | sort -u)
+          CONTEXTS=$(jq -n --arg contexts "$ALL_DOCKER_FILES" '$contexts | split("\n") | map(select(length>0)) | {dockerfile_context: .}' ｜ jq -c .)
           echo "List of Dockerfile contexts: $CONTEXTS"
-          echo "matrix=$CONTEXTS" >> $GITHUB_ENV
+          echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
 
   docker_build:
     needs: setup
@@ -55,7 +54,7 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       build_context: ${{ matrix.dockerfile_context }}
-      build_tag: ${{ github.event.inputs.build_tag }}
+      docker_tag: ${{ github.event.inputs.build_tag }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit

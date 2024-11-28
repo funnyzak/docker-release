@@ -2,48 +2,69 @@ name: Docker Image Publish
 on:
   workflow_call:
     inputs:
-      build_tag:
+      docker_tag:
         description: 'Docker image tag, e.g. latest'
         required: true
         type: string
         default: 'latest'
       build_context:
-        description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
+        description: 'Docker build context, default is current directory, e.g. ./Docker/request-hub'
         required: true
         type: string
-        default: './Docker/y-webrtc-signaling'
+        default: './Docker/request-hub'
+      docker_file_name:
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
+        required: false
+        type: string
+        default: 'Dockerfile'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64'
+      docker_image_name:
+        description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
+        required: false
+        default: ''
+        type: string
       build_args:
         description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
         required: false
         type: string
-        default: ''
-      build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
-        required: false
-        type: string
-        default: 'linux/amd64,linux/arm64,linux/arm/v7'
+        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
+
   workflow_dispatch:
     inputs:
-      build_tag:
+      docker_tag:
         description: 'Docker image tag, e.g. latest'
         required: true
         type: string
         default: 'latest'
       build_context:
-        description: 'Docker build context, default is current directory, e.g. ./Docker/y-webrtc-signaling'
+        description: 'Docker build context, default is current directory, e.g. ./Docker/request-hub'
         required: true
         type: string
-        default: './Docker/y-webrtc-signaling'
+        default: './Docker/request-hub'
+      docker_file_name:
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
+        required: false
+        type: string
+        default: 'Dockerfile'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64'
+      docker_image_name:
+        description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
+        required: false
+        default: ''
+        type: string
       build_args:
         description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
         required: false
         type: string
-        default: ''
-      build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
-        required: false
-        type: string
-        default: 'linux/amd64,linux/arm64,linux/arm/v7'
+        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
 
 permissions:
   packages: write
@@ -57,28 +78,34 @@ jobs:
     outputs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
+      IMAGE_TAG: ${{ steps.set_vars.outputs.IMAGE_TAG }}
       BUILD_TRIGGER_DESCRIPTION: ${{ steps.set_vars.outputs.BUILD_TRIGGER_DESCRIPTION }}
-      BUILD_CONTEXT: ${{ steps.determine-context.outputs.build_context }}
+      BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
+      BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Output inputs for debugging
+        run: |
+          echo "The build tag is ${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
+          echo "The build context is ${{ github.event.inputs.build_context || inputs.build_context }}"
+          echo "The docker image name is ${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
+          echo "The build args are ${{ github.event.inputs.build_args || inputs.build_args }}"
+          echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
+          echo "The docker file is ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}"
+
       - name: Determine Docker Context
         id: determine-context
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            BUILD_CONTEXT="${{ github.event.inputs.build_context }}"
-          else
-            BUILD_CONTEXT="${{ inputs.build_context }}"
-          fi
-          echo "build_context=$BUILD_CONTEXT" >> $GITHUB_OUTPUT
+          echo "BUILD_CONTEXT=${{ github.event.inputs.build_context || inputs.build_context }}" >> $GITHUB_OUTPUT
 
       - name: Check context exist
         run: |
-          if [ ! -d "${{ steps.determine-context.outputs.build_context }}" ]; then
-            echo "Docker context ${{ steps.determine-context.outputs.build_context }} does not exist"
+          if [ ! -d "${{ steps.determine-context.outputs.BUILD_CONTEXT }}" ]; then
+            echo "Docker context ${{ steps.determine-context.outputs.BUILD_CONTEXT }} does not exist"
             exit 1
           fi
 
@@ -86,11 +113,18 @@ jobs:
         id: set_vars
         run: |
           CONTEXT="${{ steps.determine-context.outputs.build_context }}"
-          TAG="${{ github.event.inputs.build_tag || inputs.build_tag }}"
+          DOKCER_IMAGE_TAG="${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
+          if [ -z "${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}" ]; then
+            DOCKER_IMAGE_NAME=$(basename $CONTEXT)
+          else
+            DOCKER_IMAGE_NAME="${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
+          fi
           {
-            echo "IMAGE_FULL_NAME=${{ github.actor }}/$(basename $CONTEXT):$TAG"
-            echo "IMAGE_NAME=${{ github.actor }}/$(basename $CONTEXT)"
-            echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image ${{ github.actor }}/$(basename $CONTEXT):$TAG"
+            echo "IMAGE_FULL_NAME=${{ github.actor }}/${DOCKER_IMAGE_NAME}:${DOKCER_IMAGE_TAG}"
+            echo "IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
+            echo "IMAGE_TAG=$DOKCER_IMAGE_TAG"
+            echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
+            echo "BUILD_TRIGGER_DESCRIPTION=Build and push Docker image  ${{ github.actor }}/$DOCKER_IMAGE_NAME:${DOKCER_IMAGE_TAG}"
           } >> $GITHUB_OUTPUT
         
 
@@ -100,14 +134,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Build trigger description
+      - name: Output build description
         run: |
-          echo "The image full name is ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
-          echo "The image name is ${{ needs.setup.outputs.IMAGE_NAME }}"
-          echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
-          echo "The docker context is ${{ needs.setup.outputs.BUILD_CONTEXT }}"
-          echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
-          echo "The docker args are ${{ github.event.inputs.build_args || inputs.build_args }}"
+          echo "Build description: ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
+          echo "Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
+          echo "Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
+          echo "Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
+          echo "Build input args: ${{ github.event.inputs.build_args || inputs.build_args }}"
+          echo "Build platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
+          echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
+          echo "Docker tag: ${{ needs.setup.outputs.IMAGE_TAG }}"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -152,6 +188,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ needs.setup.outputs.BUILD_CONTEXT }}
+          file: ${{ needs.setup.outputs.BUILD_FILE }}
           push: true
           tags: |
             ${{ needs.setup.outputs.IMAGE_FULL_NAME }}

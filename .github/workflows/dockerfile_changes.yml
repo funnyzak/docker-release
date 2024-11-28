@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - '**/Dockerfile'
-
+      - '**/Dockerfile.*'
 
 permissions:
   contents: write
@@ -32,19 +32,20 @@ jobs:
         id: set-matrix
         run: |
           echo "All changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
-          CONTEXTS=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split(" ") | map(select(length>0)) | {dockerfile_context: map(sub("/[^/]+$"; ""))}' | jq -c .)
-          echo "List of Dockerfile contexts: $CONTEXTS"
-          echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
+          DOCKER_FILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split(" ") | map(select(length>0)) | {dockerfile: map(.)}' | jq '.dockerfile |= map(gsub("\\n"; ""))' -c)
+          echo "List of Dockerfile: $DOCKER_FILES"
+          echo "matrix=$DOCKER_FILES" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile_context.length }} > 0
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile.length }} > 0
     strategy:
       matrix: ${{ fromJson(needs.check_dockerfiles.outputs.matrix) }}
     uses: ./.github/workflows/publish.yml
     with:
-      build_context: ${{ matrix.dockerfile_context }}
-      build_tag: nightly
+      docker_file_name: $(echo ${{ matrix.dockerfile }} | awk -F'/' '{print $NF}')
+      build_context: $(dirname ${{ matrix.dockerfile }})
+      docker_tag: nightly
       build_args: BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       build_platforms: linux/amd64,linux/arm64
     secrets: inherit

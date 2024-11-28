@@ -1,4 +1,4 @@
 #!/bin/bash
-bash /opt/canal/${CANAL_COMPONENT_NAME}/bin/startup.sh
+bash /opt/canal/canal-${CANAL_NAME}/bin/startup.sh
 sleep 3
-tail -f /opt/canal/${CANAL_COMPONENT_NAME}/logs/adapter/adapter.log
+tail -f /opt/canal/canal-${CANAL_NAME}/logs/${CANAL_NAME}/${CANAL_NAME}.log

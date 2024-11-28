@@ -186,7 +186,7 @@ services:
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub)
 ![Docker Version](https://img.shields.io/docker/v/funnyzak/request-hub/latest)
 
- [RequestHub](https://github.com/kyledayton/requesthub) 用以接收、记录和代理HTTP请求。 该镜像支持 `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`。
+ [RequestHub](https://github.com/kyledayton/requesthub) 用以接收、记录和代理HTTP请求。 该镜像支持 `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x`。
 
 拉取镜像：
 <details>
