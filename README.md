@@ -19,6 +19,7 @@ Current images are as follows:
 - `funnyzak/canal-adapter:latest`: The Canal-Adaptor image ([Hub](https://hub.docker.com/r/funnyzak/canal-adapter)).
 - `funnyzak/canal-deployer:latest`: The Canal-Deployer image ([Hub](https://hub.docker.com/r/funnyzak/canal-deployer)).
 - `funnyzak/canal-admin:latest`: The Canal-Admin image ([Hub](https://hub.docker.com/r/funnyzak/canal-admin)).
+- `funnyzak/hello-world:nightly`: The Hello-World image ([Hub](https://hub.docker.com/r/funnyzak/hello-world)).
 
 
 ## Services
