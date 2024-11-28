@@ -41,7 +41,7 @@ jobs:
     if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile_context.length }} > 0
     strategy:
       matrix: ${{ fromJson(needs.check_dockerfiles.outputs.matrix) }}
-    uses: ./.github/workflows/image_publish.yml
+    uses: ./.github/workflows/publish.yml
     with:
       build_context: ${{ matrix.dockerfile_context }}
       build_tag: nightly

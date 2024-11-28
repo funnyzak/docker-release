@@ -1,0 +1,52 @@
+name: Dispatch all Dockerfile version
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_tag:
+        description: 'Docker image tag, e.g. latest'
+        required: true
+        type: string
+        default: 'latest'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64,linux/arm/v7'
+
+permissions:
+  contents: write
+  packages: write
+
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set matrix
+        id: set-matrix
+        run: |
+          ALL_DOCKER_FILES=$(find . -name Dockerfile | xargs -I {} dirname {} | sort -u)
+          CONTEXTS=$(echo '${ ALL_DOCKER_FILES }' | jq -R -s 'split("\n") | map(select(length>0)) | {dockerfile_context: map(sub("/[^/]+$"; ""))}' | jq -c .)
+          echo "List of Dockerfile contexts: $CONTEXTS"
+          echo "matrix=$CONTEXTS" >> $GITHUB_ENV
+
+  docker_build:
+    needs: setup
+    if: ${{ fromJson(needs.setup.outputs.matrix).dockerfile_context.length }} > 0
+    strategy:
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+    uses: ./.github/workflows/publish.yml
+    with:
+      build_context: ${{ matrix.dockerfile_context }}
+      build_tag: ${{ github.event.inputs.build_tag }}
+      build_args: BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+      build_platforms: ${{ github.event.inputs.build_platforms }}
+    secrets: inherit

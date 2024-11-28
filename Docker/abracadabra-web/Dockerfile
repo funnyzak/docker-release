@@ -1,7 +1,14 @@
 FROM node:21 AS build
 
-LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
-      org.label-schema.url="https://yycc.dev"
+ARG BUILD_DATE
+ARG VERSION=
+
+LABEL org.label-schema.name="Abracadabra_demo" \
+      org.label-schema.description="Abracadabra_demo" \
+      org.label-schema.version="${VERSION}" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vendor="Leon<silenceace@gmail.com>" \
+      org.label-schema.url="https://github.com/funnyzak/docker-publish"
       
 WORKDIR /app
 RUN git clone https://github.com/SheepChef/Abracadabra_demo .

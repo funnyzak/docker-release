@@ -20,7 +20,7 @@ LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="${CANAL_COMPONENT_NAME}" \
       org.label-schema.version="${CANAL_COMPONENT_VERSION}" \
       org.label-schema.description="${CANAL_COMPONENT_NAME}" \
-      org.label-schema.url="https://yycc.dev" \
+      org.label-schema.url="https://github.com/funnyzak/docker-publish" \
       org.label-schema.schema-version="${CANAL_COMPONENT_VERSION}"
 
 ENV TZ=Asia/Shanghai \

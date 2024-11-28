@@ -21,7 +21,7 @@ LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="${COMPONENT_NAME}" \
       org.label-schema.version="${VERSION}" \
       org.label-schema.description="${COMPONENT_NAME}" \
-      org.label-schema.url="https://yycc.dev" \
+      org.label-schema.url="https://github.com/funnyzak/docker-publish" \
       org.label-schema.build-date="${BUILD_DATE}"
 
 ENV TZ=Asia/Shanghai \
