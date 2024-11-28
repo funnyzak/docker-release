@@ -14,9 +14,9 @@ The Docker image build directory is located at ./Docker. You can also download t
 
 ## Docker Images
 
-The images have been released to Docker Hub, and the domestic mirror address `registry.cn-beijing.aliyuncs.com` is provided. Meanwhile, they are also synchronized to the GHCR Container Registry (`ghcr.io`).
+The images have been released to Docker Hub, and the domestic mirror address, `registry.cn-beijing.aliyuncs.com`, is provided.  Meanwhile, they are also synchronized to the GHCR Container Registry (`ghcr.io`).
 
-The images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the pages of Docker Hub or GHCR Container Registry.
+The images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
 
 Current images are as follows:
 
