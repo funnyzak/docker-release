@@ -21,7 +21,7 @@ on:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
-        default: 'linux/amd64,linux/arm64'
+        default: 'linux/amd64'
       docker_image_name:
         description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
         required: false
@@ -54,7 +54,7 @@ on:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
-        default: 'linux/amd64,linux/arm64'
+        default: 'linux/amd64'
       docker_image_name:
         description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
         required: false
