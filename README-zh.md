@@ -1,22 +1,12 @@
-# Docker 镜像发布
+# 镜像发布
 
-本仓库主要用于发布各种 Docker 镜像。
-
-## 目录
-
-Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行构建。
-
-- `./Docker/y-webrtc-signaling`: 构建 `funnyzak/y-webrtc-signaling:latest` 镜像。
-- `./Docker/abracadabra-web`: 构建 `funnyzak/abracadabra-web:latest` 镜像。
-- `./Docker/libreoffice-server`: 构建 `funnyzak/libreoffice-server:latest` 镜像。
-- `./Docker/request-hub`: 构建 `funnyzak/request-hub:latest` 镜像。
-- `./Docker/canal`: 构建 `funnyzak/canal-adapter:latest`、`funnyzak/canal-deployer:latest`、`funnyzak/canal-admin:latest` 镜像。
-
-## 镜像
+用于发布各种 Docker 镜像。
 
 镜像已发布至 Docker Hub，并提供国内镜像地址：`registry.cn-beijing.aliyuncs.com`，同时同步至 GitHub Container Registry (`ghcr.io`)。
 
-镜像提供 `latest` 和 `nightly` 标签（如有）。其他版本请参见 Docker Hub 或 GitHub Container Registry 页面。
+## 镜像
+
+每个镜像含 `latest` 和 `nightly` 标签（如有）。其他版本请参见 Docker Hub 或 GitHub Container Registry 页面。
 
 现有镜像如下：
 
@@ -28,7 +18,17 @@ Docker 镜像的构建目录位于 `./Docker`，也可下载相应目录自行�
 - `funnyzak/canal-deployer:latest`: Canal-Deployer 镜像 ([Hub](https://hub.docker.com/r/funnyzak/canal-deployer))。
 - `funnyzak/canal-admin:latest`: Canal-Admin 镜像 ([Hub](https://hub.docker.com/r/funnyzak/canal-admin))。
 
----
+## 服务
+
+Docker 镜像构建目录位于 ./Docker。也可下载该目录自行构建镜像。
+
+- `./Docker/y-webrtc-signaling`: 构建 [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) 服务镜像。
+- `./Docker/abracadabra-web`: 构建 [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) 服务镜像。
+- `./Docker/libreoffice-server`: 构建 [LibreOffice-Server](https://github.com/funnyzak/libreoffice-server) 服务镜像。
+- `./Docker/request-hub`: 构建 [Request-Hub](https://github.com/kyledayton/requesthub) 服务镜像。
+- `./Docker/canal`: 构建 [Alibaba Canal](https://github.com/alibaba/canal) 服务镜像。
+
+## 使用
 
 ### y-webrtc-signaling
 

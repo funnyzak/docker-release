@@ -4,6 +4,8 @@ Used for publishing various Docker images.
 
 The images have been released to Docker Hub, and the domestic mirror address, `registry.cn-beijing.aliyuncs.com`, is provided.  Meanwhile, they are also synchronized to the GHCR Container Registry (`ghcr.io`).
 
+## Images
+
 The images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
 
 Current images are as follows:
