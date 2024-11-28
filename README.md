@@ -1,4 +1,4 @@
-# Docker Image Release
+# Docker Release
 
 Used for publishing various Docker images.
 
