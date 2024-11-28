@@ -1,4 +1,4 @@
-FROM alpine:3.20.3 as build
+FROM alpine:3.20.3 AS build
 
 ARG CANAL_COMPONENT_VERSION=1.1.6
 ENV CANAL_DOWNLOAD_NAME=canal.server
@@ -11,21 +11,16 @@ RUN apk add --no-cache curl tar \
     && tar -xzf ${CANAL_DOWNLOAD_NAME}.tar.gz -C /opt/canal/${CANAL_COMPONENT_NAME} \
     && rm ${CANAL_DOWNLOAD_NAME}.tar.gz
 
-# Final stage
-FROM openjdk:11-jre-slim
+FROM openjdk:11-jre-slim AS runtime
 
-ARG BUILD_DATE
-ARG VCS_REF
 ARG CANAL_COMPONENT_VERSION=1.1.6
-ARG CANAL_COMPONENT_NAME=canal-server
+ENV CANAL_COMPONENT_NAME=canal-server
 
 LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="${CANAL_COMPONENT_NAME}" \
       org.label-schema.description="${CANAL_COMPONENT_NAME}" \
       org.label-schema.url="https://yycc.dev" \
-      org.label-schema.schema-version="${CANAL_COMPONENT_VERSION}" \
-      org.label-schema.vcs-type="Git" \
-      org.label-schema.vcs-ref="${VCS_REF}"
+      org.label-schema.schema-version="${CANAL_COMPONENT_VERSION}"
 
 ENV TZ=Asia/Shanghai \
     LC_ALL=C.UTF-8 \
