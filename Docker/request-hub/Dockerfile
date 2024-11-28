@@ -19,7 +19,7 @@ LABEL org.label-schema.name="requesthub" \
       org.label-schema.version="${VERSION}" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
-      org.label-schema.url="https://github.com/funnyzak/docker-publish"
+      org.label-schema.url="https://github.com/funnyzak/docker-release"
       
       
 RUN apk add --no-cache ca-certificates tzdata

@@ -8,10 +8,10 @@ on:
         type: string
         default: 'latest'
       build_context:
-        description: 'Docker build context, default is current directory, e.g. ./Docker/request-hub'
+        description: 'Docker build context, default is current directory, e.g. ./Docker/hello-world'
         required: true
         type: string
-        default: './Docker/request-hub'
+        default: './Docker/hello-world'
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
         required: false
@@ -23,7 +23,7 @@ on:
         type: string
         default: 'linux/amd64'
       docker_image_name:
-        description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
+        description: 'Docker image name, e.g. hello-world, default is the last part of the build context. If the build context is ./Docker/hello-world, the image name is hello-world'
         required: false
         default: ''
         type: string
@@ -41,10 +41,10 @@ on:
         type: string
         default: 'latest'
       build_context:
-        description: 'Docker build context, default is current directory, e.g. ./Docker/request-hub'
+        description: 'Docker build context, default is current directory, e.g. ./Docker/hello-world'
         required: true
         type: string
-        default: './Docker/request-hub'
+        default: './Docker/hello-world'
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
         required: false
@@ -56,7 +56,7 @@ on:
         type: string
         default: 'linux/amd64'
       docker_image_name:
-        description: 'Docker image name, e.g. request-hub, default is the last part of the build context. If the build context is ./Docker/request-hub, the image name is request-hub'
+        description: 'Docker image name, e.g. hello-world, default is the last part of the build context. If the build context is ./Docker/hello-world, the image name is hello-world'
         required: false
         default: ''
         type: string
@@ -82,6 +82,7 @@ jobs:
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
       BUILD_PLATFORMS: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
+      BUILD_ARGS: ${{ steps.set_vars.outputs.BUILD_ARGS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -119,10 +120,17 @@ jobs:
           else
             DOCKER_IMAGE_NAME="${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
           fi
+
+          BUILD_ARGS="${{ github.event.inputs.build_args || inputs.build_args }}"
+          if [ -z "$BUILD_ARGS" ]; then
+            BUILD_ARGS="BUILD_DATE=$(date +%Y-%m-%d)"
+          fi
+
           {
             echo "IMAGE_FULL_NAME=${{ github.actor }}/${DOCKER_IMAGE_NAME}:${DOKCER_IMAGE_TAG}"
             echo "IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
             echo "IMAGE_TAG=$DOKCER_IMAGE_TAG"
+            echo "BUILD_ARGS=$BUILD_ARGS"
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
@@ -161,31 +169,28 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Convert args to list
-        id: convert-args
-        run: |
-          if [ -n "${{ github.event.inputs.build_args || inputs.build_args }}" ]; then
-            IFS=',' read -r -a build_args <<< "${{ github.event.inputs.build_args || inputs.build_args }}"
-          else
-            BUILD_ARGS=()
-          fi
-          formatted_build_args=$(printf "%s\n" "${build_args[@]}" | sed 's/^/    /')
-          echo "BUILD_ARGS=${formatted_build_args}" >> $GITHUB_OUTPUT
-
       - name: Output build description
         id: output_build_description
         run: |
-          echo "Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
-          echo "Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
-          echo "Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
-          echo "Build input args: ${{ github.event.inputs.build_args || inputs.build_args }}"
-          echo "Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
+          echo "Docker Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
+          echo "Docker Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
+          echo "Docker Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
+          echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
           echo "Docker tag: ${{ needs.setup.outputs.IMAGE_TAG }}"
-          echo "Docker build args: ${{ steps.convert-args.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.convert-args.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS }} on ${{ github.run_id }}"
+          echo "Docker build args: ${{ needs.setup.outputs.BUILD_ARGS }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
+      
+      - name: Split Build Args
+        id: split_build_args
+        run: |
+          IFS=',' read -r -a build_args <<< "${{ needs.setup.outputs.BUILD_ARGS }}"
+          for i in {1..7}; do
+            eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
+            echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
+          done
 
       - name: Docker build and push
         uses: docker/build-push-action@v6
@@ -198,11 +203,18 @@ jobs:
             registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
           platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
-          build-args: ${{ steps.convert-args.outputs.BUILD_ARGS }}
+          build-args: |
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_1 }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_2 }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_3 }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_4 }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_5 }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_6 }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS_7 }}
 
       - name: Send Apprise Notification
         run: |
           curl -X POST \
             -F "tag=devops" \
-            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }} DockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags GHCR: https://github.com/funnyzak/docker-release/pkgs/container/${{ needs.setup.outputs.IMAGE_NAME}}/versions" \
+            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }} DockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags" \
             "${{ secrets.APPRISE_HTTP_URL }}"

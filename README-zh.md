@@ -262,6 +262,9 @@ Canal 是阿里巴巴 MySQL 数据库 binlog 增量订阅&消费组件。
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags)
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin/tags)
 
+均安装于`/opt/canal`目录下。 如 `canal-adapter` 服务的安装目录位于 `/opt/canal/canal-adapter` 目录下。
+
+
 拉取镜像：
 
 <details>

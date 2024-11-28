@@ -1,18 +1,25 @@
 FROM alpine:3.20.3 AS build
 
+ARG BUILD_DATE
 ARG VERSION=1.1.7
 ARG CANAL_NAME=adapter
-ARG BUILD_DATE
 
-ENV DOWNLOAD_NAME=canal.${CANAL_NAME}
 ENV CANAL_DIR_NAME=canal-${CANAL_NAME}
-ENV DOWNLOAD_LINK=https://github.com/alibaba/canal/releases/download/canal-${VERSION}/${DOWNLOAD_NAME}-${VERSION}.tar.gz
 
 RUN apk add --no-cache curl tar \
-    && mkdir -p /opt/canal/${CANAL_DIR_NAME} \
-    && curl -fSL "${DOWNLOAD_LINK}" -o ${DOWNLOAD_NAME}.tar.gz \
-    && tar -xzf ${DOWNLOAD_NAME}.tar.gz -C /opt/canal/${CANAL_DIR_NAME} \
-    && rm ${DOWNLOAD_NAME}.tar.gz
+    && mkdir -p /opt/canal/${CANAL_DIR_NAME}
+
+# eg. https://github.com/alibaba/canal/releases/download/canal-1.1.8-alpha-3/canal.adapter-1.1.8-SNAPSHOT.tar.gz
+# eg. https://github.com/alibaba/canal/releases/download/canal-1.1.7/canal.adapter-1.1.7.tar.gz
+
+RUN if echo ${VERSION} | grep -q "-"; then \
+        DOWNLOAD_NAME=canal.${CANAL_NAME}-$(echo ${VERSION} | awk -F '-' '{print $1}')-SNAPSHOT.tar.gz; \
+    else \
+        DOWNLOAD_NAME=canal.${CANAL_NAME}-${VERSION}.tar.gz; \
+    fi \
+    && curl -fSL "https://github.com/alibaba/canal/releases/download/canal-${VERSION}/${DOWNLOAD_NAME}" -o ${DOWNLOAD_NAME} \
+    && tar -xzf ${DOWNLOAD_NAME} -C /opt/canal/${CANAL_DIR_NAME} \
+    && rm ${DOWNLOAD_NAME}
 
 FROM openjdk:11-jre-slim AS runtime
 
@@ -24,7 +31,7 @@ LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="canal-${CANAL_NAME}" \
       org.label-schema.version="${VERSION}" \
       org.label-schema.description="canal-${CANAL_NAME}" \
-      org.label-schema.url="https://github.com/funnyzak/docker-publish" \
+      org.label-schema.url="https://github.com/funnyzak/docker-release" \
       org.label-schema.build-date="${BUILD_DATE}"
 
 ENV TZ=Asia/Shanghai \

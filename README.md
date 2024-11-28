@@ -257,6 +257,8 @@ Currently, three images are provided:
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags)
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin)
 
+All are installed under the `/opt/canal` directory. For example, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
+
 **Pulling the Images**:
 
 <details>
