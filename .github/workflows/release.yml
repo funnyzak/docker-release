@@ -82,6 +82,7 @@ jobs:
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
       BUILD_PLATFORMS: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
+      BUILD_ARGS: ${{ steps.set_vars.outputs.BUILD_ARGS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -119,10 +120,17 @@ jobs:
           else
             DOCKER_IMAGE_NAME="${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
           fi
+
+          BUILD_ARGS="${{ github.event.inputs.build_args || inputs.build_args }}"
+          if [ -z "$BUILD_ARGS" ]; then
+            BUILD_ARGS="BUILD_DATE=$(date +%Y-%m-%d)"
+          fi
+
           {
             echo "IMAGE_FULL_NAME=${{ github.actor }}/${DOCKER_IMAGE_NAME}:${DOKCER_IMAGE_TAG}"
             echo "IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
             echo "IMAGE_TAG=$DOKCER_IMAGE_TAG"
+            echo "BUILD_ARGS=$BUILD_ARGS"
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
@@ -161,32 +169,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Convert args to list
-        id: convert-args
-        run: |
-          if [ -n "${{ github.event.inputs.build_args || inputs.build_args }}" ]; then
-            IFS=',' read -r -a build_args <<< "${{ github.event.inputs.build_args || inputs.build_args }}"
-          else
-            BUILD_ARGS=()
-          fi
-          formatted_build_args=$(printf "%s\n" "${build_args[@]}" | sed 's/^/    /')
-          echo "BUILD_ARGS=${formatted_build_args}" >> $GITHUB_OUTPUT
-
       - name: Output build description
         id: output_build_description
         run: |
-          echo "Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
-          echo "Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
-          echo "Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
-          echo "Build input args: ${{ github.event.inputs.build_args || inputs.build_args }}"
-          echo "Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
+          echo "Docker Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
+          echo "Docker Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
+          echo "Docker Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
+          echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
           echo "Docker tag: ${{ needs.setup.outputs.IMAGE_TAG }}"
-          echo "Docker build args: ${{ steps.convert-args.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.convert-args.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS }} on ${{ github.run_id }}"
+          echo "Docker build args: ${{ needs.setup.outputs.BUILD_ARGS }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
-
+      
+      - name: Split Build Args
+        id: split_build_args
+        run: |
+          IFS=',' read -r -a build_args <<< "${{ needs.setup.outputs.BUILD_ARGS }}"
+          formatted_build_args=$(printf "%s\n" "${build_args[@]}" | sed 's/^/    /')
+          echo "Formatted build args: $formatted_build_args"
+          echo "BUILD_ARGS=$formatted_build_args" >> $GITHUB_OUTPUT
       - name: Docker build and push
         uses: docker/build-push-action@v6
         with:
@@ -199,11 +202,12 @@ jobs:
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
           platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
           build-args: |
-            ${{ steps.convert-args.outputs.BUILD_ARGS }}
+            ${{ steps.split_build_args.outputs.BUILD_ARGS }}
+
 
       - name: Send Apprise Notification
         run: |
           curl -X POST \
             -F "tag=devops" \
-            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }} DockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags GHCR: https://github.com/funnyzak/docker-release/pkgs/container/${{ needs.setup.outputs.IMAGE_NAME}}/versions" \
+            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }} DockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags" \
             "${{ secrets.APPRISE_HTTP_URL }}"
