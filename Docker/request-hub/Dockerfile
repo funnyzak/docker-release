@@ -11,6 +11,9 @@ RUN apk add --no-cache git && \
 
 FROM alpine:3.19 AS final
 
+LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
+      org.label-schema.url="https://yycc.dev"
+
 RUN apk add --no-cache ca-certificates tzdata
 
 WORKDIR /app

@@ -1,8 +1,8 @@
 FROM alpine:3.20.3 AS build
 
-ARG CANAL_COMPONENT_VERSION=1.1.6
-ENV CANAL_DOWNLOAD_NAME=canal.server
-ENV CANAL_COMPONENT_NAME=canal-server
+ARG CANAL_COMPONENT_VERSION=1.1.7
+ENV CANAL_DOWNLOAD_NAME=canal.adapter
+ENV CANAL_COMPONENT_NAME=canal-adapter
 ENV CANAL_ADAPTER_DOWNLOAD_URL=https://github.com/alibaba/canal/releases/download/canal-${CANAL_COMPONENT_VERSION}/${CANAL_DOWNLOAD_NAME}-${CANAL_COMPONENT_VERSION}.tar.gz
 
 RUN apk add --no-cache curl tar \
@@ -13,8 +13,8 @@ RUN apk add --no-cache curl tar \
 
 FROM openjdk:11-jre-slim AS runtime
 
-ARG CANAL_COMPONENT_VERSION=1.1.6
-ENV CANAL_COMPONENT_NAME=canal-server
+ARG CANAL_COMPONENT_VERSION=1.1.7
+ENV CANAL_COMPONENT_NAME=canal-adapter
 
 LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="${CANAL_COMPONENT_NAME}" \

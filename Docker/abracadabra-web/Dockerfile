@@ -1,5 +1,8 @@
 FROM node:21 AS build
 
+LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
+      org.label-schema.url="https://yycc.dev"
+      
 WORKDIR /app
 RUN git clone https://github.com/SheepChef/Abracadabra_demo .
 RUN npm ci 
