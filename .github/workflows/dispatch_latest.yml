@@ -18,7 +18,7 @@ on:
         type: string
         default: 'BUILD_DATE=$(date +%Y-%m-%d)'
       build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64'
         required: false
         type: string
         default: 'linux/amd64,linux/arm64,linux/arm/v7'
