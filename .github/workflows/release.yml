@@ -204,5 +204,5 @@ jobs:
         run: |
           curl -X POST \
             -F "tag=devops" \
-            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }} DockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags GHCR: https://github.com/funnyzak/docker-release/pkgs/container/${{ needs.setup.outputs.IMAGE_NAME}}/versions?filters%5Bversion_type%5D=tagged" \
+            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }}\nDockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags\nGHCR: https://github.com/funnyzak/docker-release/pkgs/container/${{ needs.setup.outputs.IMAGE_NAME}}/versions" \
             "${{ secrets.APPRISE_HTTP_URL }}"
