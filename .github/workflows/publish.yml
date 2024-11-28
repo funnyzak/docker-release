@@ -18,7 +18,7 @@ on:
         type: string
         default: 'Dockerfile'
       build_platforms:
-        description: 'Docker build platforms, e.g. linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x'
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
         default: 'linux/amd64,linux/arm64'
@@ -32,7 +32,7 @@ on:
         required: false
         type: string
         default: 'BUILD_DATE=$(date +%Y-%m-%d)'
-        
+
   workflow_dispatch:
     inputs:
       docker_tag:
@@ -51,7 +51,7 @@ on:
         type: string
         default: 'Dockerfile'
       build_platforms:
-        description: 'Docker build platforms, e.g. linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x'
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
         default: 'linux/amd64,linux/arm64'
