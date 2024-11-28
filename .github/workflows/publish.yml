@@ -77,7 +77,7 @@ jobs:
     outputs:
       IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
-      IMAGE_TAG: ${{ steps.set_vars.outputs.TAG }}
+      IMAGE_TAG: ${{ steps.set_vars.outputs.IMAGE_TAG }}
       BUILD_TRIGGER_DESCRIPTION: ${{ steps.set_vars.outputs.BUILD_TRIGGER_DESCRIPTION }}
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
