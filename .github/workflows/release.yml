@@ -185,6 +185,7 @@ jobs:
           echo "Docker build args: ${{ steps.convert-args.outputs.BUILD_ARGS }}"
           BUILD_TRIGGER_DESCRIPTION="Build triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.convert-args.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
+          echo "Description: $BUILD_TRIGGER_DESCRIPTION"
 
       - name: Docker build and push
         uses: docker/build-push-action@v6
