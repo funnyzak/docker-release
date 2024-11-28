@@ -1,10 +1,10 @@
 # Docker Image Release
 
-This repository is mainly used for releasing Docker images.
+Used for publishing various Docker images.
 
-## Directory
+## Docker Directory
 
-The build directory of Docker images is located at `./Docker`. You can also download the corresponding directory to build it on your own.
+The Docker image build directory is located at ./Docker. You can also download the directory to build the images yourself.
 
 - `./Docker/y-webrtc-signaling`: Build the `funnyzak/y-webrtc-signaling:latest` image.
 - `./Docker/abracadabra-web`: Build the `funnyzak/abracadabra-web:latest` image.
@@ -12,7 +12,7 @@ The build directory of Docker images is located at `./Docker`. You can also down
 - `./Docker/request-hub`: Build the `funnyzak/request-hub:latest` image.
 - `./Docker/canal`: Build the `funnyzak/canal-adapter:latest`, `funnyzak/canal-deployer:latest`, and `funnyzak/canal-admin:latest` images.
 
-## Images
+## Docker Images
 
 The images have been released to Docker Hub, and the domestic mirror address `registry.cn-beijing.aliyuncs.com` is provided. Meanwhile, they are also synchronized to the GHCR Container Registry (`ghcr.io`).
 
@@ -276,4 +276,4 @@ For more information, please refer to the [Canal official repository](https://gi
 
 ## Contributions
 
-Contributions of more Docker image build directories are welcomed.
+If you have any questions or suggestions, please feel free to open an issue or pull request.
