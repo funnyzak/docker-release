@@ -1,3 +1,3 @@
 FROM scratch
-COPY helloworld_amd64 /hi
-ENTRYPOINT ["/hi"]
+COPY helloworld_amd64 /helloworld
+ENTRYPOINT ["/helloworld"]
