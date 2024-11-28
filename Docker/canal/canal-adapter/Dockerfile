@@ -20,19 +20,19 @@ ARG BUILD_DATE
 ARG VERSION=1.1.7
 ARG CANAL_NAME=adapter
 
-ENV CANAL_DIR_NAME=canal-${CANAL_NAME}
-
 LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
-      org.label-schema.name="${CANAL_DIR_NAME}" \
+      org.label-schema.name="canal-${CANAL_NAME}" \
       org.label-schema.version="${VERSION}" \
-      org.label-schema.description="${CANAL_DIR_NAME}" \
+      org.label-schema.description="canal-${CANAL_NAME}" \
       org.label-schema.url="https://github.com/funnyzak/docker-publish" \
       org.label-schema.build-date="${BUILD_DATE}"
 
 ENV TZ=Asia/Shanghai \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8 \
-    VERSION=${VERSION}
+    VERSION=${VERSION} \
+    CANAL_NAME=${CANAL_NAME} \
+    CANAL_DIR_NAME=canal-${CANAL_NAME}
 
 RUN set -eux \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
@@ -43,7 +43,7 @@ COPY --from=build /opt/canal/${CANAL_DIR_NAME} /opt/canal/${CANAL_DIR_NAME}
 
 WORKDIR /opt/canal/${CANAL_DIR_NAME}
 
-COPY entrypoint.sh /entrypoint.sh
+COPY ../entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
