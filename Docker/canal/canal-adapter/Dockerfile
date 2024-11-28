@@ -13,6 +13,7 @@ RUN apk add --no-cache curl tar \
 
 FROM openjdk:11-jre-slim AS runtime
 
+ARG BUILD_DATE
 ARG CANAL_COMPONENT_VERSION=1.1.7
 ENV CANAL_COMPONENT_NAME=canal-adapter
 
@@ -21,11 +22,13 @@ LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.version="${CANAL_COMPONENT_VERSION}" \
       org.label-schema.description="${CANAL_COMPONENT_NAME}" \
       org.label-schema.url="https://yycc.dev" \
+      org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.schema-version="${CANAL_COMPONENT_VERSION}"
 
 ENV TZ=Asia/Shanghai \
     LC_ALL=C.UTF-8 \
-    LANG=C.UTF-8
+    LANG=C.UTF-8 \
+    VERSION=${CANAL_COMPONENT_VERSION}
 
 RUN set -eux \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \

@@ -45,5 +45,6 @@ jobs:
     with:
       docker_context: ${{ matrix.dockerfile_context }}
       docker_tag: nightly
+      build_args: BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       build_platforms: linux/amd64,linux/arm64
     secrets: inherit

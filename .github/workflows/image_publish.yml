@@ -12,6 +12,11 @@ on:
         required: true
         type: string
         default: './Docker/y-webrtc-signaling'
+      build_args:
+        description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
+        required: false
+        type: string
+        default: ''
       build_platforms:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
         required: false
@@ -29,6 +34,11 @@ on:
         required: true
         type: string
         default: './Docker/y-webrtc-signaling'
+      build_args:
+        description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
+        required: false
+        type: string
+        default: ''
       build_platforms:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7'
         required: false
@@ -97,6 +107,7 @@ jobs:
           echo "The build trigger description is ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }}"
           echo "The docker context is ${{ needs.setup.outputs.DOCKER_CONTEXT }}"
           echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
+          echo "The docker args are ${{ github.event.inputs.build_args || inputs.build_args }}"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -118,12 +129,23 @@ jobs:
           registry: registry.cn-beijing.aliyuncs.com
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ALIYUNCS_PASSWORD }}
+
       - name: Log in to GHCR
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Convert args to list
+        id: convert-args
+        run: |
+          if [ -n "${{ github.event.inputs.build_args || inputs.build_args }}" ]; then
+            IFS=',' read -r -a build_args <<< "${{ github.event.inputs.build_args || inputs.build_args }}"
+          else
+            BUILD_ARGS=()
+          fi
+          echo "BUILD_ARGS=${BUILD_ARGS[*]}" >> $GITHUB_OUTPUT
 
       - name: Docker build and push
         uses: docker/build-push-action@v3
@@ -135,6 +157,7 @@ jobs:
             registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
           platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
+          build-args: ${{ steps.convert-args.outputs.BUILD_ARGS }}
 
       - name: Send Apprise Notification
         run: |
