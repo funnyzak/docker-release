@@ -75,11 +75,7 @@ jobs:
       - name: Determine Docker Context
         id: determine-context
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            BUILD_CONTEXT="${{ github.event.inputs.build_context }}" >> $GITHUB_OUTPUT
-          else
-            BUILD_CONTEXT="${{ inputs.build_context }}" >> $GITHUB_OUTPUT
-          fi
+          echo "BUILD_CONTEXT=${{ github.event.inputs.build_context || inputs.build_context }}" >> $GITHUB_OUTPUT
 
       - name: Check context exist
         run: |
