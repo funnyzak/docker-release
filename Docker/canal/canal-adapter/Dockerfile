@@ -11,6 +11,7 @@ RUN apk add --no-cache curl tar \
 
 # eg. https://github.com/alibaba/canal/releases/download/canal-1.1.8-alpha-3/canal.adapter-1.1.8-SNAPSHOT.tar.gz
 # eg. https://github.com/alibaba/canal/releases/download/canal-1.1.7/canal.adapter-1.1.7.tar.gz
+
 RUN if echo ${VERSION} | grep -q "-"; then \
         DOWNLOAD_NAME=canal.${CANAL_NAME}-$(echo ${VERSION} | awk -F '-' '{print $1}')-SNAPSHOT.tar.gz; \
     else \

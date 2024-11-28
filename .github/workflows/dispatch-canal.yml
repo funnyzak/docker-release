@@ -1,0 +1,60 @@
+name: Release Canal Images
+on:
+  workflow_dispatch:
+    inputs:
+      docker_tag:
+        description: 'Docker image tag, e.g. latest'
+        required: true
+        type: string
+        default: 'latest'
+      canal_version:
+        description: 'Canal version, e.g. 1.1.8、 1.1.8-alpha-3'
+        required: true
+        type: string
+        default: '1.1.8-alpha-3'
+      build_components:
+        description: 'Build component, e.g. adapter, admin, deployer'
+        required: true
+        type: string
+        default: 'adapter,admin,deployer'
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        required: false
+        type: string
+        default: 'linux/amd64,linux/arm64'
+        
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  canal_adapter_release:
+    if: contains('${{ github.event.inputs.build_components }}', 'adapter')
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/canal-adapter'
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=adapter,VERSION=${{ github.event.inputs.canal_version }}
+      build_platforms: ${{ github.event.inputs.build_platforms }}
+    secrets: inherit
+
+  canal_admin_release:
+    if: contains('${{ github.event.inputs.build_components }}', 'admin')
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/canal-adapter'
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=admin,VERSION=${{ github.event.inputs.canal_version }}
+      build_platforms: ${{ github.event.inputs.build_platforms }}
+    secrets: inherit
+
+  canal_deployer_release:
+    if: contains('${{ github.event.inputs.build_components }}', 'deployer')
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/canal-deployer'
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=deployer,VERSION=${{ github.event.inputs.canal_version }}
+      build_platforms: ${{ github.event.inputs.build_platforms }}
+    secrets: inherit
