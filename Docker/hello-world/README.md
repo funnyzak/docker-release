@@ -11,5 +11,5 @@ This is a simple "Hello, World!" program written in Go.
 ## Docker Run
 
 ```bash
-docker run --rm funnyzak/hello-world:nightly
+docker run --rm funnyzak/hello-world:latest
 ```
