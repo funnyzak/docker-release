@@ -197,7 +197,7 @@ jobs:
             ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-          platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
+          platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
           build-args: ${{ steps.convert-args.outputs.BUILD_ARGS }}
 
       - name: Send Apprise Notification
