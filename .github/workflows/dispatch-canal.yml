@@ -33,7 +33,7 @@ jobs:
     if: contains('${{ github.event.inputs.build_components }}', 'adapter')
     uses: ./.github/workflows/release.yml
     with:
-      build_context: './Docker/canal-adapter'
+      build_context: './Docker/canal/canal-adapter'
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=adapter,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
@@ -43,7 +43,7 @@ jobs:
     if: contains('${{ github.event.inputs.build_components }}', 'admin')
     uses: ./.github/workflows/release.yml
     with:
-      build_context: './Docker/canal-adapter'
+      build_context: './Docker/canal/canal-adapter'
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=admin,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
@@ -53,7 +53,7 @@ jobs:
     if: contains('${{ github.event.inputs.build_components }}', 'deployer')
     uses: ./.github/workflows/release.yml
     with:
-      build_context: './Docker/canal-deployer'
+      build_context: './Docker/canal/canal-deployer'
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: BUILD_DATE=$(date +%Y-%m-%d),CANAL_NAME=deployer,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
