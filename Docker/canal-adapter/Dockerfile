@@ -18,6 +18,7 @@ ENV CANAL_COMPONENT_NAME=canal-adapter
 
 LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="${CANAL_COMPONENT_NAME}" \
+      org.label-schema.version="${CANAL_COMPONENT_VERSION}" \
       org.label-schema.description="${CANAL_COMPONENT_NAME}" \
       org.label-schema.url="https://yycc.dev" \
       org.label-schema.schema-version="${CANAL_COMPONENT_VERSION}"
@@ -30,8 +31,8 @@ COPY --from=build /opt/canal/${CANAL_COMPONENT_NAME} /opt/canal/${CANAL_COMPONEN
 
 WORKDIR /opt/canal/${CANAL_COMPONENT_NAME}
 
-COPY entrypoint.sh entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

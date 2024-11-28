@@ -140,5 +140,5 @@ jobs:
         run: |
           curl -X POST \
             -F "tag=office,ycgo" \
-            -F "body=${{ github.event_name }}: ${{ github.repository }} ${{ github.sha }} ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }} Link: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}" \
+            -F "body=事件: ${{ github.event_name }} 仓库: ${{ github.repository }} 提交: ${{ github.sha }} 描述: ${{ needs.setup.outputs.BUILD_TRIGGER_DESCRIPTION }} Hub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}" \
             "${{ secrets.APPRISE_HTTP_URL }}"
