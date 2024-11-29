@@ -2,13 +2,11 @@
 
 Build images and publish to Docker Hub, GitHub Container Registry, and AliCloud Image Service.
 
-Aliyun mirror address: `registry.cn-beijing.aliyuncs.com`.
-
-GitHub Container Registry address: `ghcr.io`
+Aliyun mirror: `registry.cn-beijing.aliyuncs.com`.
 
 ## Images
 
-The images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
+Images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
 
 Current images are as follows:
 
@@ -24,7 +22,7 @@ Current images are as follows:
 
 ## Services
 
-The Docker image build directory is located at ./Docker. You can also download the directory to build the images yourself.
+Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
 
 - `./Docker/y-webrtc-signaling`: Build the [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) service image.
 - `./Docker/abracadabra-web`: Build the [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) service image.
