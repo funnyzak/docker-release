@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - nginx
+          - snell-server
           - abracadabra-web
           - libreoffice-server
           - y-webrtc-signaling
@@ -34,6 +35,16 @@ permissions:
   packages: write
 
 jobs:
+  snell_server_release:
+    if: ${{ github.event.inputs.choice_service == 'snell-server' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/snell-server'
+      docker_image_name: snell-server
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v8,linux/386' }}
+    secrets: inherit
   nginx_release:
     if: ${{ github.event.inputs.choice_service == 'nginx' }}
     uses: ./.github/workflows/release.yml

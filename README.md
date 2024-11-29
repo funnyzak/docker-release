@@ -11,6 +11,7 @@ Images are provided with the `latest` and `nightly` tags (if available). For oth
 Current images are as follows:
 
 - `funnyzak/nginx:latest`: The Nginx image ([Hub](https://hub.docker.com/r/funnyzak/nginx)).
+- `funnyzak/snell-server:latest`: The Snell-Server image ([Hub](https://hub.docker.com/r/funnyzak/snell-server)).
 - `funnyzak/y-webrtc-signaling:latest`: The y-webrtc-signaling signaling server image ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling)).
 - `funnyzak/abracadabra-web:latest`: The Abracadabra_demo magic demo image ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web)).
 - `funnyzak/libreoffice-server:latest`: The LibreOffice-Server image ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server)).
@@ -26,6 +27,7 @@ Current images are as follows:
 Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
 
 - `./Docker/nginx`: Build the [Nginx](https://nginx.org) service image.
+- `./Docker/snell-server`: Build the [Snell-Server](https://manual.nssurge.com/others/snell.htm) service image.
 - `./Docker/y-webrtc-signaling`: Build the [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) service image.
 - `./Docker/abracadabra-web`: Build the [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) service image.
 - `./Docker/libreoffice-server`: Build the [LibreOffice-Server](https://github.com/funnyzak/libreoffice-server) service image.
@@ -93,6 +95,70 @@ services:
 For more information, please check [Nginx](https://github.com/funnyzak/docker-release/tree/main/Docker/nginx/README.md).
 
 ---
+
+### Snell-Server
+
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/snell-server)](https://hub.docker.com/r/funnyzak/snell-server/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/snell-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/snell-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/snell-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
+
+Snell Server is a lean encrypted proxy protocol. It is designed to be simple, lightweight.
+
+This image is build from the latest source code of [Snell Server](https://manual.nssurge.com/others/snell.html). It supports `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/386` architecture. 
+
+> **Notice**: Need to use with Surge iOS or Surge Mac, both of them support Snell protocol. The latest surge-server version is v4, which is not compatible with the previous versions like before. Please upgrade both the client (Surge iOS & Surge Mac) and the server binary.
+
+**Pulling the Image**:
+
+<details>
+
+```bash
+docker pull funnyzak/snell-server
+# GHCR
+docker pull ghcr.io/funnyzak/snell-server
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/snell-server
+```
+
+</details>
+
+**Deployment**:
+
+<details>
+
+**Docker Deployment**:
+```bash
+docker run -d --name snell-server --restart always -p 12303:6180 -e PSK="5G0H4qdf32mEZx32t" funnyzak/snell-server
+```
+
+**Docker Compose Deployment**:
+```yaml
+version: '3'
+
+services:
+  snell:
+    image: funnyzak/snell-server
+    container_name: snell-server
+    environment:
+      PSK: 5G0H4qdf32mEZx32t
+      TZ: Asia/Shanghai
+      IPV6: false
+      PORT: 6180
+    restart: always
+    ports:
+      - 12303:6180
+```
+
+**Echo config file**:
+```bash
+docker exec -it snell-server cat /etc/snell-server.conf
+```
+
+</details>
+
+For more information, please check [Snell-Server](https://github.com/funnyzak/docker-release/tree/main/Docker/snell-server/README.md).
+
 
 ### y-webrtc-signaling
 
