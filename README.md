@@ -419,7 +419,7 @@ For more information, please check [Request-Hub](https://github.com/funnyzak/doc
 
 ---
 
-## Alibaba Canal
+### Alibaba Canal
 
 Alibaba Canal, a component for incremental subscription and consumption of binlogs in MySQL.  Images are built for `linux/amd64` and `linux/arm64` architectures.
 
