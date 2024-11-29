@@ -2,4 +2,6 @@
 /temp
 /test
 **/test
+**/tmp
+**/temp
 test.*

@@ -1,5 +1,6 @@
 FROM alpine:3.20.3 AS builder
 
+ARG BUILD_DATE
 ARG VERSION=1.27.3
 ENV NGINX_VERSION nginx-${VERSION}
 ENV TZ Asia/Shanghai
@@ -75,6 +76,16 @@ RUN mkdir -p ${TMP_PATH} && \
     make && make install
 
 FROM alpine:3.20.3
+
+ARG BUILD_DATE
+ARG VERSION 1.27.3
+
+LABEL org.label-schema.name="nginx" \
+      org.label-schema.description="A nginx docker image with secure configurations and some useful modules, such as ngx_http_geoip_module, ngx_http_image_filter_module, ngx_http_perl_module, ngx_http_xslt_filter_module, ngx_mail_module, ngx_stream_geoip_module, ngx_stream_module, ngx-fancyindex, headers-more-nginx-module, etc." \
+      org.label-schema.version="${VERSION}" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vendor="Leon<silenceace@gmail.com>" \
+      org.label-schema.url="https://github.com/funnyzak/docker-release"
 
 ENV TZ Asia/Shanghai
 
