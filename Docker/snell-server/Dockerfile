@@ -11,7 +11,6 @@ RUN apt-get update && \
         "linux/amd64") ARCH="amd64" ;; \
         "linux/arm64") ARCH="aarch64" ;; \
         "linux/arm/v7") ARCH="armv7l" ;; \
-        "linux/arm/v8") ARCH="arm64" ;; \
         "linux/386") ARCH="i386" ;; \
         *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
     esac && \
