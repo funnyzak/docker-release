@@ -1,13 +1,22 @@
 # Request Hub Docker
 
-Receive, Log, and Proxy HTTP requests. Base On [kyledayton/requesthub](https://github.com/kyledayton/requesthub)
-
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/request-hub?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/request-hub)](https://hub.docker.com/r/funnyzak/request-hub/)
 [![Docker Stars](https://img.shields.io/docker/stars/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/)
 
-[Docker hub image: funnyzak/request-hub](https://hub.docker.com/r/funnyzak/request-hub)
+[RequestHub](https://github.com/kyledayton/requesthub) is used to receive, record, and proxy HTTP requests. This image supports `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x`.
 
-Docker Pull Command: `docker pull funnyzak/request-hub`
+
+You can pull the images using the following commands:
+
+```bash
+docker pull funnyzak/request-hub:latest
+# GHCR
+docker pull ghcr.io/funnyzak/request-hub:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/request-hub:latest
+```
 
 ---
 

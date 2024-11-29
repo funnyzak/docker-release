@@ -1,8 +1,9 @@
 # Nginx
 
-[![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
-[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
-[![Docker Version](https://img.shields.io/docker/v/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/nginx?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/nginx/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/nginx.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/nginx/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/nginx/)
 
 A nginx docker image with secure configurations and some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
 
