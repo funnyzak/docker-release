@@ -1,0 +1,76 @@
+name: Release Choice Image
+on:
+  workflow_dispatch:
+    inputs:
+      docker_tag:
+        description: 'Docker image tag, e.g. latest'
+        required: true
+        type: string
+        default: 'latest'
+      choice_service:
+        description: 'Service to build, e.g. abracadabra-web'
+        required: true
+        default: 'hello-world'
+        type: choice
+        options:
+          - abracadabra-web
+          - libreoffice-server
+          - y-webrtc-signaling
+          - request-hub
+          - hello-world
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  abracadabra_web_release:
+    if: ${{ github.event.inputs.choice_service == 'abracadabra-web' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/abracadabra-web'
+      docker_image_name: abracadabra-web
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d)
+      build_platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x
+    secrets: inherit
+  libreoffice_server_release:
+    if: ${{ github.event.inputs.choice_service == 'libreoffice-server' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/libreoffice-server'
+      docker_image_name: libreoffice-server
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d)
+      build_platforms: linux/amd64,linux/arm64
+    secrets: inherit
+  y_webrtc_signaling_release:
+    if: ${{ github.event.inputs.choice_service == 'y-webrtc-signaling' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/y-webrtc-signaling'
+      docker_image_name: y-webrtc-signaling
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d)
+      build_platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x
+    secrets: inherit
+  request_hub_release:
+    if: ${{ github.event.inputs.choice_service == 'request-hub' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/request-hub'
+      docker_image_name: request-hub
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d)
+      build_platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/s390x
+    secrets: inherit
+  hello_world_release:
+    if: ${{ github.event.inputs.choice_service == 'hello-world' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/hello-world'
+      docker_image_name: hello-world
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: BUILD_DATE=$(date +%Y-%m-%d)
+      build_platforms: linux/amd64
+    secrets: inherit

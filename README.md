@@ -40,6 +40,10 @@ The Docker image build directory is located at ./Docker. You can also download t
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/y-webrtc-signaling)
 ![Docker Version](https://img.shields.io/docker/v/funnyzak/y-webrtc-signaling/latest)
 
+Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling).
+
+This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
+
 **Pulling the Image**:
 <details>
 
@@ -74,7 +78,7 @@ services:
 ```
 </details>
 
-For more information, please check [y-webrtc-signaling](./Docker/y-webrtc-signaling/README.md).
+For more information, please check [y-webrtc-signaling](https://github.com/funnyzak/docker-release/tree/main/Docker/y-webrtc-signaling/README.md).
 
 ---
 
@@ -83,6 +87,10 @@ For more information, please check [y-webrtc-signaling](./Docker/y-webrtc-signal
 [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/abracadabra-web/latest)](https://hub.docker.com/r/funnyzak/abracadabra-web/tags)
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/abracadabra-web)
 ![Docker Version](https://img.shields.io/docker/v/funnyzak/abracadabra-web/latest)
+
+Abracadabra (魔曰) is an instant text encryption/de-sensitization tool, which can also be used for file encryption, based on C++ 11. More information can be found at [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo).
+
+This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `inux/ppc64le`, `linux/s390x` architectures.
 
 **Pulling the Image**:
 <details>
@@ -101,7 +109,12 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 
 **Docker Deployment Example**:
 ```bash
+
 docker run -d --name abracadabra-web -p 8080:80 funnyzak/abracadabra-web:latest
+# ghcr
+docker run -d --name abracadabra-web -p 8080:80 ghcr.io/funnyzak/abracadabra-web:latest
+# aliyun
+docker run -d --name abracadabra-web -p 8080:80 registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 ```
 
 **Docker Compose Deployment Example**:
@@ -120,11 +133,11 @@ services:
 
 **After Startup**:
 
-![Abracadabra_demo](Docker/abracadabra-web/abracadabra-demo.png)
+![Abracadabra_demo](https://github.com/funnyzak/docker-release/tree/main/Docker/abracadabra-web/abracadabra-demo.png)
 
 </details>
 
-For more information, please check [Abracadabra_demo](Docker/abracadabra-web/README.md).
+For more information, please check [Abracadabra_demo](https://github.com/funnyzak/docker-release/tree/main/Docker/abracadabra-web/README.md).
 
 ---
 
@@ -133,6 +146,10 @@ For more information, please check [Abracadabra_demo](Docker/abracadabra-web/REA
 [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-server/latest)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags)
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server)
 ![Docker Version](https://img.shields.io/docker/v/funnyzak/libreoffice-server/latest)
+
+LibreOffice Service service for editing documents online and converting Word to PDF via Web API. This service contains a Web API based on [LibreOffice service App](https://github.com/funnyzak/libreoffice-server).
+
+This image is built with the `linux/amd64`, `linux/arm64` architectures.
 
 **Pulling the Image**:
 <details>
@@ -174,7 +191,7 @@ services:
 ```
 </details>
 
-For more information, please check [LibreOffice-Server](Docker/libreoffice-server/README.md).
+For more information, please check [LibreOffice-Server](https://github.com/funnyzak/docker-release/tree/main/Docker/libreoffice-server/README.md).
 
 ---
 
@@ -231,17 +248,19 @@ services:
 
 **After Deployment**:
 
-![Request-Hub](Docker/request-hub/request-hub-demo.jpg)
+![Request-Hub](https://github.com/funnyzak/docker-release/tree/main/Docker/request-hub/request-hub-demo.jpg)
 
 </details>
 
-For more information, please check [Request-Hub](Docker/request-hub/README.md).
+For more information, please check [Request-Hub](https://github.com/funnyzak/docker-release/tree/main/Docker/request-hub/README.md).
 
 ---
 
 ### Canal
 
 Canal is a component for incremental subscription and consumption of binlogs in Alibaba's MySQL database.
+
+These images are built with the `linux/amd64`, `linux/arm64` architectures.
 
 Currently, three images are provided:
 
