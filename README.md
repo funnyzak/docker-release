@@ -44,20 +44,6 @@ A nginx docker image with secure configurations and some useful modules, such as
 
 Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
 
-Already installed modules:
-
-- [ngx_http_geoip_module.so](https://nginx.org/en/docs/http/ngx_http_geoip_module.html)
-- [ngx_http_image_filter_module.so](https://nginx.org/en/docs/http/ngx_http_image_filter_module.html)
-- ngx_http_perl_module.so
-- ngx_http_xslt_filter_module.so
-- ngx_mail_module.so
-- ngx_stream_geoip_module.so
-- ngx_stream_module.so
-- [ngx-fancyindex](https://github.com/aperezdc/ngx-fancyindex)
-- [headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module)
-- ...
-
-
 **Pulling the Image**:
 
 <details>
