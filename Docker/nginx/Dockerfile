@@ -1,50 +1,36 @@
-FROM alpine:3.20.3
+FROM alpine:3.20.3 AS builder
 
-ARG BUILD_DATE
 ARG VERSION=1.27.3
-
 ENV NGINX_VERSION nginx-${VERSION}
 ENV TZ Asia/Shanghai
-
 ENV TMP_PATH /tmp
 ENV HEADERS_MORE_NGINX_MODULE 0.37
 ENV FANCY_INDEX 0.5.2
 
-RUN apk --update add wget openssl-dev pcre-dev zlib-dev build-base \
-    gd gd-dev \
-    perl perl-dev \
-    libxslt libxslt-dev libxml2 libxml2-dev geoip geoip-dev
+RUN apk --no-cache add wget openssl-dev pcre-dev zlib-dev build-base \
+    gd gd-dev perl perl-dev libxslt libxslt-dev libxml2 libxml2-dev geoip geoip-dev
 
 RUN mkdir -p ${TMP_PATH} && \
-    wget http://nginx.org/download/${NGINX_VERSION}.tar.gz -O ${TMP_PATH}/${NGINX_VERSION}.tar.gz
-
-RUN cd ${TMP_PATH} && \
-    wget https://github.com/openresty/headers-more-nginx-module/archive/v${HEADERS_MORE_NGINX_MODULE}.tar.gz -O headers-more-nginx-module.tar.gz && \
-    tar -zxvf headers-more-nginx-module.tar.gz \
-    && mv headers-more-nginx-module-${HEADERS_MORE_NGINX_MODULE} headers-more-nginx-module
-
-RUN cd ${TMP_PATH} && \
-    wget http://github.com/aperezdc/ngx-fancyindex/archive/v${FANCY_INDEX}.tar.gz -O ngx-fancyindex.tar.gz && \
-    tar -zxvf ngx-fancyindex.tar.gz \
-    && mv ngx-fancyindex-${FANCY_INDEX} ngx-fancyindex
-
-RUN addgroup -S nginx && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx
-
-RUN cd ${TMP_PATH} && \
+    wget http://nginx.org/download/${NGINX_VERSION}.tar.gz -O ${TMP_PATH}/${NGINX_VERSION}.tar.gz && \
+    wget https://github.com/openresty/headers-more-nginx-module/archive/v${HEADERS_MORE_NGINX_MODULE}.tar.gz -O ${TMP_PATH}/headers-more-nginx-module.tar.gz && \
+    wget http://github.com/aperezdc/ngx-fancyindex/archive/v${FANCY_INDEX}.tar.gz -O ${TMP_PATH}/ngx-fancyindex.tar.gz && \
+    cd ${TMP_PATH} && \
     tar -zxvf ${NGINX_VERSION}.tar.gz && \
-    cd ${TMP_PATH}/${NGINX_VERSION} && \
+    tar -zxvf headers-more-nginx-module.tar.gz && \
+    tar -zxvf ngx-fancyindex.tar.gz && \
+    cd ${NGINX_VERSION} && \
     ./configure --prefix=/etc/nginx \
     --sbin-path=/usr/sbin/nginx \
     --modules-path=/usr/lib64/nginx/modules \
     --conf-path=/etc/nginx/nginx.conf \
     --error-log-path=/var/log/nginx/error.log \
-    --pid-path=/var/run/nginx.pid \
-    --lock-path=/var/run/nginx.lock \
+    --pid-path=/var/run/nginx/nginx.pid \
+    --lock-path=/var/run/nginx/nginx.lock \
     --user=nginx \
     --group=nginx \
     --build=Alpine \
-    --add-module=${TMP_PATH}/headers-more-nginx-module \
-    --add-module=${TMP_PATH}/ngx-fancyindex \
+    --add-module=${TMP_PATH}/headers-more-nginx-module-${HEADERS_MORE_NGINX_MODULE} \
+    --add-module=${TMP_PATH}/ngx-fancyindex-${FANCY_INDEX} \
     --with-select_module \
     --with-poll_module \
     --with-threads \
@@ -86,22 +72,30 @@ RUN cd ${TMP_PATH} && \
     --with-compat \
     --with-pcre-jit \
     --with-openssl-opt=no-nextprotoneg && \
-    make && make install && \
-    ln -s /usr/lib64/nginx/modules /etc/nginx/modules && \
-    apk del build-base && \
-    rm -rf ${TMP_PATH} && \
-    rm -rf /var/cache/apk/*
+    make && make install
 
-WORKDIR /etc/nginx
+FROM alpine:3.20.3
 
-ADD conf /data/conf
+ENV TZ Asia/Shanghai
 
-ADD conf/nginx.conf /etc/nginx/nginx.conf
-ADD conf/conf.d /etc/nginx/conf.d
+RUN apk --no-cache add pcre zlib gd libxslt libxml2 geoip perl tzdata && \
+    addgroup -S nginx && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx && \
+    mkdir -p /var/log/nginx /var/cache/nginx /var/run/nginx && \
+    chown -R nginx:nginx /var/log/nginx /var/cache/nginx /var/run/nginx
 
-ADD entrypoint.sh /entrypoint.sh
+COPY --from=builder /etc/nginx /etc/nginx
+COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
+COPY --from=builder /usr/lib64/nginx /usr/lib64/nginx
+
+COPY conf /data/conf
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/conf.d /etc/nginx/conf.d
+
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 80 443
+
+USER nginx
 
 ENTRYPOINT ["/entrypoint.sh"]
