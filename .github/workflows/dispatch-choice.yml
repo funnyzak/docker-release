@@ -32,7 +32,7 @@ jobs:
       docker_image_name: abracadabra-web
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: BUILD_DATE=$(date +%Y-%m-%d)
-      build_platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8
+      build_platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x
     secrets: inherit
   libreoffice_server_release:
     if: ${{ github.event.inputs.choice_service == 'libreoffice-server' }}
