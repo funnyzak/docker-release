@@ -147,6 +147,10 @@ For more information, please check [Abracadabra_demo](https://github.com/funnyza
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server)
 ![Docker Version](https://img.shields.io/docker/v/funnyzak/libreoffice-server/latest)
 
+LibreOffice Service service for editing documents online and converting Word to PDF via Web API. This service contains a Web API based on [LibreOffice service App](https://github.com/funnyzak/libreoffice-server).
+
+This image is built with the `linux/amd64`, `linux/arm64` architectures.
+
 **Pulling the Image**:
 <details>
 
