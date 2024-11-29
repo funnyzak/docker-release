@@ -1,4 +1,4 @@
-FROM node:20.18-alpine3.19 AS build
+FROM node:23.3.0 AS build
 
 ARG BUILD_DATE
 ARG VERSION=
