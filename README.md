@@ -42,7 +42,7 @@ The Docker image build directory is located at ./Docker. You can also download t
 
 Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling).
 
-
+This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
 
 **Pulling the Image**:
 <details>
