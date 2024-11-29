@@ -10,7 +10,6 @@ RUN apt-get update && \
     case "${TARGETPLATFORM}" in \
         "linux/amd64") ARCH="amd64" ;; \
         "linux/arm64") ARCH="aarch64" ;; \
-        "linux/arm64/v8") ARCH="aarch64" ;; \
         "linux/arm/v7") ARCH="armv7l" ;; \
         "linux/386") ARCH="i386" ;; \
         *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
