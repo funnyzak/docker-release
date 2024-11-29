@@ -3,12 +3,12 @@ FROM alpine:3.20.3
 ARG BUILD_DATE
 ARG VERSION=1.27.3
 
-ENV NGINX_VERSION=nginx-${VERSION}
+ENV NGINX_VERSION nginx-${VERSION}
 ENV TZ Asia/Shanghai
 
-ENV TMP_PATH=/tmp
-ENV HEADERS_MORE_NGINX_MODULE=0.37
-ENV FANCY_INDEX=0.5.2
+ENV TMP_PATH /tmp
+ENV HEADERS_MORE_NGINX_MODULE 0.37
+ENV FANCY_INDEX 0.5.2
 
 RUN apk --update add wget openssl-dev pcre-dev zlib-dev build-base \
     gd gd-dev \
@@ -94,9 +94,12 @@ RUN cd ${TMP_PATH} && \
 
 WORKDIR /etc/nginx
 
-ADD conf /data
-ADD entrypoint.sh /entrypoint.sh
+ADD conf /data/conf
 
+ADD conf/nginx.conf /etc/nginx/nginx.conf
+ADD conf/conf.d /etc/nginx/conf.d
+
+ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 80 443

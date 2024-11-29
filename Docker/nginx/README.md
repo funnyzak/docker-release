@@ -4,8 +4,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
 
-
-A nginx docker image with some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
+A nginx docker image with secure configurations and some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
 
 ## Installed Modules
 
@@ -30,7 +29,6 @@ First, create a `nginx.conf` file in your project directory, and then run the fo
 
 ```bash
 docker run -d -t -i --name nginx --restar on-failure \
-  -v /path/to/nginx.conf:/etc/nginx/nginx.conf \
   -v /path/to/conf.d:/etc/nginx/conf.d \
   -p 1688:80 \
   funnyzak/nginx
@@ -49,7 +47,6 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/conf.d:/etc/nginx/conf.d
     restart: on-failure
     ports:
@@ -65,7 +62,7 @@ docker build \
 --build-arg VCS_REF=`git rev-parse --short HEAD` \
 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 --build-arg VERSION="1.23.3"
--t funnyzak/nginx:1.23.3 .
+-t funnyzak/nginx:1.23.7 .
 ```
 
 ## Conf Configuration

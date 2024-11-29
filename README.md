@@ -40,10 +40,23 @@ Images build directory is located at ./Docker. You can also download the directo
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
 
-
-A nginx docker image with some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
+A nginx docker image with secure configurations and some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
 
 Built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
+
+Already installed modules:
+
+- [ngx_http_geoip_module.so](https://nginx.org/en/docs/http/ngx_http_geoip_module.html)
+- [ngx_http_image_filter_module.so](https://nginx.org/en/docs/http/ngx_http_image_filter_module.html)
+- ngx_http_perl_module.so
+- ngx_http_xslt_filter_module.so
+- ngx_mail_module.so
+- ngx_stream_geoip_module.so
+- ngx_stream_module.so
+- [ngx-fancyindex](https://github.com/aperezdc/ngx-fancyindex)
+- [headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module)
+- ...
+
 
 **Pulling the Image**:
 
@@ -66,7 +79,6 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
 **Docker Deployment Example**:
 ```bash
 docker run -d -t -i --name nginx --restart on-failure \
-  -v /path/to/nginx.conf:/etc/nginx/nginx.conf \
   -v /path/to/conf.d:/etc/nginx/conf.d \
   -p 1688:80 \
   funnyzak/nginx
@@ -84,7 +96,6 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/conf.d:/etc/nginx/conf.d
     restart: on-failure
     ports:

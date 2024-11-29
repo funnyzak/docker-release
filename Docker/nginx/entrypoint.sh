@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ ! -f /etc/nginx/nginx.conf ]; then
     cp /data/conf/nginx.conf /etc/nginx/nginx.conf
