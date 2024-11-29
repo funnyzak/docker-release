@@ -72,11 +72,11 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
 
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 docker run -d -t -i --name nginx --restart on-failure \
   -v /path/to/conf.d:/etc/nginx/conf.d \
@@ -84,7 +84,7 @@ docker run -d -t -i --name nginx --restart on-failure \
   funnyzak/nginx
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 
 version: "3.3"
@@ -128,15 +128,15 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/y-webrtc-signaling:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 docker run -d --name y-webrtc-signaling -p 4444:4444 funnyzak/y-webrtc-signaling:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: '3.1'
 services:
@@ -176,10 +176,10 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 
 docker run -d --name abracadabra-web -p 8080:80 funnyzak/abracadabra-web:latest
@@ -189,7 +189,7 @@ docker run -d --name abracadabra-web -p 8080:80 ghcr.io/funnyzak/abracadabra-web
 docker run -d --name abracadabra-web -p 8080:80 registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: '3.1'
 
@@ -235,15 +235,15 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/libreoffice-server:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 docker run -d --name libreoffice -p 3000:3000 -p 3001:8038 funnyzak/libreoffice-server:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: "3.1"
 services:
@@ -287,15 +287,15 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/request-hub:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 docker run -d --name request-hub -p 8080:8080 funnyzak/request-hub:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: '3.1'
 services:
@@ -348,7 +348,7 @@ Currently, three images are provided:
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags)
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin)
 
-All are installed under the `/opt/canal` directory. For example, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
+All are installed under the `/opt/canal` directory. For, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
 
 **Pulling the Images**:
 
