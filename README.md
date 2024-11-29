@@ -36,7 +36,7 @@ Images build directory is located at ./Docker. You can also download the directo
 
 ## Services
 
-### nginx
+### Nginx
 
 [![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
@@ -161,7 +161,7 @@ For more information, please check [Snell-Server](https://github.com/funnyzak/do
 
 ---
 
-### y-webrtc-signaling
+### Y-WebRTC Signaling
 
 [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/y-webrtc-signaling/latest)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/tags)
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/y-webrtc-signaling)
@@ -383,7 +383,7 @@ For more information, please check [Request-Hub](https://github.com/funnyzak/doc
 
 ---
 
-### Canal
+### Alibaba Canal
 
 Canal is a component for incremental subscription and consumption of binlogs in Alibaba's MySQL database.
 

@@ -41,6 +41,7 @@ COPY entrypoint.sh .
 RUN chmod +x snell-server entrypoint.sh
 
 ENV LANG=C.UTF-8 \
+    VERSION=${VERSION} \
     TZ=Asia/Shanghai \
     PORT=6180 \
     IPV6=false \
