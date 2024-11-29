@@ -1,7 +1,4 @@
-FROM node:16 as builder
-
-LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
-      org.label-schema.url="https://github.com/funnyzak/docker-release"
+FROM node:18 as builder
 
 ENV WORKDIR=/app
 WORKDIR $WORKDIR
@@ -9,7 +6,7 @@ RUN apt-get update && apt-get install -y git && \
     git clone --depth=1 https://github.com/lobehub/y-webrtc-signaling.git $WORKDIR
 RUN npm install
 
-FROM node:16-slim
+FROM node:18-alpine
 
 ARG BUILD_DATE
 ARG VERSION=

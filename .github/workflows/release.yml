@@ -18,7 +18,7 @@ on:
         type: string
         default: 'Dockerfile'
       build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
         default: 'linux/amd64'
@@ -51,7 +51,7 @@ on:
         type: string
         default: 'Dockerfile'
       build_platforms:
-        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
         default: 'linux/amd64'

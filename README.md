@@ -40,6 +40,10 @@ The Docker image build directory is located at ./Docker. You can also download t
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/y-webrtc-signaling)
 ![Docker Version](https://img.shields.io/docker/v/funnyzak/y-webrtc-signaling/latest)
 
+Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling).
+
+
+
 **Pulling the Image**:
 <details>
 
