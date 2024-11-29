@@ -46,7 +46,7 @@ A nginx docker image with secure configurations and some useful modules, such as
 
 Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
 
-**Pulling the Image**:
+**Pull**:
 
 <details>
 
@@ -109,7 +109,7 @@ This image is build from the latest source code of [Snell Server](https://manual
 
 > **Notice**: Need to use with Surge iOS or Surge Mac, both of them support Snell protocol. The latest surge-server version is v4, which is not compatible with the previous versions like before. Please upgrade both the client (Surge iOS & Surge Mac) and the server binary.
 
-**Pulling the Image**:
+**Pull**:
 
 <details>
 
@@ -171,7 +171,7 @@ Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrt
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -219,7 +219,7 @@ Abracadabra (魔曰) is an instant text encryption/de-sensitization tool, which 
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `inux/ppc64le`, `linux/s390x` architectures.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -278,7 +278,7 @@ LibreOffice Service service for editing documents online and converting Word to 
 
 This image is built with the `linux/amd64`, `linux/arm64` architectures.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -330,7 +330,7 @@ For more information, please check [LibreOffice-Server](https://github.com/funny
 
 [RequestHub](https://github.com/kyledayton/requesthub) is used to receive, record, and proxy HTTP requests. This image supports `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x`.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -405,7 +405,7 @@ Currently, three images are provided:
 
 All are installed under the `/opt/canal` directory. For, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
 
-**Pulling the Images**:
+**Pulls**:
 
 <details>
 
