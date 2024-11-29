@@ -1,8 +1,13 @@
 # Docker Release 🚀
+  
+[![Build Status](https://github.com/funnyzak/docker-release/actions/workflows/release.yml/badge.svg)](https://github.com/funnyzak/docker-release)
+[![GitHub Container Registry](https://img.shields.io/badge/GHCR-funnyzak-blue)](https://github.com/funnyzak/docker-release)
+[![License](https://img.shields.io/github/license/funnyzak/docker-release)](https://github.com/funnyzak/docker-release)
 
-Build images and publish to Docker Hub, GitHub Container Registry, and AliCloud Image Service.
+**Docker Release** is a repository that provides Docker images for various services, It publishes images to Docker Hub, GitHub Container Registry, and AliCloud Container Registry. The images are built with the latest source code and are available for multiple architectures.
 
-Aliyun mirror: `registry.cn-beijing.aliyuncs.com`.
+
+> **Note**:  The GitHub Container Registry mirror is `ghcr.io`, and the Aliyun Container Registry mirror is `registry.cn-beijing.aliyuncs.com`.
 
 ## Images
 
