@@ -11,6 +11,7 @@ Images are provided with the `latest` and `nightly` tags (if available). For oth
 Current images are as follows:
 
 - `funnyzak/nginx:latest`: The Nginx image ([Hub](https://hub.docker.com/r/funnyzak/nginx)).
+- `funnyzak/snell-server:latest`: The Snell-Server image ([Hub](https://hub.docker.com/r/funnyzak/snell-server)).
 - `funnyzak/y-webrtc-signaling:latest`: The y-webrtc-signaling signaling server image ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling)).
 - `funnyzak/abracadabra-web:latest`: The Abracadabra_demo magic demo image ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web)).
 - `funnyzak/libreoffice-server:latest`: The LibreOffice-Server image ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server)).
@@ -26,6 +27,7 @@ Current images are as follows:
 Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
 
 - `./Docker/nginx`: Build the [Nginx](https://nginx.org) service image.
+- `./Docker/snell-server`: Build the [Snell-Server](https://manual.nssurge.com/others/snell.htm) service image.
 - `./Docker/y-webrtc-signaling`: Build the [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) service image.
 - `./Docker/abracadabra-web`: Build the [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) service image.
 - `./Docker/libreoffice-server`: Build the [LibreOffice-Server](https://github.com/funnyzak/libreoffice-server) service image.
@@ -34,7 +36,7 @@ Images build directory is located at ./Docker. You can also download the directo
 
 ## Services
 
-### nginx
+### Nginx
 
 [![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
@@ -44,7 +46,7 @@ A nginx docker image with secure configurations and some useful modules, such as
 
 Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
 
-**Pulling the Image**:
+**Pull**:
 
 <details>
 
@@ -94,7 +96,72 @@ For more information, please check [Nginx](https://github.com/funnyzak/docker-re
 
 ---
 
-### y-webrtc-signaling
+### Snell-Server
+
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/snell-server)](https://hub.docker.com/r/funnyzak/snell-server/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/snell-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/snell-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/snell-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
+
+Snell Server is a lean encrypted proxy protocol. It is designed to be simple, lightweight.
+
+This image is build from the latest source code of [Snell Server](https://manual.nssurge.com/others/snell.html). It supports `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/386` architecture. 
+
+> **Notice**: Need to use with Surge iOS or Surge Mac, both of them support Snell protocol. The latest surge-server version is v4, which is not compatible with the previous versions like before. Please upgrade both the client (Surge iOS & Surge Mac) and the server binary.
+
+**Pull**:
+
+<details>
+
+```bash
+docker pull funnyzak/snell-server
+# GHCR
+docker pull ghcr.io/funnyzak/snell-server
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/snell-server
+```
+
+</details>
+
+**Deployment**:
+
+<details>
+
+**Docker Deployment**:
+```bash
+docker run -d --name snell-server --restart always -p 12303:6180 -e PSK="5G0H4qdf32mEZx32t" funnyzak/snell-server
+```
+
+**Docker Compose Deployment**:
+```yaml
+version: '3'
+
+services:
+  snell:
+    image: funnyzak/snell-server
+    container_name: snell-server
+    environment:
+      PSK: 5G0H4qdf32mEZx32t
+      TZ: Asia/Shanghai
+      IPV6: false
+      PORT: 6180
+    restart: always
+    ports:
+      - 12303:6180
+```
+
+**Echo config file**:
+```bash
+docker exec -it snell-server cat /etc/snell-server.conf
+```
+
+</details>
+
+For more information, please check [Snell-Server](https://github.com/funnyzak/docker-release/tree/main/Docker/snell-server/README.md).
+
+---
+
+### Y-WebRTC Signaling
 
 [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/y-webrtc-signaling/latest)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/tags)
 ![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/y-webrtc-signaling)
@@ -104,7 +171,7 @@ Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrt
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -152,7 +219,7 @@ Abracadabra (魔曰) is an instant text encryption/de-sensitization tool, which 
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `inux/ppc64le`, `linux/s390x` architectures.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -211,7 +278,7 @@ LibreOffice Service service for editing documents online and converting Word to 
 
 This image is built with the `linux/amd64`, `linux/arm64` architectures.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -263,7 +330,7 @@ For more information, please check [LibreOffice-Server](https://github.com/funny
 
 [RequestHub](https://github.com/kyledayton/requesthub) is used to receive, record, and proxy HTTP requests. This image supports `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x`.
 
-**Pulling the Image**:
+**Pull**:
 <details>
 
 ```bash
@@ -316,7 +383,7 @@ For more information, please check [Request-Hub](https://github.com/funnyzak/doc
 
 ---
 
-### Canal
+### Alibaba Canal
 
 Canal is a component for incremental subscription and consumption of binlogs in Alibaba's MySQL database.
 
@@ -338,7 +405,7 @@ Currently, three images are provided:
 
 All are installed under the `/opt/canal` directory. For, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
 
-**Pulling the Images**:
+**Pulls**:
 
 <details>
 
