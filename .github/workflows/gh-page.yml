@@ -2,14 +2,15 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    # paths:
-    #   - 'README.md'
+    paths:
+      - 'README.md'
 
 permissions:
   contents: write
 
 jobs:
   deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +24,6 @@ jobs:
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
-      # if: ${{ github.ref == 'refs/heads/main' }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: .
