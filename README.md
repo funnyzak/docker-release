@@ -10,6 +10,7 @@ Images are provided with the `latest` and `nightly` tags (if available). For oth
 
 Current images are as follows:
 
+- `funnyzak/nginx:latest`: The Nginx image ([Hub](https://hub.docker.com/r/funnyzak/nginx)).
 - `funnyzak/y-webrtc-signaling:latest`: The y-webrtc-signaling signaling server image ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling)).
 - `funnyzak/abracadabra-web:latest`: The Abracadabra_demo magic demo image ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web)).
 - `funnyzak/libreoffice-server:latest`: The LibreOffice-Server image ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server)).
@@ -20,17 +21,78 @@ Current images are as follows:
 - `funnyzak/hello-world:latest`: The Hello-World image ([Hub](https://hub.docker.com/r/funnyzak/hello-world)).
 
 
-## Services
+## Directories
 
 Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
 
+- `./Docker/nginx`: Build the [Nginx](https://nginx.org) service image.
 - `./Docker/y-webrtc-signaling`: Build the [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) service image.
 - `./Docker/abracadabra-web`: Build the [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) service image.
 - `./Docker/libreoffice-server`: Build the [LibreOffice-Server](https://github.com/funnyzak/libreoffice-server) service image.
 - `./Docker/request-hub`: Build the [Request-Hub](https://github.com/kyledayton/requesthub) service image.
 - `./Docker/canal`: Build the [Alibaba Canal](https://github.com/alibaba/canal) service images.
 
-## Usage
+## Services
+
+### nginx
+
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
+[![Docker Version](https://img.shields.io/docker/v/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
+
+A nginx docker image with secure configurations and some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
+
+Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
+
+**Pulling the Image**:
+
+<details>
+
+```bash
+docker pull funnyzak/nginx:latest
+# GHCR
+docker pull ghcr.io/funnyzak/nginx:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
+```
+
+</details>
+
+**Deployment**:
+
+<details>
+
+**Docker Deployment**:
+```bash
+docker run -d -t -i --name nginx --restart on-failure \
+  -v /path/to/conf.d:/etc/nginx/conf.d \
+  -p 1688:80 \
+  funnyzak/nginx
+```
+
+**Docker Compose Deployment**:
+```yaml
+
+version: "3.3"
+
+services:
+  nginx:
+    image: funnyzak/nginx
+    container_name: nginx
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    restart: on-failure
+    ports:
+      - 1688:80
+```
+
+</details>
+
+For more information, please check [Nginx](https://github.com/funnyzak/docker-release/tree/main/Docker/nginx/README.md).
+
+---
 
 ### y-webrtc-signaling
 
@@ -54,15 +116,15 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/y-webrtc-signaling:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 docker run -d --name y-webrtc-signaling -p 4444:4444 funnyzak/y-webrtc-signaling:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: '3.1'
 services:
@@ -102,10 +164,10 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 
 docker run -d --name abracadabra-web -p 8080:80 funnyzak/abracadabra-web:latest
@@ -115,7 +177,7 @@ docker run -d --name abracadabra-web -p 8080:80 ghcr.io/funnyzak/abracadabra-web
 docker run -d --name abracadabra-web -p 8080:80 registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: '3.1'
 
@@ -161,15 +223,15 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/libreoffice-server:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 docker run -d --name libreoffice -p 3000:3000 -p 3001:8038 funnyzak/libreoffice-server:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: "3.1"
 services:
@@ -213,15 +275,15 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/request-hub:latest
 ```
 </details>
 
-**Deployment Examples**:
+**Deployment**:
 <details>
 
-**Docker Deployment Example**:
+**Docker Deployment**:
 ```bash
 docker run -d --name request-hub -p 8080:8080 funnyzak/request-hub:latest
 ```
 
-**Docker Compose Deployment Example**:
+**Docker Compose Deployment**:
 ```yaml
 version: '3.1'
 services:
@@ -274,7 +336,7 @@ Currently, three images are provided:
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags)
 [![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin)
 
-All are installed under the `/opt/canal` directory. For example, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
+All are installed under the `/opt/canal` directory. For, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
 
 **Pulling the Images**:
 

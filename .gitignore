@@ -1,2 +1,7 @@
 /tmp
 /temp
+/test
+**/test
+**/tmp
+**/temp
+test.*
