@@ -19,7 +19,7 @@ jobs:
     - name: Set jeckyll config
       run: |
         echo "theme: jekyll-theme-cayman" > _config.yml
-        echo "show_downloads: true" >> _config.yml
+        echo "show_downloads: false" >> _config.yml
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
