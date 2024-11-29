@@ -21,7 +21,7 @@ Current images are as follows:
 - `funnyzak/hello-world:latest`: The Hello-World image ([Hub](https://hub.docker.com/r/funnyzak/hello-world)).
 
 
-## Services
+## Directories
 
 Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
 
@@ -32,7 +32,7 @@ Images build directory is located at ./Docker. You can also download the directo
 - `./Docker/request-hub`: Build the [Request-Hub](https://github.com/kyledayton/requesthub) service image.
 - `./Docker/canal`: Build the [Alibaba Canal](https://github.com/alibaba/canal) service images.
 
-## Usage
+## Services
 
 ### nginx
 
