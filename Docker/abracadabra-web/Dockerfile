@@ -2,8 +2,6 @@ FROM node:23.3.0 AS build
 
 ARG BUILD_DATE
 ARG VERSION=
-
-RUN apk add --no-cache git
       
 WORKDIR /app
 RUN git clone https://github.com/SheepChef/Abracadabra_demo .
