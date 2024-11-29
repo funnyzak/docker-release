@@ -2,8 +2,8 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    paths:
-      - 'README.md'
+    # paths:
+    #   - 'README.md'
 
 permissions:
   contents: write
@@ -16,9 +16,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Set jeckyll config
+      run: |
+        echo "theme: jekyll-theme-cayman" > _config.yml
+        echo "show_downloads: true" >> _config.yml
+        
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
-      if: ${{ github.ref == 'refs/heads/main' }}
+      # if: ${{ github.ref == 'refs/heads/main' }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: .
