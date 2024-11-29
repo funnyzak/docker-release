@@ -53,9 +53,11 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
 
 **Deployment**:
 
-<details>
+You can run this image with the following command:
 
-**Docker Deployment**:
+<details>
+<summary>Docker Run Commands</summary>
+
 ```bash
 docker run -d -t -i --name nginx --restart on-failure \
   -v /path/to/conf.d:/etc/nginx/conf.d \
@@ -119,7 +121,10 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/snell-server
 
 **Deployment**:
 
+You can run this image with the following command:
+
 <details>
+<summary>Docker Run Commands</summary>
 
 **Docker Deployment**:
 ```bash
@@ -184,7 +189,11 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/y-webrtc-signaling:latest
 </details>
 
 **Deployment**:
+
+You can run this image with the following command:
+
 <details>
+<summary>Docker Run Commands</summary>
 
 **Docker Deployment**:
 ```bash
@@ -237,7 +246,11 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 </details>
 
 **Deployment**:
+
+You can run this image with the following command:
+
 <details>
+<summary>Docker Run Commands</summary>
 
 **Docker Deployment**:
 ```bash
@@ -301,7 +314,11 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/libreoffice-server:latest
 </details>
 
 **Deployment**:
+
+You can run this image with the following command:
+
 <details>
+<summary>Docker Run Commands</summary>
 
 **Docker Deployment**:
 ```bash
@@ -358,7 +375,11 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/request-hub:latest
 </details>
 
 **Deployment**:
+
+You can run this image with the following command:
+
 <details>
+<summary>Docker Run Commands</summary>
 
 **Docker Deployment**:
 ```bash
