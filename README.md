@@ -480,3 +480,7 @@ Images build directory is located at ./Docker. You can also download the directo
 ## Contributions
 
 If you have any questions or suggestions, please feel free to open an issue or pull request.
+
+## License
+
+[MIT](https://github.com/funnyzak/docker-release/blob/main/LICENSE)
