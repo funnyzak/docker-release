@@ -278,7 +278,7 @@ services:
 
 **After Startup**:
 
-![Abracadabra_demo](https://github.com/funnyzak/docker-release/tree/main/Docker/abracadabra-web/abracadabra-demo.png)
+![Abracadabra_demo](https://cdn.jsdelivr.net/gh/funnyzak/docker-release@main/Docker/abracadabra-web/abracadabra-demo.png)
 
 </details>
 
@@ -411,7 +411,7 @@ services:
 
 **After Deployment**:
 
-![Request-Hub](https://github.com/funnyzak/docker-release/tree/main/Docker/request-hub/request-hub-demo.jpg)
+![Request-Hub](https://cdn.jsdelivr.net/gh/funnyzak/docker-release@main/Docker/request-hub/request-hub-demo.jpg)
 
 </details>
 
