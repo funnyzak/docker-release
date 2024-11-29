@@ -90,7 +90,7 @@ For more information, please check [y-webrtc-signaling](https://github.com/funny
 
 Abracadabra (魔曰) is an instant text encryption/de-sensitization tool, which can also be used for file encryption, based on C++ 11. More information can be found at [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo).
 
-This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
+This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x` architectures.
 
 **Pulling the Image**:
 <details>
@@ -250,6 +250,8 @@ For more information, please check [Request-Hub](https://github.com/funnyzak/doc
 ### Canal
 
 Canal is a component for incremental subscription and consumption of binlogs in Alibaba's MySQL database.
+
+These images are built with the `linux/amd64`, `linux/arm64` architectures.
 
 Currently, three images are provided:
 
