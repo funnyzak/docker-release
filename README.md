@@ -8,7 +8,7 @@ Aliyun mirror: `registry.cn-beijing.aliyuncs.com`.
 
 All images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
 
-Current images are as follows:
+The following images are available:
 
 - **Nginx Image**: `funnyzak/nginx:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nginx))
 - **Snell-Server Image**: `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
@@ -25,9 +25,10 @@ Current images are as follows:
 
 ### Nginx
 
-[![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
-[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
-[![Docker Version](https://img.shields.io/docker/v/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/nginx?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/nginx/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/nginx.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/nginx/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/nginx/)
 
 A nginx docker image with secure configurations and some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
 
@@ -85,10 +86,10 @@ For more information, please check [Nginx](https://github.com/funnyzak/docker-re
 
 ### Snell-Server
 
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/snell-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
 [![Image Size](https://img.shields.io/docker/image-size/funnyzak/snell-server)](https://hub.docker.com/r/funnyzak/snell-server/)
 [![Docker Stars](https://img.shields.io/docker/stars/funnyzak/snell-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/snell-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
-[![Docker Tags](https://img.shields.io/docker/v/funnyzak/snell-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server/)
 
 Snell Server is a lean encrypted proxy protocol. It is designed to be simple, lightweight.
 
@@ -150,9 +151,11 @@ For more information, please check [Snell-Server](https://github.com/funnyzak/do
 
 ### Y-WebRTC Signaling
 
-[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/y-webrtc-signaling/latest)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/tags)
-![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/y-webrtc-signaling)
-![Docker Version](https://img.shields.io/docker/v/funnyzak/y-webrtc-signaling/latest)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/y-webrtc-signaling?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/y-webrtc-signaling)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/y-webrtc-signaling.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/y-webrtc-signaling.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/)
+
 
 Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling).
 
@@ -198,9 +201,10 @@ For more information, please check [y-webrtc-signaling](https://github.com/funny
 
 ### Abracadabra Demo
 
-[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/abracadabra-web/latest)](https://hub.docker.com/r/funnyzak/abracadabra-web/tags)
-![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/abracadabra-web)
-![Docker Version](https://img.shields.io/docker/v/funnyzak/abracadabra-web/latest)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/abracadabra-web?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/abracadabra-web/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/abracadabra-web)](https://hub.docker.com/r/funnyzak/abracadabra-web/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/abracadabra-web.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/abracadabra-web/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/abracadabra-web.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/abracadabra-web/)
 
 Abracadabra (魔曰) is an instant text encryption/de-sensitization tool, which can also be used for file encryption, based on C++ 11. More information can be found at [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo).
 
@@ -257,9 +261,10 @@ For more information, please check [Abracadabra_demo](https://github.com/funnyza
 
 ### LibreOffice-Server
 
-[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-server/latest)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags)
-![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server)
-![Docker Version](https://img.shields.io/docker/v/funnyzak/libreoffice-server/latest)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/libreoffice-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-server/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-server)](https://hub.docker.com/r/funnyzak/libreoffice-server/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/libreoffice-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-server/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-server/)
 
 LibreOffice Service service for editing documents online and converting Word to PDF via Web API. This service contains a Web API based on [LibreOffice service App](https://github.com/funnyzak/libreoffice-server).
 
@@ -311,9 +316,10 @@ For more information, please check [LibreOffice-Server](https://github.com/funny
 
 ### Request-Hub
 
-[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/request-hub/latest)](https://hub.docker.com/r/funnyzak/request-hub/tags)
-![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub)
-![Docker Version](https://img.shields.io/docker/v/funnyzak/request-hub/latest)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/request-hub?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/request-hub)](https://hub.docker.com/r/funnyzak/request-hub/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/)
 
 [RequestHub](https://github.com/kyledayton/requesthub) is used to receive, record, and proxy HTTP requests. This image supports `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x`.
 
@@ -370,48 +376,52 @@ For more information, please check [Request-Hub](https://github.com/funnyzak/doc
 
 ---
 
-### Alibaba Canal
+## Alibaba Canal
 
-Canal is a component for incremental subscription and consumption of binlogs in Alibaba's MySQL database.
+Alibaba Canal, a component for incremental subscription and consumption of binlogs in MySQL.  Images are built for `linux/amd64` and `linux/arm64` architectures.
 
-These images are built with the `linux/amd64`, `linux/arm64` architectures.
+The following images are available:
 
-Currently, three images are provided:
+| Image | Tag | Size | Pulls |
+|---|---|---|---|
+| Canal-Adapter | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/canal-adapter/latest?label=Canal-Adapter)](https://hub.docker.com/r/funnyzak/canal-adapter/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-adapter/latest?label=Canal-Adapter)](https://hub.docker.com/r/funnyzak/canal-adapter/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-adapter?label=Canal-Adapter)](https://hub.docker.com/r/funnyzak/canal-adapter) |
+| Canal-Deployer | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-deployer?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer) |
+| Canal-Admin | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-admin?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin) |
 
-[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-adapter/latest?label=Canal-Adapter)](https://hub.docker.com/r/funnyzak/canal-adapter/tags)
-[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags)
-[![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin/tags)
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-adapter?label=Canal-Adapter)](https://hub.docker.com/r/funnyzak/canal-adapter)
-[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-deployer?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer)
-[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/canal-admin?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin)
+All Images are installed under the `/opt/canal` directory.  For example, the `canal-adapter` service is installed under `/opt/canal/canal-adapter`.
 
-[![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-adapter/latest?label=Canal-Adapter)](https://hub.docker.com/r/funnyzak/canal-adapter/tags)
-[![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-deployer/latest?label=Canal-Deployer)](https://hub.docker.com/r/funnyzak/canal-deployer/tags)
-[![Docker Version](https://img.shields.io/docker/v/funnyzak/canal-admin/latest?label=Canal-Admin)](https://hub.docker.com/r/funnyzak/canal-admin)
+**Pulling Images:**
 
-All are installed under the `/opt/canal` directory. For, the installation directory of the `canal-adapter` service is under `/opt/canal/canal-adapter`.
-
-**Pulls**:
+You can pull the images using the following commands:
 
 <details>
+<summary>Docker Pull Commands</summary>
 
 ```bash
+# Docker Hub
 docker pull funnyzak/canal-adapter:latest
 docker pull funnyzak/canal-deployer:latest
 docker pull funnyzak/canal-admin:latest
-# GHCR
+
+# GitHub Container Registry (GHCR)
 docker pull ghcr.io/funnyzak/canal-adapter:latest
 docker pull ghcr.io/funnyzak/canal-deployer:latest
 docker pull ghcr.io/funnyzak/canal-admin:latest
-# Aliyun
+
+# Alibaba Cloud Container Registry
 docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-adapter:latest
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-deDeployer:latest
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-deployer:latest # Corrected typo here
 docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-admin:latest
 ```
+
 </details>
 
-For more information, please refer to the [Canal official repository](https://github.com/alibaba/canal/releases).
+
+**Further Information:**
+
+For more information about Canal, please refer to the [official Canal repository](https://github.com/alibaba/canal/releases).
+
 
 ## Directories
 
