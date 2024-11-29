@@ -106,6 +106,8 @@ services:
 
 For more information, please check [Nginx](https://github.com/funnyzak/docker-release/tree/main/Docker/nginx/README.md).
 
+---
+
 ### y-webrtc-signaling
 
 [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/y-webrtc-signaling/latest)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/tags)
