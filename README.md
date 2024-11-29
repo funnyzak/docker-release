@@ -6,33 +6,20 @@ Aliyun mirror: `registry.cn-beijing.aliyuncs.com`.
 
 ## Images
 
-Images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
+All images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
 
 Current images are as follows:
 
-- `funnyzak/nginx:latest`: The Nginx image ([Hub](https://hub.docker.com/r/funnyzak/nginx)).
-- `funnyzak/snell-server:latest`: The Snell-Server image ([Hub](https://hub.docker.com/r/funnyzak/snell-server)).
-- `funnyzak/y-webrtc-signaling:latest`: The y-webrtc-signaling signaling server image ([Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling)).
-- `funnyzak/abracadabra-web:latest`: The Abracadabra_demo magic demo image ([Hub](https://hub.docker.com/r/funnyzak/abracadabra-web)).
-- `funnyzak/libreoffice-server:latest`: The LibreOffice-Server image ([Hub](https://hub.docker.com/r/funnyzak/libreoffice-server)).
-- `funnyzak/request-hub:latest`: The Request-Hub image ([Hub](https://hub.docker.com/r/funnyzak/request-hub)).
-- `funnyzak/canal-adapter:latest`: The Canal-Adaptor image ([Hub](https://hub.docker.com/r/funnyzak/canal-adapter)).
-- `funnyzak/canal-deployer:latest`: The Canal-Deployer image ([Hub](https://hub.docker.com/r/funnyzak/canal-deployer)).
-- `funnyzak/canal-admin:latest`: The Canal-Admin image ([Hub](https://hub.docker.com/r/funnyzak/canal-admin)).
-- `funnyzak/hello-world:latest`: The Hello-World image ([Hub](https://hub.docker.com/r/funnyzak/hello-world)).
-
-
-## Directories
-
-Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
-
-- `./Docker/nginx`: Build the [Nginx](https://nginx.org) service image.
-- `./Docker/snell-server`: Build the [Snell-Server](https://manual.nssurge.com/others/snell.htm) service image.
-- `./Docker/y-webrtc-signaling`: Build the [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) service image.
-- `./Docker/abracadabra-web`: Build the [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) service image.
-- `./Docker/libreoffice-server`: Build the [LibreOffice-Server](https://github.com/funnyzak/libreoffice-server) service image.
-- `./Docker/request-hub`: Build the [Request-Hub](https://github.com/kyledayton/requesthub) service image.
-- `./Docker/canal`: Build the [Alibaba Canal](https://github.com/alibaba/canal) service images.
+- **Nginx Image**: `funnyzak/nginx:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nginx))
+- **Snell-Server Image**: `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
+- **y-webrtc-signaling Server Image**: `funnyzak/y-webrtc-signaling:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))
+- **Abracadabra Demo Image**: `funnyzak/abracadabra-web:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))
+- **LibreOffice-Server Image**: `funnyzak/libreoffice-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))
+- **Request-Hub Image**: `funnyzak/request-hub:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/request-hub))
+- **Canal-Adaptor Image**: `funnyzak/canal-adapter:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-adapter))
+- **Canal-Deployer Image**: `funnyzak/canal-deployer:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-deployer))
+- **Canal-Admin Image**: `funnyzak/canal-admin:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-admin))
+- **Hello-World Image**: `funnyzak/hello-world:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/hello-world))
 
 ## Services
 
@@ -425,6 +412,19 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-admin:latest
 </details>
 
 For more information, please refer to the [Canal official repository](https://github.com/alibaba/canal/releases).
+
+## Directories
+
+Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
+
+- `./Docker/nginx`: Build the [Nginx](https://nginx.org) service image.
+- `./Docker/snell-server`: Build the [Snell-Server](https://manual.nssurge.com/others/snell.htm) service image.
+- `./Docker/y-webrtc-signaling`: Build the [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) service image.
+- `./Docker/abracadabra-web`: Build the [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) service image.
+- `./Docker/libreoffice-server`: Build the [LibreOffice-Server](https://github.com/funnyzak/libreoffice-server) service image.
+- `./Docker/request-hub`: Build the [Request-Hub](https://github.com/kyledayton/requesthub) service image.
+- `./Docker/canal`: Build the [Alibaba Canal](https://github.com/alibaba/canal) service images.
+
 
 ## Contributions
 
