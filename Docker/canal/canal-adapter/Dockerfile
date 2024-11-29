@@ -1,6 +1,5 @@
 FROM alpine:3.20.3 AS build
 
-ARG BUILD_DATE
 ARG VERSION=1.1.7
 ARG CANAL_NAME=adapter
 
@@ -29,8 +28,8 @@ ARG CANAL_NAME=adapter
 
 LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="canal-${CANAL_NAME}" \
+      org.label-schema.description="Alibaba Canal, a component for incremental subscription and consumption of binlogs in MySQL." \
       org.label-schema.version="${VERSION}" \
-      org.label-schema.description="canal-${CANAL_NAME}" \
       org.label-schema.url="https://github.com/funnyzak/docker-release" \
       org.label-schema.build-date="${BUILD_DATE}"
 

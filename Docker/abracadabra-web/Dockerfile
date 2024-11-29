@@ -1,14 +1,14 @@
 FROM node:23.3.0 AS build
 
-ARG BUILD_DATE
-ARG VERSION=
-      
 WORKDIR /app
 RUN git clone https://github.com/SheepChef/Abracadabra_demo .
 RUN npm ci 
 RUN npx vite build --outDir ./dist
 
 FROM nginx:1.27.3-alpine3.20-slim
+
+ARG BUILD_DATE
+ARG VERSION
 
 LABEL org.label-schema.name="Abracadabra_demo" \
       org.label-schema.description="Abracadabra_demo" \

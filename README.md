@@ -461,8 +461,7 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-admin:latest
 </details>
 
 
-For more information about Canal, please refer to the [official Canal repository](https://github.com/alibaba/canal/releases).
-
+For more information about Canal, please check [Alibaba Canal](https://github.com/funnyzak/docker-release/tree/main/Docker/canal/README.md).
 
 ## Directories
 
