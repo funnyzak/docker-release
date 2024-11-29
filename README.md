@@ -109,7 +109,12 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 
 **Docker Deployment Example**:
 ```bash
+
 docker run -d --name abracadabra-web -p 8080:80 funnyzak/abracadabra-web:latest
+# ghcr
+docker run -d --name abracadabra-web -p 8080:80 ghcr.io/funnyzak/abracadabra-web:latest
+# aliyun
+docker run -d --name abracadabra-web -p 8080:80 registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
 ```
 
 **Docker Compose Deployment Example**:
