@@ -42,7 +42,7 @@ jobs:
       docker_image_name: nginx
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: ${{ github.event.inputs.build_args || 'BUILD_DATE=$(date +%Y-%m-%d),VERSION=1.27.3' }}
-      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8' }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/arm64,linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8' }}
     secrets: inherit  
   abracadabra_web_release:
     if: ${{ github.event.inputs.choice_service == 'abracadabra-web' }}

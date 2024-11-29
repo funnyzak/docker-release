@@ -1,4 +1,4 @@
-# Nginx Docker
+# Nginx
 
 [![Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx/latest)](https://hub.docker.com/r/funnyzak/nginx/tags)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx)
@@ -6,7 +6,9 @@
 
 A nginx docker image with secure configurations and some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
 
-## Installed Modules
+Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
+
+Already installed modules:
 
 - [ngx_http_geoip_module.so](https://nginx.org/en/docs/http/ngx_http_geoip_module.html)
 - [ngx_http_image_filter_module.so](https://nginx.org/en/docs/http/ngx_http_image_filter_module.html)
@@ -19,7 +21,19 @@ A nginx docker image with secure configurations and some useful modules, such as
 - [headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module)
 - ...
 
+
 More modules can be found in [Dockerfile](https://github.com/funnyzak/nginx-docker/blob/main/Dockerfile).
+
+## Pull
+
+```bash
+docker pull funnyzak/nginx:latest
+# GHCR
+docker pull ghcr.io/funnyzak/nginx:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
+```
+
 
 ## Usage
 
@@ -59,60 +73,9 @@ Now, running `docker-compose up -d` will run the application for you.
 
 ```bash
 docker build \
---build-arg VCS_REF=`git rev-parse --short HEAD` \
 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
---build-arg VERSION="1.23.3"
--t funnyzak/nginx:1.23.7 .
-```
-
-## Conf Configuration
-
-### Nginx.conf
-
-```conf
-load_module /usr/lib64/nginx/modules/ngx_http_image_filter_module.so;
-load_module /usr/lib64/nginx/modules/ngx_stream_module.so;
-load_module /usr/lib64/nginx/modules/ngx_http_geoip_module.so;
-load_module /usr/lib64/nginx/modules/ngx_http_xslt_filter_module.so;
-load_module /usr/lib64/nginx/modules/ngx_stream_geoip_module.so;
-# load_module /usr/lib64/nginx/modules/ngx_http_perl_module.so;
-# load_module /usr/lib64/nginx/modules/ngx_mail_module.so;
-
-user  nginx;
-worker_processes  1;
-
-#error_log  logs/error.log;
-#error_log  logs/error.log  notice;
-#error_log  logs/error.log  info;
-
-#pid        logs/nginx.pid;
-
-
-events {
-    worker_connections  1024;
-}
-
-
-http {
-    include       mime.types;
-    default_type  application/octet-stream;
-
-    #log_format  main  ‘$remote_addr - $remote_user [$time_local] “$request” ‘
-    #                  ‘$status $body_bytes_sent “$http_referer” ‘
-    #                  ‘”$http_user_agent” “$http_x_forwarded_for”’;
-
-    #access_log  logs/access.log  main;
-
-    sendfile        on;
-    #tcp_nopush     on;
-
-    #keepalive_timeout  0;
-    keepalive_timeout  65;
-
-    #gzip  on;
-
-    include /etc/nginx/conf.d/*.conf;
-}
+--build-arg VERSION="1.27.3"
+-t funnyzak/nginx:1.27.3 .
 ```
 
 ## Reference
