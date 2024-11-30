@@ -473,7 +473,7 @@ For more information about cron, please check [Cron Documentation](https://githu
 
 mysql-dump is a simple MySQL backup tool that can backup all databases or specified databases. It can push message with pushoo and delete expired dump files. It supports custom commands before and after the dump, custom mysqldump options, compressed dump files, and crontab rules. 
 
-The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, `linux/s390x`.
+The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm64`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`.
 
 For more information about mysql-dump, please check [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md).
 
