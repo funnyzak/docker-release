@@ -25,7 +25,11 @@ The following images are available:
 - **Hello-World**: `funnyzak/hello-world:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/hello-world))
 
 
-You can pull above images from Docker Hub, GitHub Container Registry, or Aliyun Container Registry. e.g., `docker pull funnyzak/nginx:latest`, `docker pull ghcr.io/funnyzak/nginx:latest`, `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest`.
+You can pull the above images from Docker Hub, GitHub Container Registry, or Aliyun Container Registry. For example:
+
+- Docker Hub: `docker pull funnyzak/nginx:latest`
+- GitHub Container Registry: `docker pull ghcr.io/funnyzak/nginx:latest`
+- Aliyun Container Registry: `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest`
 
 ## Services
 
