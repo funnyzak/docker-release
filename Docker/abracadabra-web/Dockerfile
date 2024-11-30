@@ -9,10 +9,12 @@ FROM nginx:1.27.3-alpine3.20-slim
 
 ARG BUILD_DATE
 ARG VERSION
+ARG VCS_REF
 
 LABEL org.label-schema.name="Abracadabra_demo" \
       org.label-schema.description="Abracadabra_demo" \
       org.label-schema.version="${VERSION}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"

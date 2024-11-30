@@ -79,10 +79,12 @@ FROM alpine:3.20.3
 
 ARG BUILD_DATE
 ARG VERSION 1.27.3
+ARG VCS_REF
 
 LABEL org.label-schema.name="nginx" \
       org.label-schema.description="A nginx docker image with secure configurations and some useful modules, such as ngx_http_geoip_module, ngx_http_image_filter_module, ngx_http_perl_module, ngx_http_xslt_filter_module, ngx_mail_module, ngx_stream_geoip_module, ngx_stream_module, ngx-fancyindex, headers-more-nginx-module, etc." \
       org.label-schema.version="${VERSION}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"

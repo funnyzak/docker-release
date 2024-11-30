@@ -24,10 +24,12 @@ FROM debian:stable-slim
 
 ARG BUILD_DATE
 ARG VERSION=4.1.1
+ARG VCS_REF
 
 LABEL org.label-schema.name="snell-server" \
       org.label-schema.description="snell server is a lean encrypted proxy protocol." \
       org.label-schema.version="${VERSION}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
