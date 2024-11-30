@@ -43,7 +43,7 @@ jobs:
       docker_image_name: one-api
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: ${{ github.event.inputs.build_args }}
-      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64' }}
     secrets: inherit
 
   snell_server_release:
