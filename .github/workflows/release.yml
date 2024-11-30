@@ -121,7 +121,7 @@ jobs:
 
           BUILD_ARGS="${{ github.event.inputs.build_args || inputs.build_args }}"
           if [ -z "$BUILD_ARGS" ]; then
-            BUILD_ARGS="BUILD_DATE=$(date +%Y-%m-%d)"
+            BUILD_ARGS="BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           fi
           if [[ $BUILD_ARGS != *"VCS_REF="* ]]; then
             BUILD_ARGS="VCS_REF=${{ github.sha }},$BUILD_ARGS"
