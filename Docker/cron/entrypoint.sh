@@ -41,9 +41,8 @@ if [ "$(ls -A /var/spool/cron/crontabs/)" ]; then
   echo "Current crontab:"
   cat /var/spool/cron/crontabs/*
 else
-  echo "No crontab found in /var/spool/cron/crontabs/, Will exit now..."
-  echo "Please mount your crontab file to /var/spool/cron/crontabs/ and restart the container."
-  exit 1
+  echo "\nNo crontab found in /var/spool/cron/crontabs/, will not run any cron jobs."
+  echo "Please mount your crontab file to /var/spool/cron/crontabs/ and restart the container.\n"
 fi
 
 tail -F /var/log/cron/cron.log 2>&1
