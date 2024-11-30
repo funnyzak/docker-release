@@ -53,7 +53,7 @@ For example, you can create a file named `my-cron` with the following content:
 * * * * * /scripts/request.sh >> /var/log/cron/cron.log 2>&1
 ```
 
-> **Note**: Default log file should be `/var/log/cron/cron.log`.
+> **Note**: Default log file should be `/var/log/cron/cron.log`. You should forward all script output to this file.
 
 
 ## Usage
@@ -74,6 +74,11 @@ docker run --name="cron2" -d \
   -e 'CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1' \
   -e 'STARTUP_COMMANDS=echo "Hello, World!"' \
   -e 'EXTRA_PACKAGES=git' \
+  funnyzak/cron
+
+docker run --name="cron5" -d \
+  -e 'CRON_STRINGS=* * * * * /scripts/request.sh >> /var/log/cron/cron.log 2>&1' \
+  -e 'STARTUP_COMMANDS=/scripts/echo.sh >> /var/log/cron/cron.log 2>&1' \
   funnyzak/cron
 ```
 

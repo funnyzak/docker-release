@@ -3,6 +3,8 @@ set -e
 
 chmod +x -R /scripts
 
+[ ! "$(ls -A /scripts)" ] && cp -f /example/scripts/* /scripts || true
+
 rm -rf /var/spool/cron/crontabs && mkdir -m 0644 -p /var/spool/cron/crontabs
 
 [ "$(ls -A /etc/cron.d)" ] && cp -f /etc/cron.d/* /var/spool/cron/crontabs/ || true
@@ -14,18 +16,12 @@ chmod -R 0644 /var/spool/cron/crontabs
 if [ -n "$EXTRA_PACKAGES" ]; then
   echo -e "Installing Extra Packages: $EXTRA_PACKAGES"
   apk add --no-cache $EXTRA_PACKAGES || (echo -e "Failed to install Extra Packages: $EXTRA_PACKAGES")
-else
-  echo -e "No Extra Packages provided, skipping..."
 fi
 
 if [ -n "$STARTUP_COMMANDS" ]; then
   echo -e "Executing Start Up commands: $STARTUP_COMMANDS"
   (eval "$STARTUP_COMMANDS") || (echo -e "Failed to execute Start Up commands: $STARTUP_COMMANDS" && exit 1)
-else
-    echo -e "No Start Up commands provided, skipping..."
 fi
-
-[ ! "$(ls -A /scripts)" ] && cp -f /example/scripts/* /scripts || true
 
 mkdir -p /var/log/cron
 
