@@ -7,6 +7,16 @@
 
 **CRON** is a lightweight Docker image containing Cron, based on Alpine Linux. It supports multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, and `linux/s390x`.
 
+Following packages are installed by default:
+
+- `certificates`
+- `bash`
+- `curl`
+- `wget`
+- `rsync`
+- `git`
+- `zip`
+- 
 ## Pull the Image
 
 ```bash
@@ -18,68 +28,65 @@ docker pull ghcr.io/funnyzak/cron:latest
 docker pull registry.cn-beijing.aliyuncs.com/funnyzak/cron:latest
 ```
 
-## Environment Variables
+## How to Use
 
-- **CRON_STRINGS**: Cron job strings. Use `\n` for newlines. (Default: undefined)
-- **CRON_TAIL**: If defined, outputs the cron log file to `stdout` using `tail`. (Default: undefined)
+### Environment Variables
 
-By default, cron runs in the foreground.
+- **CRON_STRINGS**: Crontab strings, separated by `\n`.
+- **STARTUP_COMMANDS**: Commands to run before starting the cron service.
 
-## Installed Packages
+**CRON_STRINGS** example:
 
-The following packages are installed by default:
+```bash
+# Run every minute
+* * * * * /scripts/request.sh
+# Multiple jobs
+* * * * * /scripts/request.sh\n* * * * * /scripts/request2.sh
+```
 
-- `certificates`
-- `bash`
-- `curl`
-- `wget`
-- `rsync`
-- `git`
-- `zip`
+## Crontab Files
 
-## Cron Files
+crontab files are located in **/etc/cron.d**, you can mount a volume to this directory to add your own crontab files.
 
-**/etc/cron.d**: Directory to mount custom crontab files.
+config file example `/etc/cron.d/request`:
 
-When the image runs, files in `/etc/cron.d` are copied to `/var/spool/cron/crontab`.
+```bash
+* * * * * /scripts/request.sh >> /var/log/cron/request.log 2>&1
+* * * * * /scripts/request.sh >> /var/log/cron/request2.log 2>&1
+```
 
-If **CRON_STRINGS** is defined, the script creates the file `/var/spool/cron/crontab/CRON_STRINGS`.
-
-## Logs
-
-By default, the log file is located at `/var/log/cron/cron.log`.
+> **Note**: Default log file is `/var/log/cron/cron.log`.
 
 ## Usage
 
-### Running a Single Cron Job
+### Using Crontab Files
 
 ```bash
-docker run --name="cron-sample" -d \
-  -v /path/to/app/conf/crontabs:/etc/cron.d \
-  -v /path/to/app/scripts:/scripts \
+docker run --name="cron" -d \
+  -v ./crontabs:/etc/cron.d \
+  -v ./scripts:/scripts \
   funnyzak/cron
 ```
 
-### Using Scripts and CRON_STRINGS
+### Using CRON_STRINGS
 
 ```bash
-docker run --name="cron-sample" -d \
-  -e 'CRON_STRINGS=* * * * * /scripts/myapp-script.sh' \
-  -v /path/to/app/scripts:/scripts \
+docker run --name="cron2" -d \
+  -e 'CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1' \
+  -e 'STARTUP_COMMANDS=echo "Hello, World!"' \
   funnyzak/cron
 ```
 
-### Fetching a URL with Cron Every Minute
+### Fetch Google Homepage Every Minute
 
 ```bash
-docker run --name="cron-sample" -d \
-  -e 'CRON_STRINGS=* * * * * wget --spider https://sample.dockerhost/cron-jobs' \
+docker run --name="cron3" -d \
+  -e 'CRON_STRINGS=* * * * * echo $(date) >> /var/log/cron/cron.log' 2>&1 \
+  -e 'STARTUP_COMMANDS=echo "Hello, World!"' \
   funnyzak/cron
 ```
 
----
-
-### Docker Compose Example
+### Compose Example
 
 ```yaml
 version: '3'
@@ -88,21 +95,14 @@ services:
     image: funnyzak/cron
     privileged: true
     container_name: cron
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '1g'
-    tty: true
     environment:
       - TZ=Asia/Shanghai
       - LANG=C.UTF-8
-      - CRON_TAIL=1  # Tail cron log
-      - CRON_STRINGS=* * * * * /scripts/echo.sh
+      - CRON_TAIL=1
+      - CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1
     restart: on-failure
     volumes:
-      - ./scripts:/scripts     # Scripts to execute
-      - ./cron:/etc/cron.d     # Crontab files
-      - ./db:/db               # Log files
+      - ./cron/scripts:/scripts     # Scripts to execute
+      - ./cron/crontabs:/etc/cron.d     # Crontab files
+      - ./cron/logs:/var/log/cron     # Log files
 ```
-
-For more details, please refer to the [docker-compose.yml](example/docker-compose.yml) file.

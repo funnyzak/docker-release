@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
-curl -X POST -d "fizz=buzz" https://www.baidu.com
+curl -s https://www.google.com

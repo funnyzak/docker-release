@@ -23,8 +23,11 @@ RUN apk update && apk upgrade && \
     touch /var/log/cron/cron.log && \
     rm -rf /tmp/* /var/cache/apk/*
 
-COPY cmd.sh entrypoint.sh /run_scripts/
-RUN chmod +x /run_scripts/*.sh
+COPY entrypoint.sh /
+COPY example /example
 
-ENTRYPOINT ["/run_scripts/entrypoint.sh"]
-CMD ["/run_scripts/cmd.sh"]
+WORKDIR /
+
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,7 +1,7 @@
 version: '3'
 services:
   acron:
-    image: funnyzak/cron:nightly
+    image: funnyzak/cron:latest
     privileged: false
     container_name: crons
     tty: true
@@ -9,9 +9,9 @@ services:
       - TZ=Asia/Shanghai
       - LANG=C.UTF-8
       - CRON_TAIL=1
-      - CRON_STRINGS=* * * * * /scripts/echo.sh # excute every minute
+      - CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron.log 2>&1
     restart: on-failure
     volumes:
-      - ./scripts:/scripts # cron scripts
-      - ./cron:/etc/cron.d # more crontab files
-      - ./logs:/logs # cron logs
+      - ./cron/scripts:/scripts
+      - ./cron/crontab:/etc/cron.d # crontab files
+      - ./cron/log:/var/log/cron # cron log

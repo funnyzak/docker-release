@@ -1,5 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
-date_str=$(date)
-
-echo "$date_str" >> /logs/echo.log
+echo "Hi, Current time is $(date)"
