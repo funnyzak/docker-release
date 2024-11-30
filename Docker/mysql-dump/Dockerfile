@@ -29,14 +29,6 @@ ENV COMPRESS_EXTENSION zip
 ENV EXPIRE_HOURS 4320
 ENV DUMP_AT_STARTUP true
 
-ENV DB_HOST localhost
-ENV DB_PORT 3306
-ENV DB_USER root
-ENV DB_PASSWORD root
-ENV DB_NAMES test
-
-ENV DB_DUMP_CRON 0 0 * * *
-
 COPY /scripts/* /run-scripts/
 RUN chmod +x /run-scripts/*
 
