@@ -125,3 +125,7 @@ services:
     volumes:
       - ./bak/mysql_db:/backup
 ```
+
+## Reference
+
+- [MySQLDUMP](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html)
