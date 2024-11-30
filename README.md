@@ -23,6 +23,7 @@ The following images are available:
 - **LibreOffice-Server**: `funnyzak/libreoffice-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))
 - **Request-Hub**: `funnyzak/request-hub:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/request-hub))
 - **Cron**: `funnyzak/cron:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/cron))
+- **MySQL Dump**: `funnyzak/mysql-dump:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/mysql-dump))
 
 ### Docker Pull
 
@@ -46,6 +47,7 @@ You can pull the above images from Docker Hub, GitHub Container Registry, or Ali
 | [LibreOffice-Server](https://github.com/funnyzak/docker-release/tree/main/Docker/libreoffice-server/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/libreoffice-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-server)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-server) |
 | [Request-Hub](https://github.com/funnyzak/docker-release/tree/main/Docker/request-hub/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/request-hub?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/request-hub)](https://hub.docker.com/r/funnyzak/request-hub/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub) |
 | [Cron](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/cron?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/cron/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/cron)](https://hub.docker.com/r/funnyzak/cron/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron) |
+| [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/mysql-dump?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/mysql-dump)](https://hub.docker.com/r/funnyzak/mysql-dump/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/mysql-dump.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump) |
 
 ## Services
 
@@ -445,7 +447,6 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-admin:latest
 
 </details>
 
-
 For more information about Canal, please check [Alibaba Canal](https://github.com/funnyzak/docker-release/tree/main/Docker/canal/README.md).
 
 # CRON
@@ -461,6 +462,21 @@ Installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`,
 
 For more information about cron, please check [Cron Documentation](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md).
 
+--- 
+
+### MySQL Dump
+
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/mysql-dump?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/mysql-dump)](https://hub.docker.com/r/funnyzak/mysql-dump/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/mysql-dump.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/mysql-dump.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump/)
+
+mysql-dump is a simple MySQL backup tool that can backup all databases or specified databases. It can push message with pushoo and delete expired dump files. It supports custom commands before and after the dump, custom mysqldump options, compressed dump files, and crontab rules. 
+
+The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, `linux/s390x`.
+
+For more information about mysql-dump, please check [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md).
+
 ## Directories
 
 Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
@@ -473,7 +489,6 @@ Images build directory is located at ./Docker. You can also download the directo
 - `./Docker/libreoffice-server`: Build the [LibreOffice-Server](https://github.com/funnyzak/libreoffice-server) service image.
 - `./Docker/request-hub`: Build the [Request-Hub](https://github.com/kyledayton/requesthub) service image.
 - `./Docker/canal`: Build the [Alibaba Canal](https://github.com/alibaba/canal) service images.
-
 
 ## Contributions
 
