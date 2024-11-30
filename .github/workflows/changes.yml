@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Get changed files
         uses: tj-actions/changed-files@v45
@@ -44,6 +46,5 @@ jobs:
       docker_file_name: $(echo ${{ matrix.dockerfile }} | awk -F'/' '{print $NF}')
       build_context: $(dirname ${{ matrix.dockerfile }})
       docker_tag: nightly
-      build_args: BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       build_platforms: linux/amd64
     secrets: inherit

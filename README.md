@@ -6,9 +6,6 @@
 
 **Docker Release** is a repository that provides Docker images for various services, It publishes images to Docker Hub, GitHub Container Registry, and AliCloud Container Registry. The images are built with the latest source code and are available for multiple architectures.
 
-
-> **Note**:  The GitHub Container Registry mirror is `ghcr.io`, and the Aliyun Container Registry mirror is `registry.cn-beijing.aliyuncs.com`.
-
 ## Images
 
 All images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
@@ -17,6 +14,7 @@ The following images are available:
 
 - **Nginx**: `funnyzak/nginx:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nginx))
 - **Snell-Server**: `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
+- **One-API**: `funnyzak/one-api:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/one-api))
 - **y-webrtc-signaling Server**: `funnyzak/y-webrtc-signaling:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))
 - **Abracadabra Demo**: `funnyzak/abracadabra-web:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))
 - **LibreOffice-Server**: `funnyzak/libreoffice-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))
@@ -25,6 +23,13 @@ The following images are available:
 - **Canal-Deployer**: `funnyzak/canal-deployer:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-deployer))
 - **Canal-Admin**: `funnyzak/canal-admin:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-admin))
 - **Hello-World**: `funnyzak/hello-world:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/hello-world))
+
+
+You can pull the above images from Docker Hub, GitHub Container Registry, or Aliyun Container Registry. For example:
+
+- Docker Hub: `docker pull funnyzak/nginx:latest`
+- GitHub Container Registry: `docker pull ghcr.io/funnyzak/nginx:latest`
+- Aliyun Container Registry: `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest`
 
 ## Services
 
@@ -39,29 +44,11 @@ A nginx docker image with secure configurations and some useful modules, such as
 
 Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
 
 <details>
-<summary>Docker Pull Commands</summary>
+<summary>Deployment</summary>
 
-```bash
-docker pull funnyzak/nginx:latest
-# GHCR
-docker pull ghcr.io/funnyzak/nginx:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
-```
-
-</details>
-
-**Deployment**:
-
-You can run this image with the following command:
-
-<details>
-<summary>Docker Run Commands</summary>
+**Docker Deployment**:
 
 ```bash
 docker run -d -t -i --name nginx --restart on-failure \
@@ -107,36 +94,18 @@ This image is build from the latest source code of [Snell Server](https://manual
 
 > **Notice**: Need to use with Surge iOS or Surge Mac, both of them support Snell protocol. The latest surge-server version is v4, which is not compatible with the previous versions like before. Please upgrade both the client (Surge iOS & Surge Mac) and the server binary.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
 
 <details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/snell-server
-# GHCR
-docker pull ghcr.io/funnyzak/snell-server
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/snell-server
-```
-
-</details>
-
-**Deployment**:
-
-You can run this image with the following command:
-
-<details>
-<summary>Docker Run Commands</summary>
+<summary>Deployment</summary>
 
 **Docker Deployment**:
+
 ```bash
 docker run -d --name snell-server --restart always -p 12303:6180 -e PSK="5G0H4qdf32mEZx32t" funnyzak/snell-server
 ```
 
 **Docker Compose Deployment**:
+
 ```yaml
 version: '3'
 
@@ -155,6 +124,7 @@ services:
 ```
 
 **Echo config file**:
+
 ```bash
 docker exec -it snell-server cat /etc/snell-server.conf
 ```
@@ -164,6 +134,61 @@ docker exec -it snell-server cat /etc/snell-server.conf
 For more information, please check [Snell-Server](https://github.com/funnyzak/docker-release/tree/main/Docker/snell-server/README.md).
 
 ---
+
+### One-API
+
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/one-api?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/one-api/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/one-api)](https://hub.docker.com/r/funnyzak/one-api/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/one-api.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/one-api/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/one-api.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/one-api/)
+
+**One-API** Access all LLM through the standard OpenAI API format, easy to deploy & use. It built with the `linux/amd64`, `linux/arm64` architectures.
+
+<details>
+<summary>Deployment</summary>
+
+**Docker Deployment**:
+
+Deployment command: `docker run --name one-api -d --restart always -p 3000:3000 -e TZ=Asia/Shanghai -v /home/ubuntu/data/one-api:/data funnyzak/one-api`
+
+Update command: `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR`
+
+The first `3000` in `-p 3000:3000` is the port of the host, which can be modified as needed.
+
+Data will be saved in the `/home/ubuntu/data/one-api` directory on the host. Ensure that the directory exists and has write permissions, or change it to a suitable directory.
+
+Nginx reference configuration:
+```
+server{
+   server_name openai.justsong.cn;  # Modify your domain name accordingly
+
+   location / {
+          client_max_body_size  64m;
+          proxy_http_version 1.1;
+          proxy_pass http://localhost:3000;  # Modify your port accordingly
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-For $remote_addr;
+          proxy_cache_bypass $http_upgrade;
+          proxy_set_header Accept-Encoding gzip;
+   }
+}
+```
+
+Next, configure HTTPS with Let's Encrypt certbot:
+```bash
+# Install certbot on Ubuntu:
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+# Generate certificates & modify Nginx configuration
+sudo certbot --nginx
+# Follow the prompts
+# Restart Nginx
+sudo service nginx restart
+```
+
+The initial account username is `root` and password is `123456`.
+
+</details>
 
 ### Y-WebRTC Signaling
 
@@ -177,35 +202,18 @@ Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrt
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
 
 <details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/y-webrtc-signaling:latest
-# GHCR 
-docker pull ghcr.io/funnyzak/y-webrtc-signaling:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/y-webrtc-signaling:latest
-```
-</details>
-
-**Deployment**:
-
-You can run this image with the following command:
-
-<details>
-<summary>Docker Run Commands</summary>
+<summary>Deployment</summary>
 
 **Docker Deployment**:
+
 ```bash
 docker run -d --name y-webrtc-signaling -p 4444:4444 funnyzak/y-webrtc-signaling:latest
 ```
 
 **Docker Compose Deployment**:
+
 ```yaml
 version: '3.1'
 services:
@@ -234,30 +242,12 @@ Abracadabra (魔曰) is an instant text encryption/de-sensitization tool, which 
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `inux/ppc64le`, `linux/s390x` architectures.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
 
 <details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/abracadabra-web:latest
-# GHCR
-docker pull ghcr.io/funnyzak/abracadabra-web:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
-```
-</details>
-
-**Deployment**:
-
-You can run this image with the following command:
-
-<details>
-<summary>Docker Run Commands</summary>
+<summary>Deployment</summary>
 
 **Docker Deployment**:
+
 ```bash
 
 docker run -d --name abracadabra-web -p 8080:80 funnyzak/abracadabra-web:latest
@@ -268,6 +258,7 @@ docker run -d --name abracadabra-web -p 8080:80 registry.cn-beijing.aliyuncs.com
 ```
 
 **Docker Compose Deployment**:
+
 ```yaml
 version: '3.1'
 
@@ -302,35 +293,18 @@ LibreOffice Service service for editing documents online and converting Word to 
 
 This image is built with the `linux/amd64`, `linux/arm64` architectures.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
 
 <details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/libreoffice-server:latest
-# GHCR
-docker pull ghcr.io/funnyzak/libreoffice-server:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/libreoffice-server:latest
-```
-</details>
-
-**Deployment**:
-
-You can run this image with the following command:
-
-<details>
-<summary>Docker Run Commands</summary>
+<summary>Deployment</summary>
 
 **Docker Deployment**:
+
 ```bash
 docker run -d --name libreoffice -p 3000:3000 -p 3001:8038 funnyzak/libreoffice-server:latest
 ```
 
 **Docker Compose Deployment**:
+
 ```yaml
 version: "3.1"
 services:
@@ -363,35 +337,18 @@ For more information, please check [LibreOffice-Server](https://github.com/funny
 
 [RequestHub](https://github.com/kyledayton/requesthub) is used to receive, record, and proxy HTTP requests. This image supports `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x`.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
 
 <details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/request-hub:latest
-# GHCR
-docker pull ghcr.io/funnyzak/request-hub:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/request-hub:latest
-```
-</details>
-
-**Deployment**:
-
-You can run this image with the following command:
-
-<details>
-<summary>Docker Run Commands</summary>
+<summary>Deployment</summary>
 
 **Docker Deployment**:
+
 ```bash
 docker run -d --name request-hub -p 8080:8080 funnyzak/request-hub:latest
 ```
 
 **Docker Compose Deployment**:
+
 ```yaml
 version: '3.1'
 services:
@@ -439,12 +396,8 @@ The following images are available:
 
 All Images are installed under the `/opt/canal` directory.  For example, the `canal-adapter` service is installed under `/opt/canal/canal-adapter`.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
-
 <details>
-<summary>Docker Pull Commands</summary>
+<summary>Docker Pull</summary>
 
 ```bash
 # Docker Hub
@@ -473,6 +426,7 @@ For more information about Canal, please check [Alibaba Canal](https://github.co
 Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
 
 - `./Docker/nginx`: Build the [Nginx](https://nginx.org) service image.
+- `./Docker/one-api`: Build the [One-API](https://github.com/songquanpeng/one-api) service image.
 - `./Docker/snell-server`: Build the [Snell-Server](https://manual.nssurge.com/others/snell.htm) service image.
 - `./Docker/y-webrtc-signaling`: Build the [y-webrtc-signaling](https://github.com/lobehub/y-webrtc-signaling) service image.
 - `./Docker/abracadabra-web`: Build the [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo) service image.

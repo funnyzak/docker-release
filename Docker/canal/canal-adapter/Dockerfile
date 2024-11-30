@@ -25,11 +25,13 @@ FROM openjdk:11-jre-slim AS runtime
 ARG BUILD_DATE
 ARG VERSION=1.1.7
 ARG CANAL_NAME=adapter
+ARG VCS_REF
 
 LABEL org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.name="canal-${CANAL_NAME}" \
       org.label-schema.description="Alibaba Canal, a component for incremental subscription and consumption of binlogs in MySQL." \
       org.label-schema.version="${VERSION}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.url="https://github.com/funnyzak/docker-release" \
       org.label-schema.build-date="${BUILD_DATE}"
 

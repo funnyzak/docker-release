@@ -28,10 +28,9 @@ on:
         default: ''
         type: string
       build_args:
-        description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d),ENV=prod'
         required: false
         type: string
-        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
 
   workflow_dispatch:
     inputs:
@@ -61,10 +60,9 @@ on:
         default: ''
         type: string
       build_args:
-        description: 'Docker build args list, e.g. VERSION=1.0.0,ENV=prod'
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d),ENV=prod'
         required: false
         type: string
-        default: 'BUILD_DATE=$(date +%Y-%m-%d)'
 
 permissions:
   packages: write
@@ -123,7 +121,10 @@ jobs:
 
           BUILD_ARGS="${{ github.event.inputs.build_args || inputs.build_args }}"
           if [ -z "$BUILD_ARGS" ]; then
-            BUILD_ARGS="BUILD_DATE=$(date +%Y-%m-%d)"
+            BUILD_ARGS="BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          fi
+          if [[ $BUILD_ARGS != *"VCS_REF="* ]]; then
+            BUILD_ARGS="VCS_REF=${{ github.sha }},$BUILD_ARGS"
           fi
 
           {
