@@ -24,12 +24,20 @@ The following images are available:
 - **Canal-Admin**: `funnyzak/canal-admin:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-admin))
 - **Hello-World**: `funnyzak/hello-world:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/hello-world))
 
+### Docker Pull
 
 You can pull the above images from Docker Hub, GitHub Container Registry, or Aliyun Container Registry. For example:
 
 - Docker Hub: `docker pull funnyzak/nginx:latest`
 - GitHub Container Registry: `docker pull ghcr.io/funnyzak/nginx:latest`
 - Aliyun Container Registry: `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest`
+
+### Docker Status
+
+# 通过图表方式展示所有image
+
+| Image | Tag | Size | Pulls |
+|---|---|---|---|
 
 ## Services
 
