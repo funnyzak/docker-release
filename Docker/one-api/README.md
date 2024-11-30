@@ -5,9 +5,7 @@
 [![Docker Stars](https://img.shields.io/docker/stars/funnyzak/one-api.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/one-api/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/one-api.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/one-api/)
 
-✨ Access all LLM through the standard OpenAI API format, easy to deploy & use ✨
-
-This image is built with the `linux/amd64`, `linux/arm64` architectures.
+**One-API** Access all LLM through the standard OpenAI API format, easy to deploy & use. It built with the `linux/amd64`, `linux/arm64` architectures.
 
 ## Docker Pull
 
