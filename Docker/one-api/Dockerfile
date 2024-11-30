@@ -1,10 +1,14 @@
 FROM node:16 AS node-builder
 
 ARG VERSION
+ARG BUILD_DATE
+ARG VCS_REF
 
 WORKDIR /app
 
-RUN git clone https://github.com/songquanpeng/one-api.git .
+RUN git clone https://github.com/songquanpeng/one-api.git . \
+    && git checkout ${VERSION} || git checkout main \
+    && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION
 
 WORKDIR /app/web
 
@@ -29,7 +33,10 @@ ENV GO111MODULE=on \
 
 WORKDIR /build
 
-RUN git clone https://github.com/songquanpeng/one-api.git .
+RUN git clone https://github.com/songquanpeng/one-api.git . \
+    && git checkout ${VERSION} || git checkout main \
+    && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION
+
 RUN go mod download
 COPY --from=node-builder /app/web/build ./web/build
 RUN go build -trimpath -ldflags "-s -w -X 'github.com/songquanpeng/one-api/common.Version=$(cat VERSION)' -extldflags '-static'" -o one-api
@@ -39,6 +46,9 @@ FROM alpine
 ARG BUILD_DATE
 ARG VERSION
 ARG VCS_REF
+
+COPY --from=go-builder /build/one-api /
+COPY --from=go-builder /build/VERSION /
 
 LABEL org.label-schema.name="one-api" \
       org.label-schema.description="Access all LLM through the standard OpenAI API format, easy to deploy & use." \
@@ -53,7 +63,8 @@ RUN apk update \
     && apk add --no-cache ca-certificates tzdata \
     && update-ca-certificates 2>/dev/null || true
 
-COPY --from=go-builder /build/one-api /
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD wget -qO- http://localhost:3000/api/status || exit 1
+
 EXPOSE 3000
 WORKDIR /data
 ENTRYPOINT ["/one-api"]

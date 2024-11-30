@@ -6,17 +6,17 @@
 
 **Docker Release** is a repository that provides Docker images for various services, It publishes images to Docker Hub, GitHub Container Registry, and AliCloud Container Registry. The images are built with the latest source code and are available for multiple architectures.
 
-
-> **Note**:  The GitHub Container Registry mirror is `ghcr.io`, and the Aliyun Container Registry mirror is `registry.cn-beijing.aliyuncs.com`.
-
 ## Images
 
 All images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
+
+The GitHub Container Registry mirror is `ghcr.io`, and the Aliyun Container Registry mirror is `registry.cn-beijing.aliyuncs.com`.
 
 The following images are available:
 
 - **Nginx**: `funnyzak/nginx:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nginx))
 - **Snell-Server**: `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
+- **One-API**: `funnyzak/one-api:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/one-api))
 - **y-webrtc-signaling Server**: `funnyzak/y-webrtc-signaling:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))
 - **Abracadabra Demo**: `funnyzak/abracadabra-web:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))
 - **LibreOffice-Server**: `funnyzak/libreoffice-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))
@@ -25,6 +25,9 @@ The following images are available:
 - **Canal-Deployer**: `funnyzak/canal-deployer:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-deployer))
 - **Canal-Admin**: `funnyzak/canal-admin:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-admin))
 - **Hello-World**: `funnyzak/hello-world:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/hello-world))
+
+
+You can pull above images from Docker Hub, GitHub Container Registry, or Aliyun Container Registry. e.g., `docker pull funnyzak/nginx:latest`, `docker pull ghcr.io/funnyzak/nginx:latest`, `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest`.
 
 ## Services
 
@@ -38,23 +41,6 @@ The following images are available:
 A nginx docker image with secure configurations and some useful modules, such as `ngx_http_geoip_module`, `ngx_http_image_filter_module`, `ngx_http_perl_module`, `ngx_http_xslt_filter_module`, `ngx_mail_module`, `ngx_stream_geoip_module`, `ngx_stream_module`, `ngx-fancyindex`, `headers-more-nginx-module`, etc.
 
 Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
-
-**Pulling Images:**
-
-You can pull the images using the following commands:
-
-<details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/nginx:latest
-# GHCR
-docker pull ghcr.io/funnyzak/nginx:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
-```
-
-</details>
 
 **Deployment**:
 
@@ -106,23 +92,6 @@ Snell Server is a lean encrypted proxy protocol. It is designed to be simple, li
 This image is build from the latest source code of [Snell Server](https://manual.nssurge.com/others/snell.html). It supports `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/386` architecture. 
 
 > **Notice**: Need to use with Surge iOS or Surge Mac, both of them support Snell protocol. The latest surge-server version is v4, which is not compatible with the previous versions like before. Please upgrade both the client (Surge iOS & Surge Mac) and the server binary.
-
-**Pulling Images:**
-
-You can pull the images using the following commands:
-
-<details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/snell-server
-# GHCR
-docker pull ghcr.io/funnyzak/snell-server
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/snell-server
-```
-
-</details>
 
 **Deployment**:
 
@@ -180,22 +149,6 @@ Y-WebRTC is a WebRTC signaling server. More information can be found at [y-webrt
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
-
-<details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/y-webrtc-signaling:latest
-# GHCR 
-docker pull ghcr.io/funnyzak/y-webrtc-signaling:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/y-webrtc-signaling:latest
-```
-</details>
-
 **Deployment**:
 
 You can run this image with the following command:
@@ -238,22 +191,6 @@ For more information, please check [y-webrtc-signaling](https://github.com/funny
 Abracadabra (魔曰) is an instant text encryption/de-sensitization tool, which can also be used for file encryption, based on C++ 11. More information can be found at [Abracadabra_demo](https://github.com/SheepChef/Abracadabra_demo).
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `inux/ppc64le`, `linux/s390x` architectures.
-
-**Pulling Images:**
-
-You can pull the images using the following commands:
-
-<details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/abracadabra-web:latest
-# GHCR
-docker pull ghcr.io/funnyzak/abracadabra-web:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/abracadabra-web:latest
-```
-</details>
 
 **Deployment**:
 
@@ -309,22 +246,6 @@ LibreOffice Service service for editing documents online and converting Word to 
 
 This image is built with the `linux/amd64`, `linux/arm64` architectures.
 
-**Pulling Images:**
-
-You can pull the images using the following commands:
-
-<details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/libreoffice-server:latest
-# GHCR
-docker pull ghcr.io/funnyzak/libreoffice-server:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/libreoffice-server:latest
-```
-</details>
-
 **Deployment**:
 
 You can run this image with the following command:
@@ -371,22 +292,6 @@ For more information, please check [LibreOffice-Server](https://github.com/funny
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/)
 
 [RequestHub](https://github.com/kyledayton/requesthub) is used to receive, record, and proxy HTTP requests. This image supports `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/s390x`.
-
-**Pulling Images:**
-
-You can pull the images using the following commands:
-
-<details>
-<summary>Docker Pull Commands</summary>
-
-```bash
-docker pull funnyzak/request-hub:latest
-# GHCR
-docker pull ghcr.io/funnyzak/request-hub:latest
-# Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/request-hub:latest
-```
-</details>
 
 **Deployment**:
 

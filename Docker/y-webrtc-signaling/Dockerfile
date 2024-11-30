@@ -9,7 +9,7 @@ RUN npm install
 FROM node:18-alpine
 
 ARG BUILD_DATE
-ARG VERSION=
+ARG VERSION
 ARG VCS_REF
 
 LABEL org.label-schema.name="y-webrtc-signaling" \
