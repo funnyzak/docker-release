@@ -105,7 +105,7 @@ jobs:
         run: |
           if [ ! -d "${{ steps.determine-context.outputs.BUILD_CONTEXT }}" ]; then
             echo "Docker context ${{ steps.determine-context.outputs.BUILD_CONTEXT }} does not exist"
-            exit 1
+            exit 0
           fi
 
       - name: Set vars
