@@ -21,15 +21,14 @@ docker pull ghcr.io/funnyzak/snell-server
 docker pull registry.cn-beijing.aliyuncs.com/funnyzak/snell-server
 ```
 
-## Docker Run
+## Deployment
 
 Your can run this image with the following command:
 
 ```bash
-# One line command
 docker run -d --name snell-server --restart always -p 12303:6180 -e PSK="5G0H4qdf32mEZx32t" funnyzak/snell-server
 
-# Or with environment variables
+# With more options
 docker run -d --name snell-server --restart always \
   -e PSK="5G0H4qdf32mEZx32t" \
   -e TZ="Asia/Shanghai" \
@@ -41,7 +40,7 @@ docker run -d --name snell-server --restart always \
 docker exec -it snell-server cat /etc/snell-server.conf
 ```
 
-Or you can use docker-compose to run this image:
+## Docker Compose
 
 ```yaml
 version: '3'
@@ -57,6 +56,14 @@ services:
     restart: always
     ports:
       - 12303:6180
+```
+
+
+## Surge Configuration
+
+```ini
+[Proxy]
+Proxy = snell, 1.2.3.4, 6333, psk=RANDOM_KEY_HERE, version=4
 ```
 
 ## Reference
