@@ -149,7 +149,6 @@ For more information, please check [Snell-Server](https://github.com/funnyzak/do
 
 **Docker Deployment**:
 
-### Docker Deployment
 Deployment command: `docker run --name one-api -d --restart always -p 3000:3000 -e TZ=Asia/Shanghai -v /home/ubuntu/data/one-api:/data funnyzak/one-api`
 
 Update command: `docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -cR`
