@@ -206,6 +206,10 @@ The initial account username is `root` and password is `123456`.
 
 </details>
 
+For more information, please check [One-API](https://github.com/funnyzak/docker-release/tree/main/Docker/one-api/README.md).
+
+---
+
 ### Y-WebRTC Signaling
 
 [![Docker Tags](https://img.shields.io/docker/v/funnyzak/y-webrtc-signaling?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/y-webrtc-signaling/)
