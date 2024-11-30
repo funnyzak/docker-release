@@ -75,6 +75,7 @@ docker run -d --name mysql-dump \
   -e DB_NAMES="dbname1 dbname2" \
   -e DB_DUMP_OPTS="--single-transaction --quick --lock-tables=false" \
   -e EXPIRE_HOURS=4320 \
+  -v ./backup:/backup \
 ```
 
 ### Compose

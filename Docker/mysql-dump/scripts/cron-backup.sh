@@ -2,9 +2,6 @@
 
 export PATH=$PATH:/usr/local/bin
 
-# log message
-# usage: log "message" "level" "push_message"
-# example: log "hello world" "info" "true"
 log() {
   log_level="info"
   push_message="false"
