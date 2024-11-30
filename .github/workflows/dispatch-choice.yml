@@ -10,6 +10,7 @@ on:
         options:
           - nginx
           - snell-server
+          - one-api
           - abracadabra-web
           - libreoffice-server
           - y-webrtc-signaling
@@ -34,6 +35,16 @@ permissions:
   packages: write
 
 jobs:
+  one_api_release:
+    if: ${{ github.event.inputs.choice_service == 'one-api' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/one-api'
+      docker_image_name: one-api
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+
   snell_server_release:
     if: ${{ github.event.inputs.choice_service == 'snell-server' }}
     uses: ./.github/workflows/release.yml
@@ -44,6 +55,7 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/386' }}
     secrets: inherit
+
   nginx_release:
     if: ${{ github.event.inputs.choice_service == 'nginx' }}
     uses: ./.github/workflows/release.yml
@@ -54,6 +66,7 @@ jobs:
       build_args: ${{ github.event.inputs.build_args || 'VERSION=1.27.3' }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/arm64,linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8' }}
     secrets: inherit  
+
   abracadabra_web_release:
     if: ${{ github.event.inputs.choice_service == 'abracadabra-web' }}
     uses: ./.github/workflows/release.yml
@@ -64,6 +77,7 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
     secrets: inherit
+
   libreoffice_server_release:
     if: ${{ github.event.inputs.choice_service == 'libreoffice-server' }}
     uses: ./.github/workflows/release.yml
@@ -74,6 +88,7 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
     secrets: inherit
+
   y_webrtc_signaling_release:
     if: ${{ github.event.inputs.choice_service == 'y-webrtc-signaling' }}
     uses: ./.github/workflows/release.yml
@@ -84,6 +99,7 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
     secrets: inherit
+
   request_hub_release:
     if: ${{ github.event.inputs.choice_service == 'request-hub' }}
     uses: ./.github/workflows/release.yml
@@ -94,6 +110,7 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/s390x' }}
     secrets: inherit
+    
   hello_world_release:
     if: ${{ github.event.inputs.choice_service == 'hello-world' }}
     uses: ./.github/workflows/release.yml
