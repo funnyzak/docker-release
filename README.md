@@ -449,7 +449,7 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-admin:latest
 
 For more information about Canal, please check [Alibaba Canal](https://github.com/funnyzak/docker-release/tree/main/Docker/canal/README.md).
 
-# CRON
+# Cron
 
 [![Docker Tags](https://img.shields.io/docker/v/funnyzak/cron?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/cron/)
 [![Image Size](https://img.shields.io/docker/image-size/funnyzak/cron)](https://hub.docker.com/r/funnyzak/cron/)
