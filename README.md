@@ -10,8 +10,6 @@
 
 All images are provided with the `latest` and `nightly` tags (if available). For other versions, please refer to the Docker Hub or GHCR Container Registry pages.
 
-The GitHub Container Registry mirror is `ghcr.io`, and the Aliyun Container Registry mirror is `registry.cn-beijing.aliyuncs.com`.
-
 The following images are available:
 
 - **Nginx**: `funnyzak/nginx:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nginx))
