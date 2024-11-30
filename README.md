@@ -140,7 +140,14 @@ services:
       - 12303:6180
 ```
 
-**Echo config file**:
+**Surge Configuration**:
+
+```ini
+[Proxy]
+Proxy = snell, 1.2.3.4, 6333, psk=RANDOM_KEY_HERE, version=4
+```
+
+**Echo Config**:
 
 ```bash
 docker exec -it snell-server cat /etc/snell-server.conf
