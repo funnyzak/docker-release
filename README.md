@@ -48,6 +48,8 @@ Build with the  `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linu
 <details>
 <summary>Deployment</summary>
 
+**Docker Deployment**:
+
 ```bash
 docker run -d -t -i --name nginx --restart on-failure \
   -v /path/to/conf.d:/etc/nginx/conf.d \
