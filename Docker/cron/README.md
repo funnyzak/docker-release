@@ -5,9 +5,9 @@
 [![Docker Stars](https://img.shields.io/docker/stars/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron/)
 
-**CRON** is a lightweight Docker image containing Cron, based on Alpine Linux. It supports multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, and `linux/s390x`.
+**CRON** is a lightweight Docker image containing Cron, based on Alpine Linux. It supports multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, `linux/s390x`.
 
-Current installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
+Installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
 
 ## Pull the Image
 
@@ -26,17 +26,24 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/cron:latest
 
 - **CRON_STRINGS**: Crontab strings, separated by `\n`.
 - **STARTUP_COMMANDS**: Commands to run before starting the cron service.
+- **EXTRA_PACKAGES**: Optional, Specify extra packages to install. Default is empty. e.g. `mysql-client mariadb-connector-c`.
 
-**CRON_STRINGS** example:
+**CRON_STRINGS example**:
+
+Single job:
 
 ```bash
 # Run every minute
-* * * * * /scripts/request.sh
-# Multiple jobs
-* * * * * /scripts/request.sh\n* * * * * /scripts/request2.sh
+* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1
 ```
 
-## Crontab Files
+Multiple jobs:
+```bash
+# Multiple jobs
+* * * * * /scripts/request.sh >> /var/log/cron/cron.log 2>&1\n* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1
+```
+
+### Crontab Files
 
 crontab files are located in **/etc/cron.d**, you can mount a volume to this directory to add your own crontab files.
 
@@ -66,6 +73,7 @@ docker run --name="cron" -d \
 docker run --name="cron2" -d \
   -e 'CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1' \
   -e 'STARTUP_COMMANDS=echo "Hello, World!"' \
+  -e 'EXTRA_PACKAGES=git' \
   funnyzak/cron
 ```
 
