@@ -459,7 +459,7 @@ cron is a lightweight service that runs in the background and executes scheduled
 
 Installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
 
-For more information about Canal, please check [Cron Documentation](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md).
+For more information about cron, please check [Cron Documentation](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md).
 
 ## Directories
 
