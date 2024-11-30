@@ -27,19 +27,19 @@ The following environment variables are used to configure the container:
 
 The following environment variables are required:
 
-- `DB_DUMP_CRON` - The crontab rule of backup. Default: `0 0 * * *`. Optional.
 - `DB_HOST` - The database host. Required.
-- `DB_PORT` - The database port. Default: `3306`.
 - `DB_USER` - The database user. Required.
 - `DB_PASSWORD` - The database password. Required.
-- `DB_NAMES` - The database name of the dump.For example: dbname1 dbname2.Leave a blank default to all databases.
-- `DUMP_OPTS` - The mysqldump options. Optional. Default: `--single-transaction --quick --lock-tables=false`.
-- `EXPIRE_HOURS` - The expired time of the dump files. Default: `4320`.
 
 ### Optional
 
 The following environment variables are optional:
 
+- `DB_PORT` - The database port. Default: `3306`.
+- `DB_NAMES` - The database name of the dump.For example: dbname1 dbname2.Leave a blank default to all databases.
+- `EXPIRE_HOURS` - The expired time of the dump files. Default: `4320`.
+- `DUMP_OPTS` - The mysqldump options. Optional. Default: `--single-transaction --quick --lock-tables=false`.
+- `DB_DUMP_CRON` - The crontab rule of backup. Default: `0 0 * * *`. Optional.
 - `DUMP_AT_STARTUP` - Whether to dump at startup. Default: `true`.
 - `DB_DUMP_TARGET_DIR_PATH` - The directory path to store the dump files. Default: `/backup`.
 - `TMP_DIR_PATH` - The directory path to store the temporary files. Default: `/tmp/backups`.
@@ -77,6 +77,7 @@ docker run -d --name mysql-dump \
   -e DB_DUMP_OPTS="--single-transaction --quick --lock-tables=false" \
   -e EXPIRE_HOURS=4320 \
   -v ./backup:/backup \
+  funnyzak/mysql-dump
 ```
 
 ### Compose
@@ -89,7 +90,7 @@ services:
   dbback:
     image: funnyzak/mysql-dump
     privileged: false
-    container_name: app-db-backup
+    container_name: mysql-dump
     tty: true
     mem_limit: 1024m
     environment:

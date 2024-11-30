@@ -2,6 +2,10 @@
 
 set -e
 
+echo -e "mysql-dump is a simple MySQL backup tool that can backup all databases or specified databases. It can push message with pushoo and delete expired dump files. It supports custom commands before and after the dump, custom mysqldump options, compressed dump files, and crontab rules."
+echo -e "Docker Hub: https://hub.docker.com/r/funnyzak/mysql-dump"
+echo -e "GitHub: https://github.com/funnyzak/docker-release\n"
+
 chmod +x /run-scripts/*
 
 CRON_STRINGS="$DB_DUMP_CRON /run-scripts/cron-backup.sh >> /var/log/cron/cron.log 2>&1"
