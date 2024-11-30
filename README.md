@@ -15,13 +15,14 @@ The following images are available:
 - **Nginx**: `funnyzak/nginx:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nginx))
 - **Snell-Server**: `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
 - **One-API**: `funnyzak/one-api:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/one-api))
+- **Canal-Adaptor**: `funnyzak/canal-adapter:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-adapter))
+- **Canal-Deployer**: `funnyzak/canal-deployer:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-deployer))
+- **Canal-Admin**: `funnyzak/canal-admin:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-admin))
 - **y-webrtc-signaling Server**: `funnyzak/y-webrtc-signaling:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/y-webrtc-signaling))
 - **Abracadabra Demo**: `funnyzak/abracadabra-web:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/abracadabra-web))
 - **LibreOffice-Server**: `funnyzak/libreoffice-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/libreoffice-server))
 - **Request-Hub**: `funnyzak/request-hub:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/request-hub))
-- **Canal-Adaptor**: `funnyzak/canal-adapter:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-adapter))
-- **Canal-Deployer**: `funnyzak/canal-deployer:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-deployer))
-- **Canal-Admin**: `funnyzak/canal-admin:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/canal-admin))
+- **Cron**: `funnyzak/cron:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/cron))
 
 ### Docker Pull
 
@@ -44,7 +45,7 @@ You can pull the above images from Docker Hub, GitHub Container Registry, or Ali
 | [Abracadabra Demo](https://github.com/funnyzak/docker-release/tree/main/Docker/abracadabra-web/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/abracadabra-web?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/abracadabra-web/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/abracadabra-web)](https://hub.docker.com/r/funnyzak/abracadabra-web/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/abracadabra-web.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/abracadabra-web) |
 | [LibreOffice-Server](https://github.com/funnyzak/docker-release/tree/main/Docker/libreoffice-server/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/libreoffice-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-server)](https://hub.docker.com/r/funnyzak/libreoffice-server/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-server) |
 | [Request-Hub](https://github.com/funnyzak/docker-release/tree/main/Docker/request-hub/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/request-hub?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/request-hub)](https://hub.docker.com/r/funnyzak/request-hub/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub) |
-
+| [Cron](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/cron?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/cron/tags) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/cron)](https://hub.docker.com/r/funnyzak/cron/tags) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron) |
 
 ## Services
 
@@ -446,6 +447,19 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/canal-admin:latest
 
 
 For more information about Canal, please check [Alibaba Canal](https://github.com/funnyzak/docker-release/tree/main/Docker/canal/README.md).
+
+# CRON
+
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/cron?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/cron/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/cron)](https://hub.docker.com/r/funnyzak/cron/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron/)
+
+cron is a lightweight service that runs in the background and executes scheduled tasks. It builds on the official `alpine` image and includes `dcron` as the cron service. The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, `linux/s390x`.
+
+Installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
+
+For more information about cron, please check [Cron Documentation](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md).
 
 ## Directories
 
