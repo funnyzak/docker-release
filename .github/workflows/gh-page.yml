@@ -4,13 +4,16 @@ on:
   push:
     paths:
       - 'README.md'
-
+    tags-ignore:
+      - '*'
+    branches:
+      - main
+  
 permissions:
   contents: write
 
 jobs:
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
