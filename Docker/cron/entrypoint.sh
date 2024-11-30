@@ -3,6 +3,11 @@ set -e
 
 chmod +x -R /scripts
 
+echo -e "cron is a lightweight Docker image containing Cron, based on Alpine Linux. Includes some useful tools for cron jobs."
+echo -e "Installed Packages:${INSTALL_PACKAGES}.\n"
+echo -e "Docker Hub: https://hub.docker.com/r/funnyzak/cron"
+echo -e "GitHub: https://github.com/funnyzak/docker-release\n"
+
 [ ! "$(ls -A /scripts)" ] && cp -f /example/scripts/* /scripts || true
 
 rm -rf /var/spool/cron/crontabs && mkdir -m 0644 -p /var/spool/cron/crontabs
