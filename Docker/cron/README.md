@@ -7,16 +7,8 @@
 
 **CRON** is a lightweight Docker image containing Cron, based on Alpine Linux. It supports multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, and `linux/s390x`.
 
-Following packages are installed by default:
+Current installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
 
-- `certificates`
-- `bash`
-- `curl`
-- `wget`
-- `rsync`
-- `git`
-- `zip`
-- 
 ## Pull the Image
 
 ```bash
@@ -48,14 +40,14 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/cron:latest
 
 crontab files are located in **/etc/cron.d**, you can mount a volume to this directory to add your own crontab files.
 
-config file example `/etc/cron.d/request`:
+For example, you can create a file named `my-cron` with the following content:
 
 ```bash
-* * * * * /scripts/request.sh >> /var/log/cron/request.log 2>&1
-* * * * * /scripts/request.sh >> /var/log/cron/request2.log 2>&1
+* * * * * /scripts/request.sh >> /var/log/cron/cron.log 2>&1
 ```
 
-> **Note**: Default log file is `/var/log/cron/cron.log`.
+> **Note**: Default log file should be `/var/log/cron/cron.log`.
+
 
 ## Usage
 
@@ -77,15 +69,6 @@ docker run --name="cron2" -d \
   funnyzak/cron
 ```
 
-### Fetch Google Homepage Every Minute
-
-```bash
-docker run --name="cron3" -d \
-  -e 'CRON_STRINGS=* * * * * echo $(date) >> /var/log/cron/cron.log' 2>&1 \
-  -e 'STARTUP_COMMANDS=echo "Hello, World!"' \
-  funnyzak/cron
-```
-
 ### Compose Example
 
 ```yaml
@@ -102,7 +85,6 @@ services:
       - CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1
     restart: on-failure
     volumes:
-      - ./cron/scripts:/scripts     # Scripts to execute
-      - ./cron/crontabs:/etc/cron.d     # Crontab files
-      - ./cron/logs:/var/log/cron     # Log files
+      - ./cron/scripts:/scripts
+      - ./cron/crontabs:/etc/cron.d
 ```
