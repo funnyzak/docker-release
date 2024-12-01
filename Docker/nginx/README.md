@@ -35,21 +35,32 @@ docker pull ghcr.io/funnyzak/nginx:latest
 docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nginx:latest
 ```
 
-
 ## Usage
 
-### docker
+### Docker Run
 
 First, create a `nginx.conf` file in your project directory, and then run the following command:
 
 ```bash
-docker run -d -t -i --name nginx --restar on-failure \
-  -v /path/to/conf.d:/etc/nginx/conf.d \
+# Run nginx container with default settings
+docker run -d -t -i --name nginx --restart on-failure \
+  -p 1697:80 \
+  funnyzak/nginx
+
+# Run nginx container with custom configuration directory
+docker run -d -t -i --name nginx2 --restart on-failure \
+  -v ./nginx/conf.d:/etc/nginx/conf.d \
   -p 1688:80 \
+  funnyzak/nginx
+
+# Run nginx container with custom HTML directory
+docker run -d -t -i --name nginx3 --restart on-failure \
+  -v ./nginx/html:/etc/nginx/html \
+  -p 1690:80 \
   funnyzak/nginx
 ```
 
-### docker-compose
+### Docker Compose
 
 First, create a `docker-compose.yml` file in your project directory:
 
@@ -67,8 +78,12 @@ services:
     ports:
       - “1688:80” 
 ```
-
-Now, running `docker-compose up -d` will run the application for you.
+  
+  Then, run the following command:
+  
+  ```bash
+  docker-compose up -d
+  ```
 
 ### Docker Build
 
