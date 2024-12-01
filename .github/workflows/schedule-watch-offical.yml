@@ -1,4 +1,4 @@
-name: Watch Offical To Release
+name: Schedule Watch Offical Release
 
 on:
   workflow_dispatch:
