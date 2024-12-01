@@ -1,5 +1,11 @@
 # Hello
 
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/hello?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/hello)](https://hub.docker.com/r/funnyzak/hello/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+
+
 This is a simple "Hello, World!" program written in Go. Used to demonstrate how to build a Docker image.
 
 ## Docker Run
