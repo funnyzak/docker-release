@@ -478,6 +478,20 @@ The image is available for multiple architectures, including `linux/386`, `linux
 
 For more information about mysql-dump, please check [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md).
 
+---
+
+### Hello
+
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/hello?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/hello)](https://hub.docker.com/r/funnyzak/hello/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+
+
+This is a simple "Hello, World!" program written in Go. Used to demonstrate how to build a Docker image.
+
+For more information about Hello, please check [Hello](https://github.com/funnyzak/docker-release/tree/main/Docker/hello/README.md).
+
 ## Directories
 
 Images build directory is located at ./Docker. You can also download the directory to build the images yourself.
