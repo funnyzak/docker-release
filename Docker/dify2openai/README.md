@@ -6,7 +6,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/dify2openai.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/dify2openai/)
 
 
-dify2open converts the Dify API to the OpenAI API format, giving you access to Dify's LLMs, knowledge base, tools, and workflows within your preferred OpenAI clients. More information can be found at [dify2openai](https://github.com/funnyzak/dify2openai).
+dify2openai converts the Dify API to the OpenAI API format, giving you access to Dify's LLMs, knowledge base, tools, and workflows within your preferred OpenAI clients. More information can be found at [dify2openai](https://github.com/funnyzak/dify2openai).
 
 This image is built with the `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/s390x` architectures.
 
