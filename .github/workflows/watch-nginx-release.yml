@@ -31,7 +31,7 @@ jobs:
       - name: Get latest release version
         id: get-latest-release
         run: |
-          echo new_version=$(curl -s https://nginx.org/en/download.html | grep -oP 'nginx-\K[0-9.]+(?=</a>)' | head -n 1)
+          new_version=$(curl -s https://nginx.org/en/download.html | grep -oP 'nginx-\K[0-9.]+(?=</a>)' | head -n 1)
           echo "Current Official version: $new_version"
           echo "Current Docker version: ${{ needs.docker_latest_version.outputs.version }}"
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
