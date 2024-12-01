@@ -1,0 +1,20 @@
+name: Watch Offical To Release
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  watch_nginx_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: nginx
+      get_official_version_command: 'curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9]+\.[0-9]+\.[0-9]" | head -n 1'
+      build_context: './Docker/nginx'
+      docker_file_name: 'Dockerfile'
+      is_latest_tag: true
