@@ -16,9 +16,15 @@ jobs:
     outputs:
       NEW_VERSION: ${{ steps.get-latest-release.outputs.new_version }}
     steps:
+      - name: Get latest version of docker image
+        uses: luoqiz/docker-images-latest-version@master
+        id: get-docker-image-version
+        with:
+          image: funnyzak/nginx
       - name: Get latest release version
         id: get-latest-release
         run: |
           echo NGINX_VERSION=$(curl -s https://nginx.org/en/download.html | grep -oP 'nginx-\K[0-9.]+(?=</a>)' | head -n 1)
           echo "Current NGINX Official version: $NGINX_VERSION"
+          echo "Current NGINX Docker version: ${{ steps.get-docker-image-version.outputs.version }}"
           echo "NGINX_VERSION=$NGINX_VERSION" >> $GITHUB_OUTPUT
