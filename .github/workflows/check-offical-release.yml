@@ -17,12 +17,10 @@ on:
         description: 'Docker build context, default is current directory, e.g. ./Docker/hello'
         required: false
         type: string
-        default: './Docker/hello'
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
         required: false
         type: string
-        default: 'Dockerfile'
       is_latest_tag:
         type: boolean
         description: 'If the new version is released, whether it contains the latest tag, e.g. true'
@@ -52,12 +50,10 @@ on:
         description: 'Docker build context, default is current directory, e.g. ./Docker/hello'
         required: false
         type: string
-        default: './Docker/hello'
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
         required: false
         type: string
-        default: 'Dockerfile'
       is_latest_tag:
         type: boolean
         description: 'If the new version is released, whether it contains the latest tag, e.g. true'
