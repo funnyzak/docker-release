@@ -1,0 +1,24 @@
+name: Watch Nginx Release
+
+on:
+  # schedule:
+  #   - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+
+jobs:
+  watch_nginx_release:
+    runs-on: ubuntu-latest
+    outputs:
+      NEW_VERSION: ${{ steps.get-latest-release.outputs.new_version }}
+    steps:
+      - name: Get latest release version
+        id: get-latest-release
+        run: |
+          echo NGINX_VERSION=$(curl -s https://nginx.org/en/download.html | grep -oP 'nginx-\K[0-9.]+(?=</a>)' | head -n 1)
+          echo "Current NGINX Official version: $NGINX_VERSION"
+          echo "NGINX_VERSION=$NGINX_VERSION" >> $GITHUB_OUTPUT
