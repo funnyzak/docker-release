@@ -18,3 +18,11 @@ jobs:
       build_context: './Docker/nginx'
       docker_file_name: 'Dockerfile'
       is_latest_tag: true
+    secrets: inherit
+
+  watch_snell_server_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: snell-server
+      get_official_version_command: "curl -s https://manual.nssurge.com/others/snell.html | grep -oP 'snell-server-v\K[0-9]+\.[0-9]+\.[0-9]+(?=-linux)' | head -n 1"
+    secrets: inherit
