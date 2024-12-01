@@ -17,7 +17,7 @@ ARG VERSION
 ARG VCS_REF
 
 LABEL org.label-schema.name="dify2openai" \
-      org.label-schema.description="dify2open converts the Dify API to the OpenAI API format, giving you access to Dify's LLMs, knowledge base, tools, and workflows within your preferred OpenAI clients." \
+      org.label-schema.description="dify2openai converts the Dify API to the OpenAI API format, giving you access to Dify's LLMs, knowledge base, tools, and workflows within your preferred OpenAI clients." \
       org.label-schema.version="${VERSION}" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.build-date="${BUILD_DATE}" \
