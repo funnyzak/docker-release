@@ -23,6 +23,7 @@ The following images are available:
 - [**Request-Hub**](https://github.com/funnyzak/docker-release/tree/main/Docker/request-hub): `funnyzak/request-hub:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/request-hub))
 - [**Cron**](https://github.com/funnyzak/docker-release/tree/main/Docker/cron): `funnyzak/cron:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/cron))
 - [**MySQL Dump**](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump): `funnyzak/mysql-dump:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/mysql-dump))
+- [**Hello**](https://github.com/funnyzak/docker-release/tree/main/Docker/hello): `funnyzak/hello:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/hello))
 
 ### Docker Pull
 
@@ -47,6 +48,7 @@ You can pull the above images from Docker Hub, GitHub Container Registry, or Ali
 | [Request-Hub](https://github.com/funnyzak/docker-release/tree/main/Docker/request-hub/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/request-hub?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/request-hub)](https://hub.docker.com/r/funnyzak/request-hub) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/request-hub.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/request-hub) |
 | [Cron](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/cron?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/cron) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/cron)](https://hub.docker.com/r/funnyzak/cron) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron) |
 | [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/mysql-dump?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/mysql-dump)](https://hub.docker.com/r/funnyzak/mysql-dump) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/mysql-dump.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump) |
+| [Hello](https://github.com/funnyzak/docker-release/tree/main/Docker/hello/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/hello?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/hello) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/hello)](https://hub.docker.com/r/funnyzak/hello) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello) |
 
 ## Services
 
@@ -475,6 +477,20 @@ mysql-dump is a simple MySQL backup tool that can backup all databases or specif
 The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm64`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`.
 
 For more information about mysql-dump, please check [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md).
+
+---
+
+### Hello
+
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/hello?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/hello)](https://hub.docker.com/r/funnyzak/hello/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello/)
+
+
+This is a simple "Hello, World!" program written in Go. Used to demonstrate how to build a Docker image.
+
+For more information about Hello, please check [Hello](https://github.com/funnyzak/docker-release/tree/main/Docker/hello/README.md).
 
 ## Directories
 
