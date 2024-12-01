@@ -27,13 +27,12 @@ jobs:
       - name: Check if new version exists on docker hub
         id: check-docker-hub
         run: |
-          new_version=$(cat $GITHUB_OUTPUT | grep -oP 'new_version=\K[0-9.]+')
           echo "Checking if $new_version exists on docker hub"
           if curl -s "https://hub.docker.com/v2/repositories/library/nginx/tags/${{ steps.get-latest-release.outputs.new_version }}" | grep -q 'not found'; then
-            echo "New version $new_version does not exist on docker hub"
+            echo "New version ${{ steps.get-latest-release.outputs.new_version }} does not exist on docker hub"
             echo "is_new_version=true" >> $GITHUB_OUTPUT
           else
-            echo "New version $new_version already exists on docker hub, skipping"
+            echo "New version ${{ steps.get-latest-release.outputs.new_version }} already exists on docker hub"
             echo "is_new_version=false" >> $GITHUB_OUTPUT
           fi
 
