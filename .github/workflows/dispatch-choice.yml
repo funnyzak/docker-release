@@ -11,6 +11,7 @@ on:
           - nginx
           - cron
           - mysql-dump
+          - dify2openai
           - snell-server
           - one-api
           - abracadabra-web
@@ -37,6 +38,17 @@ permissions:
   packages: write
 
 jobs:
+  dify2openai_release:
+    if: ${{ github.event.inputs.choice_service == 'dify2openai' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/dify2openai'
+      docker_image_name: dify2openai
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
+    secrets: inherit
+
   mysql_dump_release:
     if: ${{ github.event.inputs.choice_service == 'mysql-dump' }}
     uses: ./.github/workflows/release.yml
