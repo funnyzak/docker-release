@@ -3,7 +3,7 @@ name: Watch Offical To Release
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 3 * * *'
 
 permissions:
   contents: write
