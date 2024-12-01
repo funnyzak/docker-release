@@ -42,7 +42,7 @@ jobs:
     with:
       image_name: dify2openai
       get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/dify2openai/tags | jq -r ".[0].name"'
-      is_latest_tag: false
+      is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x'
     secrets: inherit
 
