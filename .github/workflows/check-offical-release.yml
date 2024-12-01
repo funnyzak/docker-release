@@ -80,13 +80,13 @@ jobs:
         run: |
           new_release_version=$(eval ${{ github.event.inputs.get_official_version_command || inputs.get_official_version_command }})
 
-          echo "Current Official version: $new_release_version"
+          echo "Current ${{ github.event.inputs.image_name || inputs.image_name }} version is $new_release_version"
           echo "new_release_version=$new_release_version" >> $GITHUB_OUTPUT
 
       - name: Check if new version exists on docker hub
         id: check-docker-hub
         run: |
-          echo "Checking if $new_release_version exists on docker hub"
+          echo "Check ${{ github.event.inputs.image_name || inputs.image_name }} version ${{ steps.get-latest-release.outputs.new_release_version }} on docker hub"
           if curl -s "https://hub.docker.com/v2/repositories/library/${{ github.event.inputs.image_name || inputs.image_name }}/tags/${{ steps.get-latest-release.outputs.new_release_version }}" | grep -q 'not found'; then
             echo "New version ${{ steps.get-latest-release.outputs.new_release_version }} does not exist on docker hub"
             echo "is_new_release_version=true" >> $GITHUB_OUTPUT
