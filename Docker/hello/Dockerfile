@@ -1,8 +1,8 @@
-FROM scratch
+FROM golang:1.20 AS builder
 
-ARG BUILD_DATE
 ARG VERSION
 ARG VCS_REF
+ARG BUILD_DATE
 
 LABEL org.label-schema.name="helloworld" \
       org.label-schema.description="helloworld" \
@@ -12,5 +12,16 @@ LABEL org.label-schema.name="helloworld" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-COPY helloworld_amd64 /sayhello
-ENTRYPOINT ["/sayhello"]
+WORKDIR /app
+
+RUN go mod init hello && go mod tidy
+
+COPY hello.go ./
+
+RUN go build -o hello hello.go
+
+FROM scratch
+
+COPY --from=builder /app/hello /hello
+
+ENTRYPOINT ["/hello"]
