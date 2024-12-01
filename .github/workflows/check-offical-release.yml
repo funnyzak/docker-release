@@ -86,12 +86,11 @@ jobs:
       - name: Check if new version exists on docker hub
         id: check-docker-hub
         run: |
-          echo "Check ${{ github.event.inputs.image_name || inputs.image_name }} version ${{ steps.get-latest-release.outputs.new_release_version }} on docker hub"
-          if curl -s "https://hub.docker.com/v2/repositories/library/${{ github.event.inputs.image_name || inputs.image_name }}/tags/${{ steps.get-latest-release.outputs.new_release_version }}" | grep -q 'not found'; then
-            echo "New version ${{ steps.get-latest-release.outputs.new_release_version }} does not exist on docker hub"
+          if curl -s "https://hub.docker.com/v2/repositories/funnyzak/${{ github.event.inputs.image_name || inputs.image_name }}/tags/${{ steps.get-latest-release.outputs.new_release_version }}" | grep -q 'not found'; then
+            echo "New Offical Release version ${{ steps.get-latest-release.outputs.new_release_version }} does not exist on docker hub"
             echo "is_new_release_version=true" >> $GITHUB_OUTPUT
           else
-            echo "New version ${{ steps.get-latest-release.outputs.new_release_version }} already exists on docker hub"
+            echo "New Offical Release version ${{ steps.get-latest-release.outputs.new_release_version }} already exists on docker hub"
             echo "is_new_release_version=false" >> $GITHUB_OUTPUT
           fi
 
