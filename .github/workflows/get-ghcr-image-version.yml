@@ -26,15 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set up gh CLI
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Authenticate gh CLI
-        run: gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
-
+          
       - name: Get latest version
         id: get-version
         run: |
