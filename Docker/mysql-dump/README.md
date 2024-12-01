@@ -74,7 +74,7 @@ docker run -d --name mysql-dump \
   -e DB_USER="root" \
   -e DB_PASSWORD="root" \
   -e DB_NAMES="dbname1 dbname2" \
-  -e DB_DUMP_OPTS="--single-transaction --quick --lock-tables=false" \
+  -e DUMP_OPTS="--single-transaction --quick --lock-tables=false --skip-ssl" \
   -e EXPIRE_HOURS=4320 \
   -v ./backup:/backup \
   funnyzak/mysql-dump
@@ -89,38 +89,30 @@ version: '3'
 services:
   dbback:
     image: funnyzak/mysql-dump
-    privileged: false
     container_name: mysql-dump
     tty: true
-    mem_limit: 1024m
     environment:
-        - TZ=Asia/Shanghai
-        - LANG=C.UTF-8
-        # Cron
-        - DB_DUMP_CRON=0 0 * * *
-        # MySQL Connection
-        - DB_HOST=192.168.50.21
-        - DB_NAMES=cms_new
-        - DB_USER=root
-        - DB_PASSWORD=helloworld
-        - DB_PORT=1009
-        - DUMP_OPTS=--single-transaction
-        # Expire Hours
-        - EXPIRE_HOURS=4320
-        # COMMAND
-        - STARTUP_COMMAND=echo "startup"
-        - BEFORE_DUMP_COMMAND=echo "before dump"
-        - AFTER_DUMP_COMMAND=echo "after dump"
-        # optional
-        - DB_DUMP_TARGET_DIR_PATH=/backup
-        - DB_DUMP_BY_SCHEMA=true
-        - DB_FILE_EXTENSION=sql
-        - COMPRESS_EXTENSION=zip
-        - DUMP_AT_STARTUP=true
-        # pushoo 
-        - SERVER_NAME=app-db-backup
-        - PUSHOO_PUSH_PLATFORMS=dingtalk,bark
-        - PUSHOO_PUSH_TOKENS=dingtalk:xxxx,bark:xxxx
+      - TZ=Asia/Shanghai
+      - LANG=C.UTF-8
+      - DB_DUMP_CRON=0 0 * * *
+      - DB_HOST=192.168.50.21
+      - DB_NAMES=cms_new
+      - DB_USER=root
+      - DB_PASSWORD=helloworld
+      - DB_PORT=1009
+      - DUMP_OPTS=--single-transaction --quick --lock-tables=false --skip-ssl
+      - EXPIRE_HOURS=4320
+      - STARTUP_COMMAND=echo "startup"
+      - BEFORE_DUMP_COMMAND=echo "before dump"
+      - AFTER_DUMP_COMMAND=echo "after dump"
+      - DB_DUMP_TARGET_DIR_PATH=/backup
+      - DB_DUMP_BY_SCHEMA=true
+      - DB_FILE_EXTENSION=sql
+      - COMPRESS_EXTENSION=zip
+      - DUMP_AT_STARTUP=true
+      - SERVER_NAME=app-db-backup
+      - PUSHOO_PUSH_PLATFORMS=dingtalk,bark
+      - PUSHOO_PUSH_TOKENS=dingtalk:xxxx,bark:xxxx
     restart: on-failure
     volumes:
       - ./bak/mysql_db:/backup

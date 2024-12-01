@@ -100,9 +100,13 @@ COPY --from=builder /etc/nginx /etc/nginx
 COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=builder /usr/lib64/nginx /usr/lib64/nginx
 
-COPY conf /data/conf
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/conf.d /etc/nginx/conf.d
+
+RUN mkdir -p /data/nginx/html /data/nginx/conf.d && \
+    cp -r /etc/nginx/html /data/nginx && \
+    cp -r /etc/nginx/conf.d /data/nginx && \
+    cp /etc/nginx/nginx.conf /data/nginx/nginx.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

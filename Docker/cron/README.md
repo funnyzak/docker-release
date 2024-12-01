@@ -7,7 +7,7 @@
 
 cron is a lightweight service that runs in the background and executes scheduled tasks. It builds on the official `alpine` image and includes `dcron` as the cron service. The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, `linux/s390x`.
 
-Installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`, `rclone`.
+Installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
 
 ## Pull the Image
 
@@ -58,18 +58,17 @@ For example, you can create a file named `my-cron` with the following content:
 
 ## Usage
 
-### Using Crontab Files
-
-```bash
-docker run --name="cron" -d \
-  -v ./crontabs:/etc/cron.d \
-  -v ./scripts:/scripts \
-  funnyzak/cron
-```
-
 ### Using CRON_STRINGS
 
 ```bash
+docker run --name="cron" -d \
+  -e 'CRON_STRINGS=* * * * * echo "Hi, i am cron." >> /var/log/cron/cron.log 2>&1' \
+  funnyzak/cron
+
+docker run --name="cron1" -d \
+  -e 'CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1' \
+  funnyzak/cron
+
 docker run --name="cron2" -d \
   -e 'CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1' \
   -e 'STARTUP_COMMANDS=echo "Hello, World!"' \
@@ -79,6 +78,15 @@ docker run --name="cron2" -d \
 docker run --name="cron5" -d \
   -e 'CRON_STRINGS=* * * * * /scripts/request.sh >> /var/log/cron/cron.log 2>&1' \
   -e 'STARTUP_COMMANDS=/scripts/echo.sh >> /var/log/cron/cron.log 2>&1' \
+  funnyzak/cron
+```
+
+### Using Crontab Files
+
+```bash
+docker run --name="cron6" -d \
+  -v ./cron/crontabs:/etc/cron.d \
+  -v ./cron/scripts:/scripts \
   funnyzak/cron
 ```
 
