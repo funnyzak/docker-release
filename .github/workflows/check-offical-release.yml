@@ -109,7 +109,7 @@ jobs:
 
   release_new_with_latest_tag:
     needs: check_offical_release
-    if: needs.check_offical_release.outputs.is_new_release_version == 'true' && github.event.inputs.is_latest_tag == 'true'
+    if: needs.check_offical_release.outputs.is_new_release_version == 'true' && ( github.event.inputs.is_latest_tag || inputs.is_latest_tag )
     uses: ./.github/workflows/release.yml
     with:
       build_context: ${{ github.event.inputs.build_context || inputs.build_context || format('./Docker/{0}', github.event.inputs.image_name || inputs.image_name) }}
