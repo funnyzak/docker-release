@@ -126,6 +126,9 @@ jobs:
           if [[ $BUILD_ARGS != *"VCS_REF="* ]]; then
             BUILD_ARGS="VCS_REF=${{ github.sha }},$BUILD_ARGS"
           fi
+          if [[ $BUILD_ARGS != *"BUILD_DATE="* ]]; then
+            BUILD_ARGS="BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ'),$BUILD_ARGS"
+          fi
 
           {
             echo "IMAGE_FULL_NAME=${{ github.actor }}/${DOCKER_IMAGE_NAME}:${DOKCER_IMAGE_TAG}"

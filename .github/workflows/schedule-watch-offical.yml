@@ -1,0 +1,71 @@
+name: Schedule Watch Offical Release
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  watch_nginx_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: nginx
+      get_official_version_command: 'curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9]+\.[0-9]+\.[0-9]" | head -n 1'
+      is_latest_tag: true
+      build_platforms: 'linux/arm64,linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8'
+    secrets: inherit
+
+  watch_snell_server_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: snell-server
+      get_official_version_command: 'curl -s https://manual.nssurge.com/others/snell.html | grep -oP "snell-server-v\K[0-9]+\.[0-9]+\.[0-9]+(?=-linux)" | head -n 1'
+      build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7,linux/386'
+      is_latest_tag: true
+    secrets: inherit
+
+  watch_oneapi_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: one-api
+      get_official_version_command: 'curl -s https://api.github.com/repos/songquanpeng/one-api/releases/latest | jq -r ".tag_name"'
+      is_latest_tag: false
+      build_platforms: 'linux/amd64'
+    secrets: inherit
+
+  canal_adapter_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      build_context: './Docker/canal/canal-adapter'
+      get_official_version_command: "curl -s https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
+      image_name: canal-adapter
+      is_latest_tag: false
+      build_args: CANAL_NAME=adapter
+      build_platforms: 'linux/amd64,linux/arm64'
+    secrets: inherit
+
+  canal_admin_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      build_context: './Docker/canal/canal-adapter'
+      get_official_version_command: "curl -s https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
+      image_name: canal-admin
+      is_latest_tag: false
+      build_args: CANAL_NAME=admin
+      build_platforms: 'linux/amd64,linux/arm64'
+    secrets: inherit
+
+  canal_deployer_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      build_context: './Docker/canal/canal-adapter'
+      get_official_version_command: "curl -s https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
+      image_name: canal-deployer
+      is_latest_tag: false
+      build_args: CANAL_NAME=deployer
+      build_platforms: 'linux/amd64,linux/arm64'
+    secrets: inherit

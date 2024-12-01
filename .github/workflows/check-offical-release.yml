@@ -1,0 +1,131 @@
+name: Check Official And Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_name:
+        type: string
+        description: 'Docker image name, e.g. nginx. '
+        default: 'nginx'
+        required: true
+      get_official_version_command:
+        type: string
+        description: 'Command to get the official version, e.g. curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9.]+(?=</a>)" | head -n 1'
+        default: 'curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9.]+(?=</a>)" | head -n 1'
+        required: true
+      build_context:
+        description: 'Docker build context, default is current directory, e.g. ./Docker/hello-world'
+        required: false
+        type: string
+        default: './Docker/hello-world'
+      docker_file_name:
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
+        required: false
+        type: string
+        default: 'Dockerfile'
+      is_latest_tag:
+        type: boolean
+        description: 'If the new version is released, whether it contains the latest tag, e.g. true'
+        required: false
+        default: false
+      build_args:
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d),ENV=prod'
+        required: false
+        type: string
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        required: false
+        type: string
+        default: 'linux/amd64'
+
+  workflow_call:
+    inputs:
+      image_name:
+        type: string
+        description: 'Docker image name, e.g. nginx. '
+        required: true
+      get_official_version_command:
+        type: string
+        description: 'Command to get the official version, e.g. curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9.]+(?=</a>)" | head -n 1'
+        required: true
+      build_context:
+        description: 'Docker build context, default is current directory, e.g. ./Docker/hello-world'
+        required: false
+        type: string
+        default: './Docker/hello-world'
+      docker_file_name:
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
+        required: false
+        type: string
+        default: 'Dockerfile'
+      is_latest_tag:
+        type: boolean
+        description: 'If the new version is released, whether it contains the latest tag, e.g. true'
+        required: false
+        default: false
+      build_args:
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d),ENV=prod'
+        required: false
+        type: string
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        required: false
+        type: string
+        default: 'linux/amd64'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  check_offical_release:
+    runs-on: ubuntu-latest
+    outputs:
+      new_release_version: ${{ steps.get-latest-release.outputs.new_release_version }}
+      is_new_release_version: ${{ steps.check-docker-hub.outputs.is_new_release_version }}
+      build_context: ${{ github.event.inputs.build_context || inputs.build_context  || './Docker/' }}
+    steps:
+      - name: Get latest release version
+        id: get-latest-release
+        run: |
+          new_release_version=$(eval ${{ github.event.inputs.get_official_version_command || inputs.get_official_version_command }})
+
+          echo "Current ${{ github.event.inputs.image_name || inputs.image_name }} version is $new_release_version"
+          echo "new_release_version=$new_release_version" >> $GITHUB_OUTPUT
+
+      - name: Check if new version exists on docker hub
+        id: check-docker-hub
+        run: |
+          if curl -s "https://hub.docker.com/v2/repositories/funnyzak/${{ github.event.inputs.image_name || inputs.image_name }}/tags/${{ steps.get-latest-release.outputs.new_release_version }}" | grep -q 'not found'; then
+            echo "New Offical Release version ${{ steps.get-latest-release.outputs.new_release_version }} does not exist on docker hub"
+            echo "is_new_release_version=true" >> $GITHUB_OUTPUT
+          else
+            echo "New Offical Release version ${{ steps.get-latest-release.outputs.new_release_version }} already exists on docker hub"
+            echo "is_new_release_version=false" >> $GITHUB_OUTPUT
+          fi
+
+  release_new:
+    needs: check_offical_release
+    if: needs.check_offical_release.outputs.is_new_release_version == 'true'
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: ${{ github.event.inputs.build_context || inputs.build_context || format('./Docker/{0}', github.event.inputs.image_name || inputs.image_name) }}
+      docker_file_name: ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}
+      docker_image_name: ${{ github.event.inputs.image_name || inputs.image_name }}
+      docker_tag: ${{ needs.check_offical_release.outputs.new_release_version }}
+      build_args: VERSION=${{ needs.check_offical_release.outputs.new_release_version }},${{ github.event.inputs.build_args || inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms || 'linux/arm64' }}
+    secrets: inherit
+
+  release_new_with_latest_tag:
+    needs: check_offical_release
+    if: needs.check_offical_release.outputs.is_new_release_version == 'true' && ( github.event.inputs.is_latest_tag || inputs.is_latest_tag )
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: ${{ github.event.inputs.build_context || inputs.build_context || format('./Docker/{0}', github.event.inputs.image_name || inputs.image_name) }}
+      docker_file_name: ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}
+      docker_image_name: ${{ github.event.inputs.image_name || inputs.image_name }}
+      docker_tag: latest
+      build_args: VERSION=${{ needs.check_offical_release.outputs.new_release_version }},${{ github.event.inputs.build_args || inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms || 'linux/arm64' }}
+    secrets: inherit
