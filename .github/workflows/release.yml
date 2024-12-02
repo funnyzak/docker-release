@@ -181,12 +181,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Split Build Args
-        id: split_build_args
+      - name: Build vars format
+        id: build_vars_format
         run: |
+          DOCKER_TAG=$(echo "${{ matrix.tag }}" | tr -d '\n')
+          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_OUTPUT
+
           BUILD_ARGS=${{ needs.setup.outputs.BUILD_ARGS }}
-          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ ${{ matrix.tag }} != "latest" ]]; then
-            BUILD_ARGS="VERSION=${{ matrix.tag }},$BUILD_ARGS"
+          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ ${ DOCKER_TAG } != "latest" ]]; then
+            BUILD_ARGS="VERSION=${ DOCKER_TAG },$BUILD_ARGS"
           fi
           echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
 
@@ -201,12 +204,12 @@ jobs:
         run: |
           echo "Docker Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
           echo "Docker Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
-          echo "Docker Image full name:  ${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}"
+          echo "Docker Image full name:  ${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}"
           echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
-          echo "Docker tag: ${{ matrix.tag }}"
-          echo "Docker build args: ${{ steps.split_build_args.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.split_build_args.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
+          echo "Docker tag: ${{ steps.build_vars_format.outputs.DOCKER_TAG }}"
+          echo "Docker build args: ${{ steps.build_vars_format.outputs.BUILD_ARGS }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.build_vars_format.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
 
@@ -217,18 +220,18 @@ jobs:
           file: ${{ needs.setup.outputs.BUILD_FILE }}
           push: true
           tags: |
-            ${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
-            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
-            ghcr.io/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
+            ${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+            ghcr.io/${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
           platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
           build-args: |
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_1 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_2 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_3 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_4 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_5 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_6 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_7 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_1 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_2 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_3 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_4 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_5 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_6 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_7 }}
 
       - name: Send Apprise Notification
         run: |
