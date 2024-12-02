@@ -10,6 +10,7 @@ on:
         options:
           - nginx
           - cron
+          - certimate
           - mysql-dump
           - dify2openai
           - snell-server
@@ -47,6 +48,17 @@ jobs:
       docker_tag: ${{ github.event.inputs.docker_tag }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le' }}
+    secrets: inherit
+
+  certimate_release:
+    if: ${{ github.event.inputs.choice_service == 'certimate' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/certimate'
+      docker_image_name: certimate
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm64/v8' }}
     secrets: inherit
 
   mysql_dump_release:
