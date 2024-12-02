@@ -184,7 +184,7 @@ jobs:
       - name: Build vars format
         id: build_vars_format
         run: |
-          DOCKER_TAG=$(echo "${{ matrix.tag }}" | tr -d '\n')
+          DOCKER_TAG=$(echo "${{ matrix.tag }}" | tr -d '\n[:space:]')
           echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_OUTPUT
 
           BUILD_ARGS=${{ needs.setup.outputs.BUILD_ARGS }}
