@@ -19,7 +19,6 @@ on:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
-        default: 'linux/amd64'
       docker_image_name:
         description: 'Docker image name, e.g. hello, default is the last part of the build context. If the build context is ./Docker/hello, the image name is hello'
         required: false
@@ -49,7 +48,6 @@ on:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
-        default: 'linux/amd64'
       docker_image_name:
         description: 'Docker image name, e.g. hello, default is the last part of the build context. If the build context is ./Docker/hello, the image name is hello'
         required: false
@@ -75,7 +73,7 @@ jobs:
       IMAGE_TAG: ${{ steps.set_vars.outputs.IMAGE_TAG }}
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
-      BUILD_PLATFORMS: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
+      BUILD_PLATFORM_LIST: ${{ steps.set_vars.outputs.BUILD_PLATFORMS_LIST }}
       BUILD_ARGS: ${{ steps.set_vars.outputs.BUILD_ARGS }}
     steps:
       - name: Checkout
@@ -126,11 +124,17 @@ jobs:
             BUILD_ARGS="BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ'),$BUILD_ARGS"
           fi
 
+          BUILD_PLATFORMS="${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
+          if [ -z "$BUILD_PLATFORMS" ]; then
+            BUILD_PLATFORMS="linux/amd64"
+          fi
+
           {
             echo "IMAGE_FULL_NAME=${{ github.actor }}/${DOCKER_IMAGE_NAME}:${DOKCER_IMAGE_TAG}"
             echo "IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
             echo "IMAGE_TAG=$DOKCER_IMAGE_TAG"
             echo "BUILD_ARGS=$BUILD_ARGS"
+            echo "BUILD_PLATFORM_LIST=$(echo '${BUILD_PLATFORMS}' | jq -R -s 'split(",") | map(select(length>0)) | {platform: map(.)}' | jq '.platform |= map(gsub("\\n"; ""))' -c)"
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
@@ -140,6 +144,9 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    if: ${{ fromJson(needs.setup.outputs.BUILD_PLATFORM_LIST).platform.length }} > 0
+    strategy:
+      matrix: ${{ fromJson(needs.setup.outputs.BUILD_PLATFORM_LIST) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -178,11 +185,11 @@ jobs:
           echo "Docker Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
           echo "Docker Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
           echo "Docker Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
-          echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
+          echo "Docker Build platform: ${{ matrix.platform }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
           echo "Docker tag: ${{ needs.setup.outputs.IMAGE_TAG }}"
           echo "Docker build args: ${{ needs.setup.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS }} on ${{ github.run_id }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ matrix.platform }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
       
@@ -205,7 +212,7 @@ jobs:
             ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
             ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-          platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
+          platforms: ${{ matrix.platform }}
           build-args: |
             ${{ steps.split_build_args.outputs.BUILD_ARGS_1 }}
             ${{ steps.split_build_args.outputs.BUILD_ARGS_2 }}
