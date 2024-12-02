@@ -180,7 +180,22 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Split Build Args
+        id: split_build_args
+        run: |
+          BUILD_ARGS=${{ needs.setup.outputs.BUILD_ARGS }}
+          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ ${{ matrix.tag }} != "latest" ]]; then
+            BUILD_ARGS="VERSION=${{ matrix.tag }},$BUILD_ARGS"
+          fi
+          echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
 
+          IFS=',' read -r -a build_args <<< "${BUILD_ARGS}"
+          for i in {1..7}; do
+            eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
+            echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
+          done
+      
       - name: Output build description
         id: output_build_description
         run: |
@@ -190,19 +205,10 @@ jobs:
           echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
           echo "Docker tag: ${{ matrix.tag }}"
-          echo "Docker build args: ${{ needs.setup.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
+          echo "Docker build args: ${{ steps.split_build_args.outputs.BUILD_ARGS }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.split_build_args.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
-      
-      - name: Split Build Args
-        id: split_build_args
-        run: |
-          IFS=',' read -r -a build_args <<< "${{ needs.setup.outputs.BUILD_ARGS }}"
-          for i in {1..7}; do
-            eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
-            echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
-          done
 
       - name: Docker build and push
         uses: docker/build-push-action@v6
