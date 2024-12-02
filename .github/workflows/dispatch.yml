@@ -12,7 +12,7 @@ on:
         required: false
         type: string
       build_args:
-        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d),ENV=prod'
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
         required: false
         type: string
       build_platforms:
