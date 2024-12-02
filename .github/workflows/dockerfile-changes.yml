@@ -45,6 +45,6 @@ jobs:
     with:
       docker_file_name: $(echo ${{ matrix.dockerfile }} | awk -F'/' '{print $NF}')
       build_context: $(dirname ${{ matrix.dockerfile }})
-      docker_tag: nightly
+      docker_tags: nightly
       build_platforms: linux/amd64
     secrets: inherit

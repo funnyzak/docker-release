@@ -7,7 +7,7 @@ ARG VCS_REF
 WORKDIR /app
 
 RUN git clone https://github.com/songquanpeng/one-api.git . \
-    && git checkout ${VERSION} || git checkout main \
+    && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
     && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION
 
 WORKDIR /app/web

@@ -2,14 +2,13 @@ name: Release Image
 on:
   workflow_call:
     inputs:
-      docker_tag:
-        description: 'Docker image tag, e.g. latest'
-        required: true
-        type: string
-        default: 'latest'
       build_context:
         description: 'Docker build context, default is current directory, e.g. ./Docker/hello'
         required: true
+        type: string
+      docker_tags:
+        description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
+        required: false
         type: string
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
@@ -19,27 +18,25 @@ on:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
-        default: 'linux/amd64'
       docker_image_name:
         description: 'Docker image name, e.g. hello, default is the last part of the build context. If the build context is ./Docker/hello, the image name is hello'
         required: false
         default: ''
         type: string
       build_args:
-        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d),ENV=prod'
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
         required: false
         type: string
 
   workflow_dispatch:
     inputs:
-      docker_tag:
-        description: 'Docker image tag, e.g. latest'
-        required: true
-        type: string
-        default: 'latest'
       build_context:
         description: 'Docker build context, default is current directory, e.g. ./Docker/hello'
         required: true
+        type: string
+      docker_tags:
+        description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
+        required: false
         type: string
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
@@ -49,14 +46,13 @@ on:
         description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
         required: false
         type: string
-        default: 'linux/amd64'
       docker_image_name:
         description: 'Docker image name, e.g. hello, default is the last part of the build context. If the build context is ./Docker/hello, the image name is hello'
         required: false
         default: ''
         type: string
       build_args:
-        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d),ENV=prod'
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
         required: false
         type: string
 
@@ -70,12 +66,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event_name == 'push'
     outputs:
-      IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
-      IMAGE_TAG: ${{ steps.set_vars.outputs.IMAGE_TAG }}
+      IMAGE_TAG_LIST: ${{ steps.set_vars.outputs.IMAGE_TAG_LIST }}
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
-      BUILD_PLATFORMS: ${{ github.event.inputs.build_platforms || inputs.build_platforms }}
+      BUILD_PLATFORMS: ${{ steps.set_vars.outputs.BUILD_PLATFORMS }}
       BUILD_ARGS: ${{ steps.set_vars.outputs.BUILD_ARGS }}
     steps:
       - name: Checkout
@@ -85,7 +80,7 @@ jobs:
 
       - name: Output inputs for debugging
         run: |
-          echo "The build tag is ${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
+          echo "The build tags is ${{ github.event.inputs.docker_tags || inputs.docker_tags }}"
           echo "The build context is ${{ github.event.inputs.build_context || inputs.build_context }}"
           echo "The docker image name is ${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
           echo "The build args are ${{ github.event.inputs.build_args || inputs.build_args }}"
@@ -108,7 +103,12 @@ jobs:
         id: set_vars
         run: |
           CONTEXT="${{ steps.determine-context.outputs.build_context }}"
-          DOKCER_IMAGE_TAG="${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
+
+          DOKCER_IMAGE_TAGS="${{ github.event.inputs.docker_tags || inputs.docker_tags }}"
+          if [ -z "$DOKCER_IMAGE_TAGS" ]; then
+            DOKCER_IMAGE_TAGS="latest"
+          fi
+
           if [ -z "${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}" ]; then
             DOCKER_IMAGE_NAME=$(basename $CONTEXT)
           else
@@ -126,11 +126,17 @@ jobs:
             BUILD_ARGS="BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ'),$BUILD_ARGS"
           fi
 
+          BUILD_PLATFORMS="${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
+          if [ -z "$BUILD_PLATFORMS" ]; then
+            BUILD_PLATFORMS="linux/amd64"
+          fi
+
           {
-            echo "IMAGE_FULL_NAME=${{ github.actor }}/${DOCKER_IMAGE_NAME}:${DOKCER_IMAGE_TAG}"
             echo "IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
-            echo "IMAGE_TAG=$DOKCER_IMAGE_TAG"
+            echo "IMAGE_TAG=$DOKCER_IMAGE_TAGS"
             echo "BUILD_ARGS=$BUILD_ARGS"
+            echo "BUILD_PLATFORMS=$BUILD_PLATFORMS"
+            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
@@ -140,6 +146,9 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    if: ${{ fromJson(needs.setup.outputs.IMAGE_TAG_LIST).tag.length }} > 0
+    strategy:
+      matrix: ${{ fromJson(needs.setup.outputs.IMAGE_TAG_LIST) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -171,29 +180,42 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build vars format
+        id: build_vars_format
+        run: |
+          DOCKER_TAG=$(echo "${{ matrix.tag }}" | tr -d '\n'| tr -d ' ')
+          echo "Docekr tag: $DOCKER_TAG"
 
+          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_OUTPUT
+
+          BUILD_ARGS=${{ needs.setup.outputs.BUILD_ARGS }}
+          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ ${DOCKER_TAG} != "latest" ]]; then
+            BUILD_ARGS="VERSION=${DOCKER_TAG},$BUILD_ARGS"
+          fi
+          echo "BUILD_ARGS: $BUILD_ARGS"
+          echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
+
+          IFS=',' read -r -a build_args <<< "${BUILD_ARGS}"
+          for i in {1..7}; do
+            eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
+            echo "BUILD_ARGS_$i > ${build_args[$i-1]:-}"
+            echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
+          done
+      
       - name: Output build description
         id: output_build_description
         run: |
           echo "Docker Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
           echo "Docker Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
-          echo "Docker Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
+          echo "Docker Image full name:  ${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}"
           echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
-          echo "Docker tag: ${{ needs.setup.outputs.IMAGE_TAG }}"
-          echo "Docker build args: ${{ needs.setup.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS }} on ${{ github.run_id }}"
+          echo "Docker tag: ${{ steps.build_vars_format.outputs.DOCKER_TAG }}"
+          echo "Docker build args: ${{ steps.build_vars_format.outputs.BUILD_ARGS }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.build_vars_format.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
-      
-      - name: Split Build Args
-        id: split_build_args
-        run: |
-          IFS=',' read -r -a build_args <<< "${{ needs.setup.outputs.BUILD_ARGS }}"
-          for i in {1..7}; do
-            eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
-            echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
-          done
 
       - name: Docker build and push
         uses: docker/build-push-action@v6
@@ -202,18 +224,18 @@ jobs:
           file: ${{ needs.setup.outputs.BUILD_FILE }}
           push: true
           tags: |
-            ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-            ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
+            ${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+            ghcr.io/${{ needs.setup.outputs.IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
           platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
           build-args: |
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_1 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_2 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_3 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_4 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_5 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_6 }}
-            ${{ steps.split_build_args.outputs.BUILD_ARGS_7 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_1 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_2 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_3 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_4 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_5 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_6 }}
+            ${{ steps.build_vars_format.outputs.BUILD_ARGS_7 }}
 
       - name: Send Apprise Notification
         run: |
