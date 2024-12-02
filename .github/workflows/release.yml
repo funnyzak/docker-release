@@ -2,14 +2,13 @@ name: Release Image
 on:
   workflow_call:
     inputs:
-      docker_tag:
-        description: 'Docker image tag, e.g. latest'
-        required: true
-        type: string
-        default: 'latest'
       build_context:
         description: 'Docker build context, default is current directory, e.g. ./Docker/hello'
         required: true
+        type: string
+      docker_tags:
+        description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
+        required: false
         type: string
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
@@ -31,14 +30,13 @@ on:
 
   workflow_dispatch:
     inputs:
-      docker_tag:
-        description: 'Docker image tag, e.g. latest'
-        required: true
-        type: string
-        default: 'latest'
       build_context:
         description: 'Docker build context, default is current directory, e.g. ./Docker/hello'
         required: true
+        type: string
+      docker_tags:
+        description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
+        required: false
         type: string
       docker_file_name:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
@@ -68,12 +66,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event_name == 'push'
     outputs:
-      IMAGE_FULL_NAME: ${{ steps.set_vars.outputs.IMAGE_FULL_NAME }}
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
-      IMAGE_TAG: ${{ steps.set_vars.outputs.IMAGE_TAG }}
+      IMAGE_TAG_LIST: ${{ steps.set_vars.outputs.IMAGE_TAG_LIST }}
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
-      BUILD_PLATFORM_LIST: ${{ steps.set_vars.outputs.BUILD_PLATFORM_LIST }}
+      BUILD_PLATFORMS: ${{ steps.set_vars.outputs.BUILD_PLATFORMS }}
       BUILD_ARGS: ${{ steps.set_vars.outputs.BUILD_ARGS }}
     steps:
       - name: Checkout
@@ -83,7 +80,7 @@ jobs:
 
       - name: Output inputs for debugging
         run: |
-          echo "The build tag is ${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
+          echo "The build tags is ${{ github.event.inputs.docker_tags || inputs.docker_tags }}"
           echo "The build context is ${{ github.event.inputs.build_context || inputs.build_context }}"
           echo "The docker image name is ${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
           echo "The build args are ${{ github.event.inputs.build_args || inputs.build_args }}"
@@ -106,7 +103,12 @@ jobs:
         id: set_vars
         run: |
           CONTEXT="${{ steps.determine-context.outputs.build_context }}"
-          DOKCER_IMAGE_TAG="${{ github.event.inputs.docker_tag || inputs.docker_tag }}"
+
+          DOKCER_IMAGE_TAGS="${{ github.event.inputs.docker_tags || inputs.docker_tags }}"
+          if [ -z "$DOKCER_IMAGE_TAGS" ]; then
+            DOKCER_IMAGE_TAGS="latest"
+          fi
+
           if [ -z "${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}" ]; then
             DOCKER_IMAGE_NAME=$(basename $CONTEXT)
           else
@@ -130,11 +132,11 @@ jobs:
           fi
 
           {
-            echo "IMAGE_FULL_NAME=${{ github.actor }}/${DOCKER_IMAGE_NAME}:${DOKCER_IMAGE_TAG}"
             echo "IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
-            echo "IMAGE_TAG=$DOKCER_IMAGE_TAG"
+            echo "IMAGE_TAG=$DOKCER_IMAGE_TAGS"
             echo "BUILD_ARGS=$BUILD_ARGS"
-            echo BUILD_PLATFORM_LIST=$(echo ${BUILD_PLATFORMS} | jq -R -s 'split(",") | map(select(length>0)) | {platform: map(.)}' | jq '.platform |= map(gsub("\\n"; ""))' -c)
+            echo "BUILD_PLATFORMS=$BUILD_PLATFORMS"
+            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
@@ -144,9 +146,9 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    if: ${{ fromJson(needs.setup.outputs.BUILD_PLATFORM_LIST).platform.length }} > 0
+    if: ${{ fromJson(needs.setup.outputs.IMAGE_TAG_LIST).tag.length }} > 0
     strategy:
-      matrix: ${{ fromJson(needs.setup.outputs.BUILD_PLATFORM_LIST) }}
+      matrix: ${{ fromJson(needs.setup.outputs.IMAGE_TAG_LIST) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -184,12 +186,12 @@ jobs:
         run: |
           echo "Docker Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
           echo "Docker Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
-          echo "Docker Image full name: ${{ needs.setup.outputs.IMAGE_FULL_NAME }}"
-          echo "Docker Build platform: ${{ matrix.platform }}"
+          echo "Docker Image full name:  ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}"
+          echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
-          echo "Docker tag: ${{ needs.setup.outputs.IMAGE_TAG }}"
+          echo "Docker tag: ${{ matrix.tag }}"
           echo "Docker build args: ${{ needs.setup.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_FULL_NAME }} with tag ${{ needs.setup.outputs.IMAGE_TAG }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ matrix.platform }} on ${{ github.run_id }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ needs.setup.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
       
@@ -209,10 +211,10 @@ jobs:
           file: ${{ needs.setup.outputs.BUILD_FILE }}
           push: true
           tags: |
-            ${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-            ghcr.io/${{ needs.setup.outputs.IMAGE_FULL_NAME }}
-          platforms: ${{ matrix.platform }}
+            ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
+            registry.cn-beijing.aliyuncs.com/${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
+            ghcr.io/${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
+          platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
           build-args: |
             ${{ steps.split_build_args.outputs.BUILD_ARGS_1 }}
             ${{ steps.split_build_args.outputs.BUILD_ARGS_2 }}

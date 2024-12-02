@@ -80,6 +80,7 @@ jobs:
       new_release_version: ${{ steps.get-latest-release.outputs.new_release_version }}
       is_new_release_version: ${{ steps.check-docker-hub.outputs.is_new_release_version }}
       build_context: ${{ github.event.inputs.build_context || inputs.build_context  || './Docker/' }}
+      docker_tags: ${{ steps.get-latest-release.outputs.docker_tags }}
     steps:
       - name: Get latest release version
         id: get-latest-release
@@ -88,6 +89,11 @@ jobs:
 
           echo "Current ${{ github.event.inputs.image_name || inputs.image_name }} version is $new_release_version"
           echo "new_release_version=$new_release_version" >> $GITHUB_OUTPUT
+          if [ ${{ github.event.inputs.is_latest_tag || inputs.is_latest_tag }} == true ]; then
+            echo "docker_tags=latest,$new_release_version" >> $GITHUB_OUTPUT
+          else
+            echo "docker_tags=$new_release_version" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check if new version exists on docker hub
         id: check-docker-hub
@@ -111,20 +117,7 @@ jobs:
       build_context: ${{ github.event.inputs.build_context || inputs.build_context || format('./Docker/{0}', github.event.inputs.image_name || inputs.image_name) }}
       docker_file_name: ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}
       docker_image_name: ${{ github.event.inputs.image_name || inputs.image_name }}
-      docker_tag: ${{ needs.check_offical_release.outputs.new_release_version }}
-      build_args: VERSION=${{ needs.check_offical_release.outputs.new_release_version }},${{ github.event.inputs.build_args || inputs.build_args }}
-      build_platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms || 'linux/arm64' }}
-    secrets: inherit
-
-  release_new_with_latest_tag:
-    needs: check_offical_release
-    if: needs.check_offical_release.outputs.is_new_release_version == 'true' && ( github.event.inputs.is_latest_tag || inputs.is_latest_tag )
-    uses: ./.github/workflows/release.yml
-    with:
-      build_context: ${{ github.event.inputs.build_context || inputs.build_context || format('./Docker/{0}', github.event.inputs.image_name || inputs.image_name) }}
-      docker_file_name: ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}
-      docker_image_name: ${{ github.event.inputs.image_name || inputs.image_name }}
-      docker_tag: latest
+      docker_tags: ${{ needs.check_offical_release.outputs.docker_tags }}
       build_args: VERSION=${{ needs.check_offical_release.outputs.new_release_version }},${{ github.event.inputs.build_args || inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms || 'linux/arm64' }}
     secrets: inherit

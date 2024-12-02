@@ -2,11 +2,10 @@ name: Release Canal Images
 on:
   workflow_dispatch:
     inputs:
-      docker_tag:
-        description: 'Docker image tag, e.g. latest'
-        required: true
+      docker_tags:
+        description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
+        required: false
         type: string
-        default: 'latest'
       canal_version:
         description: 'Canal version, e.g. 1.1.8、 1.1.8-alpha-3'
         required: true
@@ -35,7 +34,7 @@ jobs:
     with:
       build_context: './Docker/canal/canal-adapter'
       docker_image_name: canal-adapter
-      docker_tag: ${{ github.event.inputs.docker_tag }}
+      docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: CANAL_NAME=adapter,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit
@@ -46,7 +45,7 @@ jobs:
     with:
       build_context: './Docker/canal/canal-adapter'
       docker_image_name: canal-admin
-      docker_tag: ${{ github.event.inputs.docker_tag }}
+      docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: CANAL_NAME=admin,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit
@@ -57,7 +56,7 @@ jobs:
     with:
       build_context: './Docker/canal/canal-adapter'
       docker_image_name: canal-deployer
-      docker_tag: ${{ github.event.inputs.docker_tag }}
+      docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: CANAL_NAME=deployer,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit
