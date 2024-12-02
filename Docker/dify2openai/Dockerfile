@@ -8,7 +8,8 @@ RUN apk add --no-cache git && \
     git clone https://github.com/funnyzak/dify2openai . \
     && git checkout ${VERSION} || git checkout main \
     && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION \
-    && npm install --production
+    && npm install --production && npm install @vercel/ncc -g \
+    && ncc build app.js -o /app
 
 FROM node:16-alpine
 
@@ -29,10 +30,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/VERSION /app/
-COPY --from=builder /app/node_modules /app/node_modules
-COPY --from=builder /app/app.js /app/
+COPY --from=builder /app/index.js /app/
 COPY --from=builder /app/package.json /app/
-COPY --from=builder /app/package-lock.json /app/
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD wget -qO- http://localhost:3000 || exit 1
 

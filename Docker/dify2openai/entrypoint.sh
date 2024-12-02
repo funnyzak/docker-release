@@ -18,4 +18,4 @@ echo -e "${BLUE}DIFY_API_URL=${DIFY_API_URL}\nBOT_TYPE=${BOT_TYPE}\nINPUT_VARIAB
 
 echo -e "${BLUE}Dify2OpenAI started.${NC}"
 
-node /app/app.js
+node /app/index.js
