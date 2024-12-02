@@ -24,7 +24,7 @@ The following images are available:
 - [**Cron**](https://github.com/funnyzak/docker-release/tree/main/Docker/cron): `funnyzak/cron:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/cron))
 - [**MySQL Dump**](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump): `funnyzak/mysql-dump:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/mysql-dump))
 - [**Dify2OpenAI**](https://github.com/funnyzak/docker-release/tree/main/Docker/dify2openai): `funnyzak/dify2openai:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/dify2openai))
-- [**Certimate**](https://github.com/funnyzak/docker-release/tree/main/Docker/certificate): `funnyzak/certificate:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/certificate))
+- [**Certimate**](https://github.com/funnyzak/docker-release/tree/main/Docker/certimate): `funnyzak/certimate:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/certimate))
 - [**Hello**](https://github.com/funnyzak/docker-release/tree/main/Docker/hello): `funnyzak/hello:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/hello))
 
 ### Docker Pull
@@ -51,7 +51,7 @@ You can pull the above images from Docker Hub, GitHub Container Registry, or Ali
 | [Cron](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/cron?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/cron) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/cron)](https://hub.docker.com/r/funnyzak/cron) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/cron.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/cron) |
 | [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/mysql-dump?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/mysql-dump)](https://hub.docker.com/r/funnyzak/mysql-dump) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/mysql-dump.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump) |
 | [Dify2OpenAI](https://github.com/funnyzak/docker-release/tree/main/Docker/dify2openai/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/dify2openai?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/dify2openai) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/dify2openai)](https://hub.docker.com/r/funnyzak/dify2openai) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/dify2openai.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/dify2openai) |
-| [Certimate](https://github.com/funnyzak/docker-release/tree/main/Docker/certificate/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/certificate?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/certificate) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/certificate)](https://hub.docker.com/r/funnyzak/certificate) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/certificate.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/certificate) |
+| [Certimate](https://github.com/funnyzak/docker-release/tree/main/Docker/certimate/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/certimate?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/certimate) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/certimate)](https://hub.docker.com/r/funnyzak/certimate) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/certimate.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/certimate) |
 | [Hello](https://github.com/funnyzak/docker-release/tree/main/Docker/hello/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/hello?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/hello) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/hello)](https://hub.docker.com/r/funnyzak/hello) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/hello.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/hello) |
 
 ## Services
@@ -209,7 +209,7 @@ Next, configure HTTPS with Let's Encrypt certbot:
 # Install certbot on Ubuntu:
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
-# Generate certificates & modify Nginx configuration
+# Generate certimates & modify Nginx configuration
 sudo certbot --nginx
 # Follow the prompts
 # Restart Nginx
@@ -463,7 +463,7 @@ For more information about Canal, please check [Alibaba Canal](https://github.co
 
 cron is a lightweight service that runs in the background and executes scheduled tasks. It builds on the official `alpine` image and includes `dcron` as the cron service. The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`, `linux/s390x`.
 
-Installed packages: `dcron`, `ca-certificates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
+Installed packages: `dcron`, `ca-certimates`, `curl`, `tar`, `tzdata`, `bash`, `zip`, `unzip`, `rsync`.
 
 For more information about cron, please check [Cron Documentation](https://github.com/funnyzak/docker-release/tree/main/Docker/cron/README.md).
 
