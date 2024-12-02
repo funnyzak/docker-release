@@ -136,7 +136,7 @@ jobs:
             echo "IMAGE_TAG=$DOKCER_IMAGE_TAGS"
             echo "BUILD_ARGS=$BUILD_ARGS"
             echo "BUILD_PLATFORMS=$BUILD_PLATFORMS"
-            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | tr -d '\n' ｜ jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
+            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
