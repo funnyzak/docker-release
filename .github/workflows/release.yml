@@ -184,8 +184,8 @@ jobs:
       - name: Build vars format
         id: build_vars_format
         run: |
-          DOCKER_TAG=$(echo "${{ matrix.tag }}" | tr -d '\n')
-          DOCKER_TAG=$(echo $DOCKER_TAG | tr -d ' ')
+          DOCKER_TAG=$(echo "${{ matrix.tag }}" | tr -d '\n'| tr -d ' ')
+          echo "Docekr tag: $DOCKER_TAG"
 
           echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_OUTPUT
 
@@ -193,11 +193,13 @@ jobs:
           if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ ${DOCKER_TAG} != "latest" ]]; then
             BUILD_ARGS="VERSION=${DOCKER_TAG},$BUILD_ARGS"
           fi
+          echo "BUILD_ARGS: $BUILD_ARGS"
           echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
 
           IFS=',' read -r -a build_args <<< "${BUILD_ARGS}"
           for i in {1..7}; do
             eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
+            echo "BUILD_ARGS_$i > ${build_args[$i-1]:-}"
             echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
           done
       
