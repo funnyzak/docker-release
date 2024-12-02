@@ -2,10 +2,16 @@ name: Release Canal Images
 on:
   workflow_dispatch:
     inputs:
-      docker_tags:
-        description: 'Docker image tags, e.g. 1.1.8,1.1.8-alpha-3,latest, support multiple tags, default is latest. notes: the tag must be the same as the official version.'
-        required: false
+      docker_tag:
+        description: 'Docker image tag, e.g. latest'
+        required: true
         type: string
+        default: 'latest'
+      canal_version:
+        description: 'Canal version, e.g. 1.1.8、 1.1.8-alpha-3'
+        required: true
+        type: string
+        default: '1.1.8-alpha-3'
       build_components:
         description: 'Build component, e.g. adapter, admin, deployer'
         required: true
@@ -29,8 +35,8 @@ jobs:
     with:
       build_context: './Docker/canal/canal-adapter'
       docker_image_name: canal-adapter
-      docker_tags: ${{ github.event.inputs.docker_tags }}
-      build_args: CANAL_NAME=adapter
+      docker_tags: ${{ github.event.inputs.docker_tag }}
+      build_args: CANAL_NAME=adapter,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit
 
@@ -40,8 +46,8 @@ jobs:
     with:
       build_context: './Docker/canal/canal-adapter'
       docker_image_name: canal-admin
-      docker_tags: ${{ github.event.inputs.docker_tags }}
-      build_args: CANAL_NAME=admin
+      docker_tags: ${{ github.event.inputs.docker_tag }}
+      build_args: CANAL_NAME=admin,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit
 
@@ -51,7 +57,7 @@ jobs:
     with:
       build_context: './Docker/canal/canal-adapter'
       docker_image_name: canal-deployer
-      docker_tags: ${{ github.event.inputs.docker_tags }}
-      build_args: CANAL_NAME=deployer
+      docker_tags: ${{ github.event.inputs.docker_tag }}
+      build_args: CANAL_NAME=deployer,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
     secrets: inherit
