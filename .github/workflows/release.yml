@@ -136,7 +136,7 @@ jobs:
             echo "IMAGE_TAG=$DOKCER_IMAGE_TAGS"
             echo "BUILD_ARGS=$BUILD_ARGS"
             echo "BUILD_PLATFORMS=$BUILD_PLATFORMS"
-            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
+            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | tr -d '\n' ｜ jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
@@ -201,12 +201,12 @@ jobs:
         run: |
           echo "Docker Build context: ${{ needs.setup.outputs.BUILD_CONTEXT }}"
           echo "Docker Image name: ${{ needs.setup.outputs.IMAGE_NAME }}"
-          echo "Docker Image full name:  ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}"
+          echo "Docker Image full name:  ${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}"
           echo "Docker Build platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}"
           echo "Docker file: ${{ needs.setup.outputs.BUILD_FILE }}"
           echo "Docker tag: ${{ matrix.tag }}"
           echo "Docker build args: ${{ steps.split_build_args.outputs.BUILD_ARGS }}"
-          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.split_build_args.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
+          BUILD_TRIGGER_DESCRIPTION="Docker Image Release triggered by ${{ github.event_name }} event, Bulld Docker image ${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }} from ${{ needs.setup.outputs.BUILD_FILE }} in ${{ needs.setup.outputs.BUILD_CONTEXT }} with build args ${{ steps.split_build_args.outputs.BUILD_ARGS }} and platforms ${{ needs.setup.outputs.BUILD_PLATFORMS  }} on ${{ github.run_id }}"
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
 
@@ -217,9 +217,9 @@ jobs:
           file: ${{ needs.setup.outputs.BUILD_FILE }}
           push: true
           tags: |
-            ${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
-            registry.cn-beijing.aliyuncs.com/${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
-            ghcr.io/${{ github.actor }}/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
+            ${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
+            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
+            ghcr.io/${{ needs.setup.outputs.IMAGE_NAME }}:${{ matrix.tag }}
           platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
           build-args: |
             ${{ steps.split_build_args.outputs.BUILD_ARGS_1 }}
