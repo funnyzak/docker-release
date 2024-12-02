@@ -73,7 +73,7 @@ jobs:
       IMAGE_TAG: ${{ steps.set_vars.outputs.IMAGE_TAG }}
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
-      BUILD_PLATFORM_LIST: ${{ steps.set_vars.outputs.BUILD_PLATFORMS_LIST }}
+      BUILD_PLATFORM_LIST: ${{ steps.set_vars.outputs.BUILD_PLATFORM_LIST }}
       BUILD_ARGS: ${{ steps.set_vars.outputs.BUILD_ARGS }}
     steps:
       - name: Checkout
