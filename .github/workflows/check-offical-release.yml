@@ -6,12 +6,10 @@ on:
       image_name:
         type: string
         description: 'Docker image name, e.g. nginx. '
-        default: 'nginx'
         required: true
       get_official_version_command:
         type: string
         description: 'Command to get the official version, e.g. curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9.]+(?=</a>)" | head -n 1'
-        default: 'curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9.]+(?=</a>)" | head -n 1'
         required: true
       build_context:
         description: 'Docker build context, default is current directory, e.g. ./Docker/hello'
