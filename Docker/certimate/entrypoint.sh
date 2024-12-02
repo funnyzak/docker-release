@@ -8,7 +8,7 @@ YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${GREEN}Certimate v:$(cat /app/VERSION)${NC}"
+echo -e "${GREEN}Certimate $(cat /app/VERSION)${NC}"
 echo -e "${BLUE}Certimate aims to provide users with a secure and user-friendly SSL certificate management solution.${NC}\n"
 
 echo -e "${GREEN}Docker Hub: https://hub.docker.com/r/funnyzak/certmate${NC}"

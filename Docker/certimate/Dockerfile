@@ -8,7 +8,7 @@ ARG VERSION
 
 RUN git clone https://github.com/usual2970/certimate . \
     && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
-    && echo ${VERSION:-$(git rev-parse --short=12 HEAD)} > VERSION
+    && echo ${VERSION:-$(git rev-parse HEAD)} > VERSION
 
 RUN \
   cd /app/ui && \
