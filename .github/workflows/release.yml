@@ -134,7 +134,7 @@ jobs:
             echo "IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
             echo "IMAGE_TAG=$DOKCER_IMAGE_TAG"
             echo "BUILD_ARGS=$BUILD_ARGS"
-            echo "BUILD_PLATFORM_LIST=$(echo '${BUILD_PLATFORMS}' | jq -R -s 'split(",") | map(select(length>0)) | {platform: map(.)}' | jq '.platform |= map(gsub("\\n"; ""))' -c)"
+            echo BUILD_PLATFORM_LIST=$(echo '${BUILD_PLATFORMS}' | jq -R -s 'split(",") | map(select(length>0)) | {platform: map(.)}' | jq '.platform |= map(gsub("\\n"; ""))' -c)
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
