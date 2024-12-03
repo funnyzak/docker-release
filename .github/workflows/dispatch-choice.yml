@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - nginx
+          - java
           - cron
           - certimate
           - mysql-dump
@@ -59,6 +60,17 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm64/v8' }}
+    secrets: inherit
+
+  java_release:
+    if: ${{ github.event.inputs.choice_service == 'java' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/java'
+      docker_image_name: java
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
     secrets: inherit
 
   mysql_dump_release:
