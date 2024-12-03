@@ -12,7 +12,7 @@ RUN apk add --no-cache git && \
 FROM alpine:3.19 AS final
 
 ARG BUILD_DATE
-ARG VERSION=
+ARG VERSION
 ARG VCS_REF
 
 LABEL org.label-schema.name="requesthub" \
