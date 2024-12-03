@@ -20,14 +20,13 @@ RUN npm install -g pushoo-cli
 
 ENV TMP_DIR_PATH /tmp/backups
 
-ENV SERVER_NAME mysql-backup-server
+ENV SERVER_NAME=mysql-backup-server
 ENV DB_DUMP_TARGET_DIR_PATH /backup
-ENV DB_DUMP_BY_SCHEMA true
-ENV DUMP_OPTS --single-transaction --quick --lock-tables=false
-ENV DB_FILE_EXTENSION sql
-ENV COMPRESS_EXTENSION zip
-ENV EXPIRE_HOURS 4320
-ENV DUMP_AT_STARTUP true
+ENV DB_DUMP_BY_SCHEMA=true
+ENV DB_FILE_EXTENSION=sql
+ENV COMPRESS_EXTENSION=zip
+ENV EXPIRE_HOURS=4320
+ENV DUMP_AT_STARTUP=true
 
 COPY /scripts/* /run-scripts/
 RUN chmod +x /run-scripts/*
