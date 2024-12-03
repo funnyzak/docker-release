@@ -1,17 +1,19 @@
 FROM alpine:3.20.3 AS builder
 
 ARG BUILD_DATE
-ARG VERSION=1.27.3
-ENV NGINX_VERSION nginx-${VERSION}
-ENV TZ Asia/Shanghai
-ENV TMP_PATH /tmp
-ENV HEADERS_MORE_NGINX_MODULE 0.37
-ENV FANCY_INDEX 0.5.2
+ARG VERSION
+
+ENV TZ=Asia/Shanghai
+ENV TMP_PATH=/tmp
+ENV HEADERS_MORE_NGINX_MODULE=0.37
+ENV FANCY_INDEX=0.5.2
 
 RUN apk --no-cache add wget openssl-dev pcre-dev zlib-dev build-base \
-    gd gd-dev perl perl-dev libxslt libxslt-dev libxml2 libxml2-dev geoip geoip-dev
-
-RUN mkdir -p ${TMP_PATH} && \
+    gd gd-dev perl perl-dev libxslt libxslt-dev libxml2 libxml2-dev geoip geoip-dev && \
+    LATEST_VERSION=$(wget -qO- https://nginx.org/en/download.html | grep -oE "nginx-[0-9]+\.[0-9]+\.[0-9]+" | head -n 1 | cut -d- -f2) && \
+    NGINX_VERSION=nginx-${VERSION:-$LATEST_VERSION} && \
+    echo "Latest version is $NGINX_VERSION" && \
+    mkdir -p ${TMP_PATH} && \
     wget http://nginx.org/download/${NGINX_VERSION}.tar.gz -O ${TMP_PATH}/${NGINX_VERSION}.tar.gz && \
     wget https://github.com/openresty/headers-more-nginx-module/archive/v${HEADERS_MORE_NGINX_MODULE}.tar.gz -O ${TMP_PATH}/headers-more-nginx-module.tar.gz && \
     wget http://github.com/aperezdc/ngx-fancyindex/archive/v${FANCY_INDEX}.tar.gz -O ${TMP_PATH}/ngx-fancyindex.tar.gz && \
@@ -78,7 +80,7 @@ RUN mkdir -p ${TMP_PATH} && \
 FROM alpine:3.20.3
 
 ARG BUILD_DATE
-ARG VERSION 1.27.3
+ARG VERSION
 ARG VCS_REF
 
 LABEL org.label-schema.name="nginx" \
@@ -89,7 +91,7 @@ LABEL org.label-schema.name="nginx" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-ENV TZ Asia/Shanghai
+ENV TZ=Asia/Shanghai
 
 RUN apk --no-cache add pcre zlib gd libxslt libxml2 geoip perl tzdata && \
     addgroup -S nginx && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx && \
@@ -114,5 +116,7 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 80 443
 
 USER nginx
+
+WORKDIR /etc/nginx
 
 ENTRYPOINT ["/entrypoint.sh"]

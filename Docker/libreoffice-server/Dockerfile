@@ -13,7 +13,7 @@ LABEL org.label-schema.name="libreoffice-server" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
 
 ENV LANG=C.UTF-8
-ENV TZ Asia/Shanghai
+ENV TZ=Asia/Shanghai
       
 RUN \
     apk add --no-cache nodejs npm git cups-libs fontconfig ttf-dejavu && \
