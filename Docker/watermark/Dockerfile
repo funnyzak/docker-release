@@ -4,7 +4,7 @@ ARG VERSION
 
 WORKDIR /app
 
-RUN git clone https://github.com/funnyzak/watermark . && \
+RUN git clone https://github.com/funnyzak/watermark . \
     && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
     && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION \
     && yarn && yarn build
