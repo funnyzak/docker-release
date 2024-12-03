@@ -5,7 +5,7 @@ ARG VERSION
 WORKDIR /app
 
 RUN apk add --no-cache git \
-    && git clone https://github.com/funnyzak/watermark . \
+    && git clone https://github.com/funnyzak/watermark.git . \
     && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
     && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION \
     && yarn && yarn build
