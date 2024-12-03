@@ -190,7 +190,7 @@ jobs:
           echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_OUTPUT
 
           BUILD_ARGS=${{ needs.setup.outputs.BUILD_ARGS }}
-          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ ${DOCKER_TAG} != "latest" ]]; then
+          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ $DOCKER_TAG != "latest" ]] && [[ $DOCKER_TAG != "nightly" ]]; then
             BUILD_ARGS="VERSION=${DOCKER_TAG},$BUILD_ARGS"
           fi
           echo "BUILD_ARGS: $BUILD_ARGS"
