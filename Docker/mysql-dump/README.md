@@ -104,7 +104,8 @@ services:
       - EXPIRE_HOURS=4320
       - STARTUP_COMMAND=echo "startup"
       - BEFORE_DUMP_COMMAND=echo "before dump"
-      - AFTER_DUMP_COMMAND=echo "after dump"
+      # sync backup to remote server after dump
+      # - AFTER_DUMP_COMMAND=echo "rsync -Pav -e 'ssh -p 22 -i /mnt/data/.ssh/id_rsa' /back root@hostaddress:/mnt/backup"
       - DB_DUMP_TARGET_DIR_PATH=/backup
       - DB_DUMP_BY_SCHEMA=true
       - DB_FILE_EXTENSION=sql
@@ -116,6 +117,7 @@ services:
     restart: on-failure
     volumes:
       - ./bak/mysql_db:/backup
+      # - ./ssh:/mnt/data/.ssh
 ```
 
 ## Reference
