@@ -10,7 +10,7 @@ RUN apk add --no-cache git \
     && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION \
     && yarn && yarn build
 
-FROM nginx:1.27.3-alpine3.20-slim
+FROM nginx:stable-alpine-slim
 
 ARG BUILD_DATE
 ARG VERSION
