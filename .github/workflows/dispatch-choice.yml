@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - nginx
+          - openjdk
           - cron
           - certimate
           - mysql-dump
@@ -18,6 +19,7 @@ on:
           - abracadabra-web
           - libreoffice-server
           - y-webrtc-signaling
+          - watermark
           - request-hub
           - hello
       docker_tags:
@@ -58,6 +60,17 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm64/v8' }}
+    secrets: inherit
+
+  openjdk_release:
+    if: ${{ github.event.inputs.choice_service == 'openjdk' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/openjdk'
+      docker_image_name: openjdk
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
     secrets: inherit
 
   mysql_dump_release:
@@ -124,6 +137,17 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
+    secrets: inherit
+
+  watermark_release:
+    if: ${{ github.event.inputs.choice_service == 'watermark' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/watermark'
+      docker_image_name: watermark
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le' }}
     secrets: inherit
 
   libreoffice_server_release:
