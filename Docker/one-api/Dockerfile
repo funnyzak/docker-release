@@ -8,7 +8,7 @@ WORKDIR /app
 
 RUN git clone https://github.com/songquanpeng/one-api.git . \
     && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
-    && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION
+    && echo ${VERSION:-$(git rev-parse --short=12 HEAD)}-$(git log -1 --format=%cd --date=format:'%y%m%d') > VERSION
 
 WORKDIR /app/web
 
@@ -35,7 +35,7 @@ WORKDIR /build
 
 RUN git clone https://github.com/songquanpeng/one-api.git . \
     && git checkout ${VERSION} || git checkout main \
-    && echo ${VERSION:-$(git rev-parse --short=8 HEAD)} > VERSION
+    && echo ${VERSION:-$(git rev-parse --short=12 HEAD)}-$(git log -1 --format=%cd --date=format:'%y%m%d') > VERSION
 
 RUN go mod download
 COPY --from=node-builder /app/web/build ./web/build
