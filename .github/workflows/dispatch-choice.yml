@@ -10,6 +10,7 @@ on:
         options:
           - nginx
           - openjdk
+          - nezha-dashboard
           - cron
           - certimate
           - mysql-dump
@@ -50,7 +51,16 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le' }}
     secrets: inherit
-
+  nezha_dashboard_release:
+    if: ${{ github.event.inputs.choice_service == 'nezha-dashboard' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/nezha/nezha-dashboard'
+      docker_image_name: nezha-dashboard
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
   certimate_release:
     if: ${{ github.event.inputs.choice_service == 'certimate' }}
     uses: ./.github/workflows/release.yml
