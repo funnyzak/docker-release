@@ -33,7 +33,7 @@ jobs:
     with:
       image_name: one-api
       get_official_version_command: 'curl -s https://api.github.com/repos/songquanpeng/one-api/releases/latest | jq -r ".tag_name // \"no-tags\""'
-      is_latest_tag: false
+      is_latest_tag: true
       build_platforms: 'linux/amd64'
     secrets: inherit
 
@@ -42,7 +42,7 @@ jobs:
     with:
       image_name: nezha-dashboard
       get_official_version_command: 'curl -s https://api.github.com/repos/nezhahq/nezha/releases/latest | jq -r ".tag_name // \"no-tags\""'
-      is_latest_tag: false
+      is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
 
@@ -51,7 +51,7 @@ jobs:
     with:
       image_name: certimate
       get_official_version_command: 'curl -s https://api.github.com/repos/usual2970/certimate/tags |  jq -r ".[0].name // \"no-tags\""'
-      is_latest_tag: false
+      is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64,linux/arm64/v8'
     secrets: inherit
 

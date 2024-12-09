@@ -1,5 +1,6 @@
 # NeZha
 
+## NeZha-Dashboard
 
 [![Docker Tags](https://img.shields.io/docker/v/funnyzak/nezha-dashboard?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/nezha-dashboard/)
 [![Image Size](https://img.shields.io/docker/image-size/funnyzak/nezha-dashboard)](https://hub.docker.com/r/funnyzak/nezha-dashboard/)
@@ -11,7 +12,7 @@ A NeZha dashboard docker image.
 Build with the  `linux/arm64`, `linux/amd64` architectures.
 
 
-## Pull
+### Pull
 
 ```bash
 docker pull funnyzak/nezha-dashboard:latest
@@ -22,9 +23,9 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nezha-dashboard:latest
 ```
 
 
-## Usage
+### Usage
 
-### Run NeZha Dashboard with Docker
+#### Run NeZha Dashboard with Docker
 
 ```bash
 docker run -d \
@@ -34,3 +35,5 @@ docker run -d \
   -p 8008:8008 \
   funnyzak/nezha-dashboard
 ```
+
+More details about the NeZha dashboard, please refer to the [NeZha](https://nezha.wiki) documentation.
