@@ -250,10 +250,10 @@ jobs:
           • 版本：${{ steps.build_vars_format.outputs.DOCKER_TAG }}
           
           💻 支持平台
-          • ${{ needs.setup.outputs.BUILD_PLATFORMS }}
+          $(echo "${{ needs.setup.outputs.BUILD_PLATFORMS }}" | tr ',' '\n• ')
           
           ⏰ 发布时间
-          • $(date +'%Y-%m-%d %H:%M:%S')
+          • $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
           
           📎 相关链接
           • [Docker Hub](https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }})

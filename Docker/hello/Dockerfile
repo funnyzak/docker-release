@@ -22,4 +22,5 @@ RUN go build -o hello hello.go
 
 FROM scratch
 COPY --from=builder /app/hello /hello
+
 ENTRYPOINT ["/hello"]
