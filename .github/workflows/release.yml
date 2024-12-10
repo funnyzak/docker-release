@@ -64,7 +64,7 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event_name == 'push'
+    # if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || github.event_name == 'push'
     outputs:
       IMAGE_NAME: ${{ steps.set_vars.outputs.IMAGE_NAME }}
       IMAGE_TAG_LIST: ${{ steps.set_vars.outputs.IMAGE_TAG_LIST }}
@@ -80,6 +80,7 @@ jobs:
 
       - name: Output inputs for debugging
         run: |
+          echo "Github event is ${{ github.event_name }}"
           echo "The build tags is ${{ github.event.inputs.docker_tags || inputs.docker_tags }}"
           echo "The build context is ${{ github.event.inputs.build_context || inputs.build_context }}"
           echo "The docker image name is ${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}"
@@ -241,6 +242,21 @@ jobs:
       - name: Send Apprise Notification
         run: |
           curl -X POST \
-            -F "tag=devops" \
-            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }} DockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags GAction: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            "${{ secrets.APPRISE_HTTP_URL }}"
+          -F "tag=ycgo" \
+          -F "body=🐳 Docker 镜像发布通知
+      
+          📦 镜像信息
+          • 名称：[${{ needs.setup.outputs.IMAGE_NAME }}](https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }})
+          • 版本：${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+
+          💻 构建平台
+          $(echo "${{ needs.setup.outputs.BUILD_PLATFORMS }}" | tr ',' '\n' | sed 's/^/• /')
+
+          ⏰ 发布时间
+          • $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
+          
+          📎 相关链接
+          • [Docker Hub](https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }})
+          • [构建日志](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          • [项目仓库](https://github.com/${{ github.repository }})" \
+          "${{ secrets.APPRISE_HTTP_URL }}"
