@@ -253,7 +253,6 @@ jobs:
           💻 构建平台
           • $(echo "${{ needs.setup.outputs.BUILD_PLATFORMS }}" | tr ',' '\n• ')
 
-          
           ⏰ 发布时间
           • $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')
           
