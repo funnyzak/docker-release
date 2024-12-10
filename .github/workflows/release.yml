@@ -258,7 +258,5 @@ jobs:
           📎 相关链接
           • [Docker Hub](https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }})
           • [构建日志](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          • [使用说明](https://github.com/${{ github.repository }}/blob/main/README.md)
-          
-          😄 镜像已成功发布至 Docker Hub" \
+          • [使用说明](https://github.com/${{ github.repository }}/blob/main/README.md)" \
           "${{ secrets.APPRISE_HTTP_URL }}"
