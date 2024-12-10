@@ -17,6 +17,7 @@ WORKDIR /app
 RUN go mod init hello && go mod tidy
 
 COPY hello.go ./
+
 RUN go build -o hello hello.go
 
 FROM scratch
