@@ -41,6 +41,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: nezha-dashboard
+      build_context: './Docker/nezha/nezha-dashboard'
       get_official_version_command: 'curl -s https://api.github.com/repos/nezhahq/nezha/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
