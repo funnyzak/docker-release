@@ -241,6 +241,23 @@ jobs:
       - name: Send Apprise Notification
         run: |
           curl -X POST \
-            -F "tag=devops" \
-            -F "body=${{ steps.output_build_description.outputs.BUILD_TRIGGER_DESCRIPTION }} DockerHub: https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }}/tags GAction: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            "${{ secrets.APPRISE_HTTP_URL }}"
+          -F "tag=ycgo" \
+          -F "body=🐳 Docker 镜像发布通知
+      
+          📦 镜像信息
+          • 名称：${{ needs.setup.outputs.IMAGE_NAME }}
+          • 版本：${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+          
+          💻 支持平台
+          • ${{ needs.setup.outputs.BUILD_PLATFORMS }}
+          
+          ⏰ 发布时间
+          • $(date +'%Y-%m-%d %H:%M:%S')
+          
+          📎 相关链接
+          • [Docker Hub](https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }})
+          • [构建日志](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          • [使用说明](https://github.com/${{ github.repository }}/blob/main/README.md)
+          
+           😄 镜像已成功发布至 Docker Hub" \
+          "${{ secrets.APPRISE_HTTP_URL }}"
