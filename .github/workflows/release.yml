@@ -246,7 +246,7 @@ jobs:
           -F "body=🐳 Docker 镜像发布通知
       
           📦 镜像信息
-          • 名称：${{ needs.setup.outputs.IMAGE_NAME }}
+          • 名称：[${{ needs.setup.outputs.IMAGE_NAME }}](https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }})
           • 版本：${{ steps.build_vars_format.outputs.DOCKER_TAG }}
           
           💻 支持平台
@@ -258,5 +258,5 @@ jobs:
           📎 相关链接
           • [Docker Hub](https://hub.docker.com/r/${{ needs.setup.outputs.IMAGE_NAME }})
           • [构建日志](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          • [使用说明](https://github.com/${{ github.repository }}/blob/main/README.md)" \
+          • [项目仓库](https://github.com/${{ github.repository }})" \
           "${{ secrets.APPRISE_HTTP_URL }}"
