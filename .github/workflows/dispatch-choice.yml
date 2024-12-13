@@ -17,6 +17,7 @@ on:
           - dify2openai
           - snell-server
           - one-api
+          - env-mock-data
           - abracadabra-web
           - libreoffice-server
           - y-webrtc-signaling
@@ -51,6 +52,7 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le' }}
     secrets: inherit
+
   nezha_dashboard_release:
     if: ${{ github.event.inputs.choice_service == 'nezha-dashboard' }}
     uses: ./.github/workflows/release.yml
@@ -61,6 +63,18 @@ jobs:
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
     secrets: inherit
+
+  env_mock_data_release:
+    if: ${{ github.event.inputs.choice_service == 'env-mock-data' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/other/env-mock-data'
+      docker_image_name: env-mock-data
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+
   certimate_release:
     if: ${{ github.event.inputs.choice_service == 'certimate' }}
     uses: ./.github/workflows/release.yml
