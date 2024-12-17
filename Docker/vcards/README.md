@@ -12,11 +12,11 @@
 You can pull the images using the following commands:
 
 ```bash
-docker pull funnyzak/vCards:latest
+docker pull funnyzak/vcards:latest
 # GHCR 
-docker pull ghcr.io/funnyzak/vCards:latest
+docker pull ghcr.io/funnyzak/vcards:latest
 # Aliyun
-docker pull registry.cn-beijing.aliyuncs.com/funnyzak/vCards:latest
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/vcards:latest
 ```
 
 ## Usage
