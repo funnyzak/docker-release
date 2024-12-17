@@ -97,5 +97,9 @@ Steps:
 1. [iOS](https://support.apple.com/zh-sg/guide/iphone/ipha0d932e96/ios): `Settings` - `Contacts` - `Accounts` - `Add Account` - `Other` - `Add CardDAV Account`.
 2. [Mac](https://support.apple.com/zh-cn/guide/contacts/adrb7e5aaa2a/mac): `Contacts` - `Settings` - `Accounts` - `Other Contacts Accounts`.
 
+When syncing is complete, you can see the contacts in the Contacts app. 
+
+![Contacts](https://github.com/user-attachments/assets/d1557e12-655d-4173-93af-9843e51bf78c)
+
 
 More information can be found at [vCards](https://github.com/metowolf/vCards).
