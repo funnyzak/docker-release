@@ -21,7 +21,7 @@ download_and_sync() {
   curl -sSL https://github.com/${REPO_NAME}/releases/download/${VERSION}/archive.zip -o ${DOWNLOAD_DIR}/vcards/archive-${VERSION}.zip
   unzip -o ${DOWNLOAD_DIR}/vcards/archive-${VERSION}.zip -d ${DOWNLOAD_DIR}/vcards/${VERSION}
   if [ -n "$(find ${DOWNLOAD_DIR}/vcards/${VERSION} -name '*.vcf')" ]; then
-    rsync -a --delete ${DOWNLOAD_DIR}/vcards/${VERSION}/* ${VCARD_DIR_PATH}
+    rsync -a --update ${DOWNLOAD_DIR}/vcards/${VERSION}/* ${VCARD_DIR_PATH}
     echo -e "Sync vCards done, $(find ${VCARD_DIR_PATH} -name '*.vcf' | wc -l) files synced."
   else
     echo -e "${RED}Sync vCards failed, no vcf files found.${NC}"
