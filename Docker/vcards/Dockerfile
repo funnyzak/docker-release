@@ -14,7 +14,7 @@ RUN git clone https://github.com/metowolf/vCards . \
 
 RUN yarn && yarn radicale
 
-FROM alpine:edge
+FROM funnyzak/cron:latest
 
 ARG VERSION
 ARG BUILD_DATE
@@ -29,7 +29,7 @@ LABEL org.label-schema.name="MetoWolf-vCards" \
     org.label-schema.url="https://github.com/funnyzak/docker-release"
 
 RUN apk add --no-cache \
-    radicale \
+    radicale jq \
   && rm -rf /var/cache/apk/* \
   \
   && { \
@@ -65,12 +65,16 @@ RUN apk add --no-cache \
     echo 'file = /etc/radicale/rights'; \
   } > /etc/radicale/config
 
+
+ENV TZ=Asia/Shanghai
+ENV DOWNLOAD_DIR="/app/downloads"
+
 COPY --from=builder /app/radicale/ /app/vcards/collection-root/cn/
 COPY --from=builder /app/VERSION /app/VERSION
-COPY entrypoint.sh /entrypoint.sh
+COPY /scripts/* /run-scripts/
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /run-scripts/*
 
 EXPOSE 5232
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/run-scripts/entrypoint.sh"]

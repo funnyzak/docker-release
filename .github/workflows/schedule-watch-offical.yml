@@ -53,7 +53,7 @@ jobs:
       image_name: vcards
       get_official_version_command: 'curl -s https://api.github.com/repos/metowolf/vCards/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
-      build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8'
+      build_platforms: 'linux/amd64,linux/arm64,linux/arm64/v8'
     secrets: inherit
 
   watch_certimate_release:
