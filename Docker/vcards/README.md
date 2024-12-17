@@ -32,6 +32,22 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/vcards:latest
 
 ### Docker Deployment
 
+Use the default contacts data, and map to local 5232 port.
+```bash
+docker run -d --name vcard \
+    -p 5232:5232 \
+    funnyzak/vcards:latest
+```
+
+Use custom contacts data, and map to local 5232 port.
+```bash
+docker run -d --name vcard \
+    -p 5232:5232 \
+    -v ./vcards:/app/vcards/collection-root/cn/ \
+    funnyzak/vcards:latest
+```
+
+Sync every day at 00:00, and download new data to `./downloads` folder.
 ```bash
 docker run -d --name vcard \
     -p 5232:5232 \
@@ -39,6 +55,18 @@ docker run -d --name vcard \
     -v ./downloads:/app/downloads \
     funnyzak/vcards:latest
 ```
+
+Sync every day at 00:00, and download new data to `./downloads` folder, and add custom contacts data to `vcards` folder.
+```bash
+docker run -d --name vcard \
+    -p 5232:5232 \
+    -e SYNC_CRON="0 0 * * *" \
+    -v ./downloads:/app/downloads \
+    -v ./vcards:/app/vcards/collection-root/cn/ \
+    funnyzak/vcards:latest
+```
+**Note**: You must download the contacts data from [vCards](https://github.com/metowolf/vCards) and put it in the `vcards` folder.
+
 
 ### Docker Compose Deployment
 
