@@ -21,12 +21,12 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/vcards:latest
 
 ## Environment Variables
 
-- `SYNC_CRON`: Sync schedule, default is `0 0 * * *`, which means sync every day at 00:00. More information can be found at [crontab.guru](https://crontab.guru/).
+- `SYNC_CRON`: Sync schedule, default is not set. For example, `0 0 * * *` means sync every day at 00:00. You can use [CronTab](https://crontab.guru/) to generate the schedule.
 
 ## Volumes
 
 - `/app/downloads`: New data will be downloaded to this folder.
-- `/app/vcards/collection-root/cn/`: The root folder of the contacts.
+- `/app/vcards/collection-root/cn/`: The `cn` folder of the contacts.
 
 ## Usage
 

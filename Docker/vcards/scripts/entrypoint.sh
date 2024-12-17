@@ -27,7 +27,7 @@ if [ -n "$SYNC_CRON" ]; then
   echo -e "${GREEN}Radicale is running.${NC}"
 
   echo -e "\n${GREEN}The vCard will be synchronized according to the following cron expression: ${SYNC_CRON}${NC}"
-  echo -e "${YELLOW}Note: fetch the latest vCards from the repo: https://github.com/metowolf/vCards/releases${NC}\n"
+  echo -e "${YELLOW}Note: fetch the latest vCards from the repo: https://github.com/metowolf/vCards${NC}\n"
 
   CRON_STRINGS="$SYNC_CRON /run-scripts/cron-vcard.sh >> /var/log/cron/cron.log 2>&1"
   echo -e "$CRON_STRINGS\n" > /var/spool/cron/crontabs/root
