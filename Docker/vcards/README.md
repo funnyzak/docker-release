@@ -1,9 +1,9 @@
 # vCards
 
-[![Docker Tags](https://img.shields.io/docker/v/funnyzak/vCards?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/vCards/)
-[![Image Size](https://img.shields.io/docker/image-size/funnyzak/vCards)](https://hub.docker.com/r/funnyzak/vCards/)
-[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/vCards.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/vCards/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/vCards.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/vCards/)
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/vcards?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/vcards/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/vcards)](https://hub.docker.com/r/funnyzak/vcards/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/vcards.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/vcards/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/vcards.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/vcards/)
 
 导入常用联系人头像，优化 iOS 来电、信息界面体验。更多信息请访问 [vCards](https://github.com/metowolf/vCards)。
 
