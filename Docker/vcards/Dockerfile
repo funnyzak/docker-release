@@ -14,7 +14,7 @@ RUN git clone https://github.com/metowolf/vCards . \
 
 RUN yarn && yarn radicale
 
-FROM funnyzak/cron:latest
+FROM alpine:edge
 
 ARG VERSION
 ARG BUILD_DATE
@@ -29,8 +29,8 @@ LABEL org.label-schema.name="MetoWolf-vCards" \
     org.label-schema.url="https://github.com/funnyzak/docker-release"
 
 RUN apk add --no-cache \
-    radicale jq \
-  && rm -rf /var/cache/apk/* \
+    radicale unzip curl dcron tzdata jq bash rsync && \
+  rm -rf /var/cache/apk/* \
   \
   && { \
     echo '[root]'; \
@@ -77,4 +77,4 @@ RUN chmod +x /run-scripts/*
 
 EXPOSE 5232
 
-ENTRYPOINT ["/bin/bash", "/run-scripts/entrypoint.sh"]
+ENTRYPOINT ["/run-scripts/entrypoint.sh"]
