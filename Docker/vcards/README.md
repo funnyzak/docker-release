@@ -40,4 +40,22 @@ docker run -d --name vcard \
     funnyzak/vcards:latest
 ```
 
+### Docker Compose Deployment
+
+```yaml
+version: '3.7'
+
+services:
+  vcard:
+    image: funnyzak/vcards:latest
+    container_name: vcard
+    ports:
+      - 5232:5232
+    environment:
+      - SYNC_CRON=0 0 * * *
+    volumes:
+      - ./downloads:/app/downloads
+```
+
+
 More information can be found at [vCards](https://github.com/metowolf/vCards).
