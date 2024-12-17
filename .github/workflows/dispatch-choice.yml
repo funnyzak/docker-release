@@ -12,6 +12,7 @@ on:
           - openjdk
           - nezha-dashboard
           - cron
+          - vcards
           - certimate
           - mysql-dump
           - dify2openai
@@ -59,6 +60,17 @@ jobs:
     with:
       build_context: './Docker/nezha/nezha-dashboard'
       docker_image_name: nezha-dashboard
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+  
+  vcards_release:
+    if: ${{ github.event.inputs.choice_service == 'vcards' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/vcards'
+      docker_image_name: vcards
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
