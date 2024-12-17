@@ -26,6 +26,7 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/vcards:latest
 ## Volumes
 
 - `/app/downloads`: New data will be downloaded to this folder.
+- `/app/vcards/collection-root/cn/`: The root folder of the contacts.
 
 ## Usage
 
