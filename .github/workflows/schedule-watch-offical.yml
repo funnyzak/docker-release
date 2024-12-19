@@ -59,6 +59,7 @@ jobs:
   watch_vcards_pro_release:
     uses: ./.github/workflows/check-offical-release.yml
     with:
+      build_context: './Docker/vcards'
       image_name: vcards-pro
       get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/vCards/tags | jq -r ".[0].name // \"no-tags\""'
       is_latest_tag: true
