@@ -69,6 +69,7 @@ RUN apk add --no-cache \
 ENV TZ=Asia/Shanghai
 ENV DOWNLOAD_DIR="/app/downloads"
 ENV REPO_NAME="funnyzak/vCards"
+ENV SYNC_ON_STARTUP="true"
 
 COPY --from=builder /app/radicale/ /app/vcards/collection-root/cn/
 COPY --from=builder /app/VERSION /app/VERSION

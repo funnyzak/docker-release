@@ -22,6 +22,10 @@ chmod +x /run-scripts/*
 mkdir -p /var/log/radicale /var/log/cron
 touch /var/log/radicale/radicale.log /var/log/cron/cron.log
 
+if [ "$SYNC_ON_STARTUP" == "true" ]; then
+  /run-scripts/cron-vcard.sh
+fi
+
 if [ -n "$SYNC_CRON" ]; then
   radicale >> /var/log/radicale/radicale.log 2>&1 &
   echo -e "${GREEN}Radicale is running.${NC}"

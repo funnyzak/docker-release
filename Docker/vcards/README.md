@@ -22,6 +22,7 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/vcards:latest
 ## Environment Variables
 
 - `SYNC_CRON`: Sync schedule, default is not set. For example, `0 0 * * *` means sync every day at 00:00. You can use [CronTab](https://crontab.guru/) to generate the schedule.
+- `ENV SYNC_ON_STARTUP`: Sync when the container starts, default is `false`.
 
 ## Volumes
 
