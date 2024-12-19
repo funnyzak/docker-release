@@ -28,7 +28,7 @@ jobs:
         with:
           files: | 
             '**/Dockerfile'
-            '**/Dockerfile.*'
+            '**/Dockerfile*'
 
       - name: Set matrix
         id: set-matrix
