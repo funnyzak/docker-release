@@ -11,6 +11,7 @@ on:
           - nginx
           - openjdk
           - nezha-dashboard
+          - git-sync
           - cron
           - vcards
           - vcards-pro
@@ -109,6 +110,17 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm64/v8' }}
+    secrets: inherit
+
+  git_sync_release:
+    if: ${{ github.event.inputs.choice_service == 'git-sync' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/git-sync'
+      docker_image_name: git-sync
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7' }}
     secrets: inherit
 
   openjdk_release:

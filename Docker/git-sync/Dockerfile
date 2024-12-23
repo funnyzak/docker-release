@@ -40,7 +40,8 @@ RUN apk update && \
 RUN mkdir -p /git-sync /backups
 
 COPY --from=builder /go/src/app/git-sync /opt/go/git-sync
-COPY entrypoint.sh /entrypoint.sh
+COPY --from=builder /go/src/app/VERSION /opt/go/VERSION
+COPY --from=builder /go/src/app/entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
