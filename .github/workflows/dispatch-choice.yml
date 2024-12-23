@@ -13,6 +13,7 @@ on:
           - nezha-dashboard
           - cron
           - vcards
+          - vcards-pro
           - certimate
           - mysql-dump
           - dify2openai
@@ -71,6 +72,18 @@ jobs:
     with:
       build_context: './Docker/vcards'
       docker_image_name: vcards
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+
+  vcards_pro_release:
+    if: ${{ github.event.inputs.choice_service == 'vcards-pro' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/vcards'
+      docker_image_name: vcards-pro
+      docker_file_name: 'Dockerfile.pro'
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}

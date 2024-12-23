@@ -1,14 +1,14 @@
 FROM node:20-alpine3.19 AS builder
 
-WORKDIR /app
-
-RUN apk add --no-cache git
-
 ARG VERSION
 
 WORKDIR /app
 
-RUN git clone https://github.com/metowolf/vCards . \
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+RUN git clone https://github.com/funnyzak/vCards . \
     && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
     && echo ${VERSION:-$(git rev-parse HEAD)} > VERSION
 
@@ -68,7 +68,8 @@ RUN apk add --no-cache \
 
 ENV TZ=Asia/Shanghai
 ENV DOWNLOAD_DIR="/app/downloads"
-ENV REPO_NAME="metowolf/vCards"
+ENV REPO_NAME="funnyzak/vCards"
+ENV SYNC_ON_STARTUP="true"
 
 COPY --from=builder /app/radicale/ /app/vcards/collection-root/cn/
 COPY --from=builder /app/VERSION /app/VERSION

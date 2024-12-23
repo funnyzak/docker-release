@@ -10,7 +10,6 @@ export PATH=$PATH:/usr/local/bin
 
 VCARD_DIR_PATH="/app/vcards/collection-root/cn"
 CURRENT_VERSION=$(cat /app/VERSION)
-REPO_NAME="metowolf/vCards"
 
 download_and_sync() {
   local VERSION=$1
@@ -30,7 +29,7 @@ download_and_sync() {
 
 echo -e "${GREEN}Current vCards: $(find ${VCARD_DIR_PATH} -name '*.vcf' | wc -l) files.${NC}"
 
-echo -e "${GREEN}Metowolf/vCards ${CURRENT_VERSION}, syncing vCards.${NC}"
+echo -e "${GREEN}${REPO_NAME} ${CURRENT_VERSION}, syncing vCards.${NC}"
 
 echo -e "${BLUE}Checking latest version from GitHub.${NC}"
 LATEST_VERSION=$(curl -s https://api.github.com/repos/${REPO_NAME}/releases/latest | jq -r '.tag_name')
