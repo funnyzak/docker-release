@@ -22,6 +22,7 @@ download_and_sync() {
   if [ -n "$(find ${DOWNLOAD_DIR}/vcards/${VERSION}/radicale -name '*.vcf')" ]; then
     rsync -a --update --exclude='汇总/' ${DOWNLOAD_DIR}/vcards/${VERSION}/radicale/* ${VCARD_DIR_PATH}
     echo -e "Sync vCards done, $(find ${VCARD_DIR_PATH} -type d -name '*cache*' -prune -o -type f -name '*.vcf' -print | wc -l) files synced."
+    echo $VERSION > /app/VERSION
   else
     echo -e "${RED}Sync vCards failed, no vcf files found.${NC}"
   fi
@@ -41,7 +42,6 @@ else
   else
     echo -e "${BLUE}Current version: ${CURRENT_VERSION}, latest version: ${LATEST_VERSION}, downloading and syncing.${NC}"
     download_and_sync $LATEST_VERSION
-    echo $LATEST_VERSION > /app/VERSION
   fi
 fi
 
