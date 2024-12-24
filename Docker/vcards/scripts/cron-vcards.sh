@@ -21,7 +21,7 @@ download_and_sync() {
   unzip -o ${DOWNLOAD_DIR}/vcards/archive-${VERSION}.zip -d ${DOWNLOAD_DIR}/vcards/${VERSION}
   if [ -n "$(find ${DOWNLOAD_DIR}/vcards/${VERSION} -name '*.vcf')" ]; then
     rsync -a --update --ignore-existing --exclude='汇总/' ${DOWNLOAD_DIR}/vcards/${VERSION}/* ${VCARD_DIR_PATH}
-    echo -e "Sync vCards done, $(find ${VCARD_DIR_PATH} -name '*.vcf' | wc -l) files synced."
+    echo -e "Sync vCards done, $(find ${VCARD_DIR_PATH} -type d -name '*cache*' -prune -o -type f -name '*.vcf' -print | wc -l) files synced."
   else
     echo -e "${RED}Sync vCards failed, no vcf files found.${NC}"
   fi

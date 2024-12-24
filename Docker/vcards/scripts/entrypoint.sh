@@ -15,7 +15,7 @@ echo -e "${GREEN}Docker Hub: https://hub.docker.com/r/funnyzak/vcards${NC}"
 echo -e "${GREEN}Repository: https://github.com/${REPO_NAME}${NC}"
 echo -e "${GREEN}Build via: https://github.com/funnyzak/docker-release${NC}\n"
 
-echo -e "${GREEN}Has vCards: $(find /app/vcards/collection-root/cn -name '*.vcf' | wc -l) files.${NC}\n"
+echo -e "${GREEN}Has vCards: $(find /app/vcards/collection-root/cn -type d -name '*cache*' -prune -o -type f -name '*.vcf' -print | wc -l) files.${NC}\n"
 
 chmod +x /run-scripts/*
 
