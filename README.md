@@ -13,6 +13,7 @@ All images are provided with the `latest` and `nightly` tags (if available). For
 The following images are available:
 - [**Nginx**](https://github.com/funnyzak/docker-release/tree/main/Docker/nginx): `funnyzak/nginx:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nginx))
 - [**openjdk**](https://github.com/funnyzak/docker-release/tree/main/Docker/openjdk): `funnyzak/openjdk:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/openjdk))
+- [**git-sync**](https://github.com/funnyzak/docker-release/tree/main/Docker/git-sync): `funnyzak/git-sync:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/git-sync))
 - [**Snell-Server**](https://github.com/funnyzak/docker-release/tree/main/Docker/snell-server): `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
 - [**One-API**](https://github.com/funnyzak/docker-release/tree/main/Docker/one-api): `funnyzak/one-api:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/one-api))
 - [**NeZha-Dashboard**](https://github.com/funnyzak/docker-release/tree/main/Docker/nezha): `funnyzak/nezha-dashboard:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nezha-dashboard))
@@ -45,6 +46,7 @@ You can pull the above images from Docker Hub, GitHub Container Registry, or Ali
 | [Nginx](https://github.com/funnyzak/docker-release/tree/main/Docker/nginx/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/nginx?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/nginx) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/nginx)](https://hub.docker.com/r/funnyzak/nginx) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nginx.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/nginx) |
 | [openjdk](https://github.com/funnyzak/docker-release/tree/main/Docker/openjdk/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/openjdk?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/openjdk) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/openjdk)](https://hub.docker.com/r/funnyzak/openjdk) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/openjdk.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/openjdk) |
 | [Snell-Server](https://github.com/funnyzak/docker-release/tree/main/Docker/snell-server/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/snell-server?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/snell-server)](https://hub.docker.com/r/funnyzak/snell-server) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/snell-server.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/snell-server) |
+| [git-sync](https://github.com/funnyzak/docker-release/tree/main/Docker/git-sync/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/git-sync?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/git-sync) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/git-sync)](https://hub.docker.com/r/funnyzak/git-sync) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/git-sync.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/git-sync) |
 | [One-API](https://github.com/funnyzak/docker-release/tree/main/Docker/one-api/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/one-api?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/one-api) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/one-api)](https://hub.docker.com/r/funnyzak/one-api) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/one-api.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/one-api) |
 | [vCards](https://github.com/funnyzak/docker-release/tree/main/Docker/vcards/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/vcards?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/vcards) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/vcards)](https://hub.docker.com/r/funnyzak/vcards) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/vcards.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/vcards) |
 | [NeZha-Dashboard](https://github.com/funnyzak/docker-release/tree/main/Docker/nezha/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/nezha-dashboard?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/nezha-dashboard) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/nezha-dashboard)](https://hub.docker.com/r/funnyzak/nezha-dashboard) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/nezha-dashboard.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/nezha-dashboard) |
@@ -316,7 +318,7 @@ services:
 
 **After Startup**:
 
-![Abracadabra_demo](https://cdn.jsdelivr.net/gh/funnyzak/docker-release@main/Docker/abracadabra-web/abracadabra-demo.png)
+![Abracadabra_demo](https://github.com/user-attachments/assets/5f9e5806-6372-49ce-9088-cc60bb47ed65)
 
 </details>
 
@@ -415,7 +417,7 @@ services:
 
 **After Deployment**:
 
-![Request-Hub](https://cdn.jsdelivr.net/gh/funnyzak/docker-release@main/Docker/request-hub/request-hub-demo.jpg)
+![Request-Hub](https://github.com/user-attachments/assets/a4dacbb9-1131-4db9-a5f3-3d477487a070)
 
 </details>
 

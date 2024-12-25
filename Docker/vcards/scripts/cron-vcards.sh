@@ -17,17 +17,18 @@ download_and_sync() {
 
   mkdir -p ${DOWNLOAD_DIR}/vcards/${VERSION}
 
-  curl -sSL https://github.com/${REPO_NAME}/releases/download/${VERSION}/archive.zip -o ${DOWNLOAD_DIR}/vcards/archive-${VERSION}.zip
-  unzip -o ${DOWNLOAD_DIR}/vcards/archive-${VERSION}.zip -d ${DOWNLOAD_DIR}/vcards/${VERSION}
-  if [ -n "$(find ${DOWNLOAD_DIR}/vcards/${VERSION} -name '*.vcf')" ]; then
-    rsync -a --update ${DOWNLOAD_DIR}/vcards/${VERSION}/* ${VCARD_DIR_PATH}
-    echo -e "Sync vCards done, $(find ${VCARD_DIR_PATH} -name '*.vcf' | wc -l) files synced."
+  curl -sSL https://github.com/${REPO_NAME}/releases/download/${VERSION}/radicale.zip -o ${DOWNLOAD_DIR}/vcards/radicale-${VERSION}.zip
+  unzip -o ${DOWNLOAD_DIR}/vcards/radicale-${VERSION}.zip -d ${DOWNLOAD_DIR}/vcards/${VERSION}
+  if [ -n "$(find ${DOWNLOAD_DIR}/vcards/${VERSION}/radicale -name '*.vcf')" ]; then
+    rsync -a --update --exclude='汇总/' ${DOWNLOAD_DIR}/vcards/${VERSION}/radicale/* ${VCARD_DIR_PATH}
+    echo -e "Sync vCards done, $(find ${VCARD_DIR_PATH} -type d -name '*cache*' -prune -o -type f -name '*.vcf' -print | wc -l) files synced."
+    echo $VERSION > /app/VERSION
   else
     echo -e "${RED}Sync vCards failed, no vcf files found.${NC}"
   fi
 }
 
-echo -e "${GREEN}Current vCards: $(find ${VCARD_DIR_PATH} -name '*.vcf' | wc -l) files.${NC}"
+echo -e "${GREEN}Current vCards: $(find ${VCARD_DIR_PATH} -type d -name '*cache*' -prune -o -type f -name '*.vcf' -print | wc -l) files.${NC}"
 
 echo -e "${GREEN}${REPO_NAME} ${CURRENT_VERSION}, syncing vCards.${NC}"
 
@@ -41,7 +42,6 @@ else
   else
     echo -e "${BLUE}Current version: ${CURRENT_VERSION}, latest version: ${LATEST_VERSION}, downloading and syncing.${NC}"
     download_and_sync $LATEST_VERSION
-    echo $LATEST_VERSION > /app/VERSION
   fi
 fi
 

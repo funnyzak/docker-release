@@ -15,7 +15,7 @@ echo -e "${GREEN}Docker Hub: https://hub.docker.com/r/funnyzak/vcards${NC}"
 echo -e "${GREEN}Repository: https://github.com/${REPO_NAME}${NC}"
 echo -e "${GREEN}Build via: https://github.com/funnyzak/docker-release${NC}\n"
 
-echo -e "${GREEN}Has vCards: $(find /app/vcards/collection-root/cn -name '*.vcf' | wc -l) files.${NC}\n"
+echo -e "${GREEN}Has vCards: $(find /app/vcards/collection-root/cn -type d -name '*cache*' -prune -o -type f -name '*.vcf' -print | wc -l) files.${NC}\n"
 
 chmod +x /run-scripts/*
 
@@ -23,7 +23,7 @@ mkdir -p /var/log/radicale /var/log/cron
 touch /var/log/radicale/radicale.log /var/log/cron/cron.log
 
 if [ "$SYNC_ON_STARTUP" == "true" ]; then
-  /run-scripts/cron-vcard.sh
+  /run-scripts/cron-vcards.sh
 fi
 
 if [ -n "$SYNC_CRON" ]; then
@@ -33,7 +33,7 @@ if [ -n "$SYNC_CRON" ]; then
   echo -e "\n${GREEN}The vCard will be synchronized according to the following cron expression: ${SYNC_CRON}${NC}"
   echo -e "${YELLOW}Note: fetch the latest vCards from the repo: https://github.com/${REPO_NAME}${NC}\n"
 
-  CRON_STRINGS="$SYNC_CRON /run-scripts/cron-vcard.sh >> /var/log/cron/cron.log 2>&1"
+  CRON_STRINGS="$SYNC_CRON /run-scripts/cron-vcards.sh >> /var/log/cron/cron.log 2>&1"
   echo -e "$CRON_STRINGS\n" > /var/spool/cron/crontabs/root
   chmod 0644 /var/spool/cron/crontabs/root
 
