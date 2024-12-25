@@ -318,7 +318,7 @@ services:
 
 **After Startup**:
 
-![Abracadabra_demo](https://cdn.jsdelivr.net/gh/funnyzak/docker-release@main/Docker/abracadabra-web/abracadabra-demo.png)
+![Abracadabra_demo](https://github.com/user-attachments/assets/5f9e5806-6372-49ce-9088-cc60bb47ed65)
 
 </details>
 
@@ -417,7 +417,7 @@ services:
 
 **After Deployment**:
 
-![Request-Hub](https://cdn.jsdelivr.net/gh/funnyzak/docker-release@main/Docker/request-hub/request-hub-demo.jpg)
+![Request-Hub](https://github.com/user-attachments/assets/a4dacbb9-1131-4db9-a5f3-3d477487a070)
 
 </details>
 

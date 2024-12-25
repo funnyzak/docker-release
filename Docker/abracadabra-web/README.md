@@ -53,4 +53,4 @@ services:
 
 **After Startup**:
 
-![Abracadabra_demo](https://cdn.jsdelivr.net/gh/funnyzak/docker-release@main/Docker/abracadabra-web/abracadabra-demo.png)
+![Abracadabra_demo](https://github.com/user-attachments/assets/5f9e5806-6372-49ce-9088-cc60bb47ed65)

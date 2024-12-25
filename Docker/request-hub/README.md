@@ -90,4 +90,4 @@ services:
 
 ## Preview
 
-![preview](./request-hub-demo.jpg)
+![preview](https://github.com/user-attachments/assets/a4dacbb9-1131-4db9-a5f3-3d477487a070)
