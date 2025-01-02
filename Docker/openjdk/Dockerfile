@@ -14,7 +14,6 @@ LABEL org.label-schema.name="OpenJDK" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-ENV LANG=C.UTF-8 \
-    TZ=Asia/Shanghai
+ENV LANG=C.UTF-8
 
 CMD ["java", "-version"]
