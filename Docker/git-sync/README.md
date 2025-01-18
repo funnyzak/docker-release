@@ -55,33 +55,28 @@ services:
 Here is an example of a `config.yaml` file:
 
 ```yaml
-# Git Sync Configuration
-
-# Repository settings
-include_forks: false # Include forked repositories
-include_wiki: true # Include wiki's
-include_repos: [] # Include specific repositories
-exclude_repos: [] # Exclude specific repositories
-include_orgs: [] # Include repositories from specific organizations
-exclude_orgs: [] # Exclude repositories from specific organizations
-raw_git_urls: [] # Raw valid git URLs
-
-# Authentication
-username: <username>
-tokens: [<token 1>]
-
-# Server settings
-backup_dir: /path/to/backup
-clone_type: bare # Clone type: bare, shallow, mirror or full. Default: bare
-cron: 0 0 * * * # run every 24 hours at 00:00
+backup_dir: /backups
+clone_type: full
 concurrency: 5
-retry:
-  count: 3
-  delay: 10 # in seconds
+exclude_orgs: []
+exclude_repos: []
+include_forks: false
+include_orgs: []
+include_repos: []
+include_wiki: true
 platform: github
+raw_git_urls: []
+retry:
+    count: 3
+    delay: 5
 server:
-  domain: github.com
-  protocol: https
+    domain: github.com
+    protocol: https
+tokens:
+    - github_pat_your_token
+username: "your_username"
+workspace: ""
+
 ```
 More information about the configuration can be found [here](https://github.com/AkashRajpurohit/git-sync/wiki/Configuration).
 
