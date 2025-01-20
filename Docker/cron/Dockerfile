@@ -7,7 +7,7 @@ ARG VERSION
 ENV TZ=Asia/Shanghai \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8 \
-    INSTALL_PACKAGES="dcron ca-certificates curl tar tzdata bash zip unzip rsync"
+    INSTALL_PACKAGES="dcron ca-certificates curl tar tzdata bash zip unzip rsync rclone"
 
 LABEL org.label-schema.name="Alpine CRON" \
       org.label-schema.description="CRON is a lightweight Docker image containing Cron, based on Alpine Linux. Includes some useful tools for cron jobs. Such as ${INSTALL_PACKAGES}." \
