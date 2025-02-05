@@ -102,7 +102,6 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - LANG=C.UTF-8
-      - CRON_TAIL=1
       - CRON_STRINGS=* * * * * /scripts/echo.sh >> /var/log/cron/cron.log 2>&1
     restart: on-failure
     volumes:

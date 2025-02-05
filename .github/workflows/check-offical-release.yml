@@ -96,7 +96,7 @@ jobs:
       - name: Check if new version exists on docker hub
         id: check-docker-hub
         run: |
-          if [ ${{ steps.get-latest-release.outputs.new_release_version }} == 'no-tags' ]; then
+          if [ "${{ steps.get-latest-release.outputs.new_release_version }}" = "no-tags" ] || [ "${{ steps.get-latest-release.outputs.new_release_version }}" = "null" ]; then
             echo "Can't get the new Offical Release version"
             echo "is_new_release_version=false" >> $GITHUB_OUTPUT
           elif curl -s "https://hub.docker.com/v2/repositories/funnyzak/${{ github.event.inputs.image_name || inputs.image_name }}/tags/${{ steps.get-latest-release.outputs.new_release_version }}" | grep -q 'not found'; then

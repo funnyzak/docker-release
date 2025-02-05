@@ -27,4 +27,28 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/certimate:latest
 docker run -d --name certimate_server -p 8090:8090 -v $(pwd)/data:/app/pb_data --restart unless-stopped funnyzak/certimate:latest
 ```
 
+### Docker Compose Deployment
+
+```yaml
+version: '3.7'
+services:
+  certimate:
+    image: funnyzak/certimate:latest
+    container_name: certimate_server
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data:/app/pb_data
+    restart: unless-stopped
+```
+
+
+After completing the installation steps above, you can access the Certimate admin panel at:
+http://127.0.0.1:8090
+
+Default credentials:
+- Username: admin@certimate.fun
+- Password: 1234567890
+
+
 More information can be found at [certimate](https://github.com/usual2970/certimate).
