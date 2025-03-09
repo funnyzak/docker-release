@@ -40,7 +40,7 @@ jobs:
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile.length }} > 0
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile.length > 0 && fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile[0] != '' }}
     strategy:
       matrix: ${{ fromJson(needs.check_dockerfiles.outputs.matrix) }}
     uses: ./.github/workflows/release.yml
