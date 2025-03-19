@@ -2,8 +2,8 @@ name: Schedule Watch Offical Release
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 2,12 * * *'
+  # schedule:
+  #   - cron: '0 2,12 * * *'
 
 permissions:
   contents: write
