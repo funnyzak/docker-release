@@ -26,7 +26,8 @@ RUN rm -rf /app/ui/dist && \
 
 COPY --from=front-builder /app/ui/dist /app/ui/dist
 
-RUN go build -o certimate
+ENV CGO_ENABLED=0
+RUN go build -ldflags="-s -w" -o certimate
 
 FROM alpine:latest
 
