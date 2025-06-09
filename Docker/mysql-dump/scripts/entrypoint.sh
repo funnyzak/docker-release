@@ -60,7 +60,7 @@ fi
 FILE_SUFFIX="${DB_FILE_EXTENSION:-sql}"
 
 # Set extra mysqldump options
-EXTRA_OPTS="${DUMP_OPTS:---ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert}"
+EXTRA_OPTS="${DUMP_OPTS:---skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert}"
 
 # Set instance name
 INSTANCE_NAME="${SERVER_NAME:-mysql-backup-server}"

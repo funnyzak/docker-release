@@ -37,7 +37,7 @@ ENV DB_PORT=3306
 ENV DB_USER=root
 ENV DB_PASSWORD=""
 ENV DB_NAMES=""
-ENV DUMP_OPTS="--ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert"
+ENV DUMP_OPTS="--skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert"
 
 # Advanced backup options
 ENV LOG_DIR=""
