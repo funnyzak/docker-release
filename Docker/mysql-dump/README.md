@@ -44,7 +44,7 @@ The following environment variables are commonly used:
 - `DB_PORT` - The database port. Default: `3306`.
 - `DB_NAMES` - The database names to backup, space-separated (e.g., "dbname1 dbname2"). Leave blank to backup all databases.
 - `EXPIRE_DAYS` - The retention time for backup files in days. Default: `180`.
-- `DUMP_OPTS` - Custom mysqldump options. Default: `--skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert`.
+- `DUMP_OPTS` - Custom mysqldump options. Default: `--ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert`.
 - `DB_DUMP_CRON` - The crontab rule for backup scheduling. Default: `0 0 * * *` (daily at midnight).
 - `DUMP_AT_STARTUP` - Whether to run backup at container startup. Default: `true`.
 - `DB_DUMP_TARGET_DIR_PATH` - The directory path to store backup files. Default: `/backup`.
@@ -100,7 +100,7 @@ docker run -d --name mysql-dump \
   -e DB_USER="root" \
   -e DB_PASSWORD="root" \
   -e DB_NAMES="dbname1 dbname2" \
-  -e DUMP_OPTS="--skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert" \
+  -e DUMP_OPTS="--ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert" \
   -e EXPIRE_DAYS=180 \
   -e ENABLE_COMPRESS=true \
   -v ./backup:/backup \
@@ -164,7 +164,7 @@ services:
       - DB_USER=backup_user
       - DB_PASSWORD=secure_password
       - DB_NAMES=wordpress nextcloud
-      - DUMP_OPTS=--skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert
+      - DUMP_OPTS=--ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert
       - EXPIRE_DAYS=180  # 180 days retention
       - ENABLE_COMPRESS=true
       - DB_DUMP_TARGET_DIR_PATH=/backup
@@ -243,7 +243,7 @@ mysql:
 backup:
   output_dir: "./"
   file_suffix: "sql"
-  extra_options: "--skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert"
+  extra_options: "--ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert"
   compress: true
   # Backup retention days, 0 means skip backup file cleanup
   retention_days: 180

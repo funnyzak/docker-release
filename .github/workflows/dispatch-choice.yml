@@ -129,7 +129,7 @@ jobs:
       docker_image_name: mysql-dump
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
-      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/386,linux/amd64,linux/arm64,linux/arm64/v8,linux/ppc64le,linux/riscv64' }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm64/v8' }}
     secrets: inherit
 
   cron_release:

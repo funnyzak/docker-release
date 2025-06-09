@@ -1,8 +1,13 @@
-FROM funnyzak/cron:latest
+FROM ubuntu:latest
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
+
+ENV TZ=Asia/Shanghai \
+    LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive
 
 LABEL org.label-schema.name="mysql-dump" \
     org.label-schema.description="mysql-dump" \
@@ -12,13 +17,27 @@ LABEL org.label-schema.name="mysql-dump" \
     org.label-schema.vendor="Leon<silenceace@gmail.com>" \
     org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache mysql-client curl tar gzip && \
-    rm -rf /tmp/* /var/cache/apk/*
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+        mysql-client \
+        curl \
+        tar \
+        gzip \
+        cron \
+        ca-certificates \
+        bash \
+        zip \
+        unzip \
+        rsync \
+        tzdata \
+        procps && \
+    mkdir -p /var/log/cron /run-scripts /etc/cron.d /var/spool/cron/crontabs && \
+    touch /var/log/cron/cron.log && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Download mysql_backup.sh script from remote repository
-RUN mkdir -p /run-scripts && \
-    curl -fsSL https://raw.githubusercontent.com/funnyzak/dotfiles/refs/heads/main/utilities/shell/mysql/mysql_backup.sh \
+RUN curl -fsSL https://raw.githubusercontent.com/funnyzak/dotfiles/refs/heads/main/utilities/shell/mysql/mysql_backup.sh \
     -o /run-scripts/mysql_backup.sh && \
     chmod +x /run-scripts/mysql_backup.sh
 
@@ -37,7 +56,7 @@ ENV DB_PORT=3306
 ENV DB_USER=root
 ENV DB_PASSWORD=""
 ENV DB_NAMES=""
-ENV DUMP_OPTS="--skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert"
+ENV DUMP_OPTS="--ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert"
 
 # Advanced backup options
 ENV LOG_DIR=""

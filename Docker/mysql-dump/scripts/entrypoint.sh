@@ -60,7 +60,7 @@ fi
 FILE_SUFFIX="${DB_FILE_EXTENSION:-sql}"
 
 # Set extra mysqldump options
-EXTRA_OPTS="${DUMP_OPTS:---skip-ssl --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert}"
+EXTRA_OPTS="${DUMP_OPTS:---ssl-mode=DISABLED --single-transaction --routines --triggers --events --flush-logs --hex-blob --complete-insert}"
 
 # Set instance name
 INSTANCE_NAME="${SERVER_NAME:-mysql-backup-server}"
@@ -166,9 +166,11 @@ chmod +x /run-scripts/backup-wrapper.sh
 # Set up cron job
 CRON_STRINGS="${DB_DUMP_CRON:-0 0 * * *} /run-scripts/backup-wrapper.sh >> /var/log/cron/cron.log 2>&1"
 
-echo -e "$CRON_STRINGS\n" > /var/spool/cron/crontabs/root
+# Create crontab for root user
+echo "$CRON_STRINGS" | crontab -
 
-chmod -R 0644 /var/spool/cron/crontabs
+# Ensure cron service is configured
+service cron start
 
 # Execute startup command if specified (backward compatibility)
 STARTUP_CMD="${STARTUP_COMMAND:-}"
@@ -183,5 +185,15 @@ if [[ -n "$DUMP_AT_STARTUP" && "$DUMP_AT_STARTUP" = "true" ]]; then
     /run-scripts/backup-wrapper.sh >> /var/log/cron/cron.log 2>&1 &
 fi
 
-# Start cron daemon and tail logs
-crond -s /var/spool/cron/crontabs -b -L /var/log/cron/cron.log "$@" && tail -f /var/log/cron/cron.log
+# Keep cron running and tail logs
+tail -f /var/log/cron/cron.log &
+
+# Keep the container running
+while true; do
+    sleep 60
+    # Check if cron is still running, restart if needed
+    if ! pgrep cron > /dev/null; then
+        echo "Cron service stopped, restarting..."
+        service cron start
+    fi
+done
