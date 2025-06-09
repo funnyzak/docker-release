@@ -486,7 +486,7 @@ For more information about cron, please check [Cron Documentation](https://githu
 [![Docker Stars](https://img.shields.io/docker/stars/funnyzak/mysql-dump.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/mysql-dump.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/mysql-dump/)
 
-mysql-dump is a simple MySQL backup tool that can backup all databases or specified databases. It can push message with pushoo and delete expired dump files. It supports custom commands before and after the dump, custom mysqldump options, compressed dump files, and crontab rules. 
+mysql-dump is a professional MySQL backup tool that can backup all databases or specified databases. It supports multiple notification systems (Apprise, Bark), automatic cleanup of expired dump files, custom commands before and after backup, custom mysqldump options, compressed dump files, and crontab scheduling.
 
 The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm64`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`.
 
