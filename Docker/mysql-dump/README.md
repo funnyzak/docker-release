@@ -126,6 +126,25 @@ docker run -d --name mysql-dump \
   funnyzak/mysql-dump
 ```
 
+### With Post-Backup Tools
+
+Backup with automatic upload to S3 using tools:
+
+```bash
+docker run -d --name mysql-dump \
+  -e DB_HOST="localhost" \
+  -e DB_USER="root" \
+  -e DB_PASSWORD="mypassword" \
+  -e DB_NAMES="wordpress nextcloud" \
+  -e POST_BACKUP_COMMAND="/tools/upload_backups.sh /backup s3" \
+  -e S3_BUCKET="my-backup-bucket" \
+  -e AWS_ACCESS_KEY="your_access_key" \
+  -e AWS_SECRET_KEY="your_secret_key" \
+  -v ./backup:/backup \
+  -v ./tools:/tools:ro \
+  funnyzak/mysql-dump
+```
+
 ### Docker Compose
 
 Complete setup with notifications and advanced features:
@@ -162,12 +181,18 @@ services:
       - APPRISE_TAGS=mysql,backup
       # Custom commands
       - PRE_BACKUP_COMMAND=echo "Starting backup process"
-      - POST_BACKUP_COMMAND=echo "Backup completed, syncing to remote storage"
+      - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/upload_backups.sh /backup s3
+      # S3 upload configuration
+      - S3_BUCKET=my-backup-bucket
+      - S3_PREFIX=mysql-backups
+      - AWS_ACCESS_KEY=your_access_key
+      - AWS_SECRET_KEY=your_secret_key
     restart: unless-stopped
     volumes:
       - ./backup:/backup
       - ./logs:/var/log/cron
       - ./mysql-backup-logs:/var/log/mysql-backup
+      - ./tools:/tools:ro
 ```
 
 ### Advanced Configuration with YAML
@@ -281,6 +306,46 @@ The container maps environment variables to the underlying `mysql_backup.sh` scr
 | `BARK_URL` | `--bark-url` | Bark notification URL |
 | `BARK_KEY` | `--bark-key` | Bark device key |
 
+## Post-Backup Tools
+
+The container includes a set of optional tools that can be mounted and used with `POST_BACKUP_COMMAND` for advanced backup processing:
+
+### Available Tools
+
+- **upload_backups.sh** - Upload backup files to cloud storage (S3, FTP, SCP, WebDAV, OSS)
+- **process_backups.sh** - Process backup files (encrypt, verify, split, convert, analyze)
+
+### Tool Usage Examples
+
+Upload to S3 after backup:
+```yaml
+environment:
+  - POST_BACKUP_COMMAND=/tools/upload_backups.sh /backup s3
+  - S3_BUCKET=my-backup-bucket
+  - AWS_ACCESS_KEY=your_access_key
+volumes:
+  - ./tools:/tools:ro
+```
+
+Verify and encrypt backups:
+```yaml
+environment:
+  - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/process_backups.sh /backup encrypt
+  - GPG_PASSPHRASE=your_encryption_passphrase
+volumes:
+  - ./tools:/tools:ro
+```
+
+Combined operations:
+```yaml
+environment:
+  - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/upload_backups.sh /backup s3 && /tools/upload_backups.sh /backup ftp
+volumes:
+  - ./tools:/tools:ro
+```
+
+For detailed tool documentation, see `tools/README.md`.
+
 ## Backup Features
 
 - **Automatic Database Discovery**: Backs up all databases if none specified
@@ -291,6 +356,7 @@ The container maps environment variables to the underlying `mysql_backup.sh` scr
 - **Notifications**: Real-time backup status notifications
 - **Statistics**: Detailed backup statistics and reporting
 - **Custom Commands**: Execute custom commands before/after backup
+- **Post-Backup Tools**: Optional tools for upload and processing
 - **YAML Configuration**: Support for complex configuration files
 - **Cross-Platform**: Works on multiple architectures and operating systems
 - **Auto-Installation**: Automatically installs MySQL client if needed
