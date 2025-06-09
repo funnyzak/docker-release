@@ -14,6 +14,7 @@
 - `scp` - SSH/SCP 传输
 - `webdav` - WebDAV 服务
 - `oss` - 阿里云对象存储
+- `alist` - AList 网盘存储
 
 **使用方法：**
 ```bash
@@ -61,7 +62,38 @@ OSS_ACCESS_KEY=your_access_key
 OSS_SECRET_KEY=your_secret_key
 ```
 
-### 2. process_backups.sh - 备份文件处理工具
+AList 上传：
+```bash
+ALIST_API_URL=https://alist.example.com
+ALIST_USERNAME=your_username
+ALIST_PASSWORD=your_password
+ALIST_REMOTE_PATH=/mysql-backups
+```
+
+### 2. alist_upload.sh - AList 文件上传脚本
+
+专门用于上传文件到 AList 网盘存储的独立脚本。
+
+**主要特性：**
+- API 认证和令牌缓存（24小时有效期）
+- 支持命令行参数和环境变量配置
+- 自动令牌刷新机制
+- 多文件上传支持
+- 详细的错误处理和日志记录
+
+**使用方法：**
+```bash
+./alist_upload.sh [OPTIONS] <file_path> [file_path2] ...
+```
+
+**环境变量配置：**
+```bash
+ALIST_API_URL=https://alist.example.com
+ALIST_USERNAME=your_username
+ALIST_PASSWORD=your_password
+```
+
+### 3. process_backups.sh - 备份文件处理工具
 
 用于对备份文件进行各种处理操作。
 
@@ -131,6 +163,31 @@ services:
     restart: unless-stopped
 ```
 
+### 上传到 AList
+
+```yaml
+version: '3'
+services:
+  mysql-dump:
+    image: funnyzak/mysql-dump
+    container_name: mysql-dump
+    environment:
+      - DB_HOST=mysql-server
+      - DB_USER=backup_user
+      - DB_PASSWORD=backup_password
+      - DB_NAMES=wordpress nextcloud
+      - POST_BACKUP_COMMAND=/tools/upload_backups.sh /backup alist
+      # AList 配置
+      - ALIST_API_URL=https://alist.example.com
+      - ALIST_USERNAME=your_username
+      - ALIST_PASSWORD=your_password
+      - ALIST_REMOTE_PATH=/mysql-backups
+    volumes:
+      - ./backup:/backup
+      - ./tools:/tools:ro
+    restart: unless-stopped
+```
+
 ### 组合操作
 
 ```yaml
@@ -171,6 +228,7 @@ services:
 # 3. 上传到多个位置
 /tools/upload_backups.sh /backup s3
 /tools/upload_backups.sh /backup ftp
+/tools/upload_backups.sh /backup alist
 
 # 4. 清理本地未加密文件
 find /backup -name "*.sql" -mtime -1 -delete

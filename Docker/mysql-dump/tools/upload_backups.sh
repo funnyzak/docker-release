@@ -2,7 +2,7 @@
 
 # MySQL Backup Upload Tool
 # Usage: ./upload_backups.sh [backup_directory] [upload_type]
-# Supported upload types: s3, ftp, scp, webdav, oss
+# Supported upload types: s3, ftp, scp, webdav, oss, alist
 
 set -e
 
@@ -117,6 +117,39 @@ upload_to_oss() {
     log "OSS upload completed for $filename"
 }
 
+# Upload to AList
+upload_to_alist() {
+    local file="$1"
+    local filename=$(basename "$file")
+    
+    log "Uploading $filename to AList..."
+    
+    # Check if alist_upload.sh exists
+    local alist_script="/tools/alist_upload.sh"
+    if [ ! -f "$alist_script" ]; then
+        log "ERROR: AList upload script not found at $alist_script"
+        return 1
+    fi
+    
+    # Check required environment variables
+    if [ -z "$ALIST_API_URL" ] || [ -z "$ALIST_USERNAME" ] || [ -z "$ALIST_PASSWORD" ]; then
+        log "ERROR: AList configuration missing. Required: ALIST_API_URL, ALIST_USERNAME, ALIST_PASSWORD"
+        return 1
+    fi
+    
+    # Set optional remote path if not specified
+    local remote_path="${ALIST_REMOTE_PATH:-/mysql-backups}"
+    
+    # Execute AList upload script
+    if "$alist_script" -a "$ALIST_API_URL" -u "$ALIST_USERNAME" -p "$ALIST_PASSWORD" -r "$remote_path" "$file"; then
+        log "AList upload completed for $filename"
+        return 0
+    else
+        log "ERROR: AList upload failed for $filename"
+        return 1
+    fi
+}
+
 # Main upload function
 upload_file() {
     local file="$1"
@@ -136,6 +169,9 @@ upload_file() {
             ;;
         oss)
             upload_to_oss "$file"
+            ;;
+        alist)
+            upload_to_alist "$file"
             ;;
         *)
             log "ERROR: Unsupported upload type: $UPLOAD_TYPE"
