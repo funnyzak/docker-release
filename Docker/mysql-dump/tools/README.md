@@ -18,10 +18,72 @@
 
 **使用方法：**
 ```bash
-./upload_backups.sh [backup_directory] [upload_type]
+# 基本用法
+./upload_backups.sh [OPTIONS] [backup_directory] [upload_type]
+
+# 显示帮助信息
+./upload_backups.sh --help
 ```
 
-**环境变量配置：**
+**命令行参数（优先于环境变量）：**
+
+通用参数：
+- `-h, --help` - 显示帮助信息
+- `backup_directory` - 备份文件目录（默认：/backup）
+- `upload_type` - 上传方式（默认：s3）
+
+S3 参数：
+- `--s3-bucket` - S3 存储桶名称
+- `--s3-prefix` - S3 前缀/文件夹路径
+- `--aws-access-key` - AWS 访问密钥
+- `--aws-secret-key` - AWS 密钥
+
+FTP 参数：
+- `--ftp-host` - FTP 服务器地址
+- `--ftp-user` - FTP 用户名
+- `--ftp-pass` - FTP 密码
+- `--ftp-path` - FTP 远程路径
+
+SCP 参数：
+- `--ssh-host` - SSH 服务器地址
+- `--ssh-user` - SSH 用户名
+- `--ssh-key` - SSH 私钥文件路径
+- `--ssh-path` - SSH 远程路径
+
+WebDAV 参数：
+- `--webdav-url` - WebDAV 服务器 URL
+- `--webdav-user` - WebDAV 用户名
+- `--webdav-pass` - WebDAV 密码
+
+OSS 参数：
+- `--oss-bucket` - OSS 存储桶名称
+- `--oss-prefix` - OSS 前缀/文件夹路径
+- `--oss-access-key` - OSS 访问密钥
+- `--oss-secret-key` - OSS 密钥
+
+AList 参数：
+- `--alist-api-url` - AList API URL
+- `--alist-username` - AList 用户名
+- `--alist-password` - AList 密码
+- `--alist-remote-path` - AList 远程路径（默认：/mysql-backups）
+
+**命令行参数示例：**
+
+```bash
+# 上传到 S3（使用命令行参数）
+./upload_backups.sh --s3-bucket my-backup-bucket --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY /backup s3
+
+# 上传到 FTP
+./upload_backups.sh --ftp-host ftp.example.com --ftp-user backup_user --ftp-pass secret123 --ftp-path /mysql-backups /backup ftp
+
+# 上传到 AList
+./upload_backups.sh --alist-api-url https://alist.example.com --alist-username admin --alist-password admin123 --alist-remote-path /database-backups /backup alist
+
+# 上传到 SCP
+./upload_backups.sh --ssh-host backup.example.com --ssh-user backup --ssh-key /path/to/key.pem --ssh-path /home/backup/mysql /backup scp
+```
+
+**环境变量配置（作为后备）：**
 
 S3 上传：
 ```bash
@@ -106,19 +168,129 @@ ALIST_PASSWORD=your_password
 
 **使用方法：**
 ```bash
-./process_backups.sh [backup_directory] [operation_type]
+# 基本用法
+./process_backups.sh [OPTIONS] [backup_directory] [operation_type]
+
+# 显示帮助信息
+./process_backups.sh --help
 ```
 
-**环境变量配置：**
+**命令行参数（优先于环境变量）：**
+
+- `-h, --help` - 显示帮助信息
+- `--gpg-passphrase` - GPG 加密密码短语
+- `--max-file-size` - 文件分割的最大大小（默认：1G）
+- `backup_directory` - 备份文件目录（默认：/backup）
+- `operation_type` - 处理操作类型（默认：verify）
+
+**命令行参数示例：**
+
+```bash
+# 验证备份文件
+./process_backups.sh /backup verify
+
+# 使用命令行参数加密备份文件
+./process_backups.sh --gpg-passphrase "my-secret-passphrase" /backup encrypt
+
+# 分割大文件，设置最大大小为 500MB
+./process_backups.sh --max-file-size 500M /backup split
+
+# 分析备份内容
+./process_backups.sh /backup analyze
+
+# 转换备份格式
+./process_backups.sh /backup convert
+```
+
+**环境变量配置（作为后备）：**
 
 加密操作：
 ```bash
 GPG_PASSPHRASE=your_encryption_passphrase
+MAX_FILE_SIZE=1G
 ```
 
 ## Docker Compose 集成示例
 
-### 上传到 S3
+### 使用命令行参数上传到 S3
+
+```yaml
+version: '3'
+services:
+  mysql-dump:
+    image: funnyzak/mysql-dump
+    container_name: mysql-dump
+    environment:
+      - DB_HOST=mysql-server
+      - DB_USER=backup_user
+      - DB_PASSWORD=backup_password
+      - DB_NAMES=wordpress nextcloud
+      - POST_BACKUP_COMMAND=/tools/upload_backups.sh --s3-bucket my-backup-bucket --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY /backup s3
+    volumes:
+      - ./backup:/backup
+      - ./tools:/tools:ro
+    restart: unless-stopped
+```
+
+### 使用命令行参数加密备份文件
+
+```yaml
+version: '3'
+services:
+  mysql-dump:
+    image: funnyzak/mysql-dump
+    container_name: mysql-dump
+    environment:
+      - DB_HOST=mysql-server
+      - DB_USER=backup_user
+      - DB_PASSWORD=backup_password
+      - POST_BACKUP_COMMAND=/tools/process_backups.sh --gpg-passphrase "my-encryption-key" /backup encrypt
+    volumes:
+      - ./backup:/backup
+      - ./tools:/tools:ro
+    restart: unless-stopped
+```
+
+### 使用命令行参数上传到 AList
+
+```yaml
+version: '3'
+services:
+  mysql-dump:
+    image: funnyzak/mysql-dump
+    container_name: mysql-dump
+    environment:
+      - DB_HOST=mysql-server
+      - DB_USER=backup_user
+      - DB_PASSWORD=backup_password
+      - DB_NAMES=wordpress nextcloud
+      - POST_BACKUP_COMMAND=/tools/upload_backups.sh --alist-api-url https://alist.example.com --alist-username admin --alist-password admin123 --alist-remote-path /mysql-backups /backup alist
+    volumes:
+      - ./backup:/backup
+      - ./tools:/tools:ro
+    restart: unless-stopped
+```
+
+### 组合操作（使用命令行参数）
+
+```yaml
+version: '3'
+services:
+  mysql-dump:
+    image: funnyzak/mysql-dump
+    container_name: mysql-dump
+    environment:
+      - DB_HOST=mysql-server
+      - DB_USER=backup_user
+      - DB_PASSWORD=backup_password
+      - POST_BACKUP_COMMAND=/tools/process_backups.sh --gpg-passphrase "secret123" /backup verify && /tools/upload_backups.sh --s3-bucket my-backup-bucket --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY /backup s3
+    volumes:
+      - ./backup:/backup
+      - ./tools:/tools:ro
+    restart: unless-stopped
+```
+
+### 环境变量方式（向后兼容）
 
 ```yaml
 version: '3'
@@ -132,77 +304,9 @@ services:
       - DB_PASSWORD=backup_password
       - DB_NAMES=wordpress nextcloud
       - POST_BACKUP_COMMAND=/tools/upload_backups.sh /backup s3
-      # S3 配置
+      # S3 配置（环境变量方式）
       - S3_BUCKET=my-backup-bucket
       - S3_PREFIX=mysql-backups
-      - AWS_ACCESS_KEY=your_access_key
-      - AWS_SECRET_KEY=your_secret_key
-    volumes:
-      - ./backup:/backup
-      - ./tools:/tools:ro
-    restart: unless-stopped
-```
-
-### 加密备份文件
-
-```yaml
-version: '3'
-services:
-  mysql-dump:
-    image: funnyzak/mysql-dump
-    container_name: mysql-dump
-    environment:
-      - DB_HOST=mysql-server
-      - DB_USER=backup_user
-      - DB_PASSWORD=backup_password
-      - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup encrypt
-      - GPG_PASSPHRASE=your_encryption_passphrase
-    volumes:
-      - ./backup:/backup
-      - ./tools:/tools:ro
-    restart: unless-stopped
-```
-
-### 上传到 AList
-
-```yaml
-version: '3'
-services:
-  mysql-dump:
-    image: funnyzak/mysql-dump
-    container_name: mysql-dump
-    environment:
-      - DB_HOST=mysql-server
-      - DB_USER=backup_user
-      - DB_PASSWORD=backup_password
-      - DB_NAMES=wordpress nextcloud
-      - POST_BACKUP_COMMAND=/tools/upload_backups.sh /backup alist
-      # AList 配置
-      - ALIST_API_URL=https://alist.example.com
-      - ALIST_USERNAME=your_username
-      - ALIST_PASSWORD=your_password
-      - ALIST_REMOTE_PATH=/mysql-backups
-    volumes:
-      - ./backup:/backup
-      - ./tools:/tools:ro
-    restart: unless-stopped
-```
-
-### 组合操作
-
-```yaml
-version: '3'
-services:
-  mysql-dump:
-    image: funnyzak/mysql-dump
-    container_name: mysql-dump
-    environment:
-      - DB_HOST=mysql-server
-      - DB_USER=backup_user
-      - DB_PASSWORD=backup_password
-      - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/upload_backups.sh /backup s3
-      # S3 配置
-      - S3_BUCKET=my-backup-bucket
       - AWS_ACCESS_KEY=your_access_key
       - AWS_SECRET_KEY=your_secret_key
     volumes:
@@ -222,13 +326,13 @@ services:
 # 1. 验证备份文件
 /tools/process_backups.sh /backup verify
 
-# 2. 加密备份文件
-/tools/process_backups.sh /backup encrypt
+# 2. 使用命令行参数加密备份文件
+/tools/process_backups.sh --gpg-passphrase "my-secret-key" /backup encrypt
 
-# 3. 上传到多个位置
-/tools/upload_backups.sh /backup s3
-/tools/upload_backups.sh /backup ftp
-/tools/upload_backups.sh /backup alist
+# 3. 上传到多个位置（使用命令行参数）
+/tools/upload_backups.sh --s3-bucket my-s3-bucket --aws-access-key KEY --aws-secret-key SECRET /backup s3
+/tools/upload_backups.sh --ftp-host ftp.example.com --ftp-user user --ftp-pass pass /backup ftp
+/tools/upload_backups.sh --alist-api-url https://alist.example.com --alist-username admin --alist-password admin123 /backup alist
 
 # 4. 清理本地未加密文件
 find /backup -name "*.sql" -mtime -1 -delete
@@ -245,6 +349,18 @@ volumes:
   - ./tools:/tools:ro
 ```
 
+## 优先级说明
+
+**配置优先级（从高到低）：**
+1. **命令行参数** - 最高优先级
+2. **环境变量** - 作为后备选项
+3. **默认值** - 最低优先级
+
+这种设计确保了：
+- 命令行参数始终优先于环境变量
+- 环境变量在命令行参数未提供时作为后备
+- 向后兼容现有的环境变量配置
+
 ## 注意事项
 
 1. **权限设置**：确保脚本有执行权限
@@ -252,7 +368,7 @@ volumes:
    chmod +x tools/*.sh
    ```
 
-2. **环境变量**：根据使用的服务配置相应的环境变量
+2. **参数优先级**：命令行参数优先于环境变量，环境变量优先于默认值
 
 3. **网络访问**：确保容器能够访问目标上传服务
 
@@ -260,12 +376,16 @@ volumes:
    - 不要在日志中暴露敏感信息
    - 使用强密码和密钥
    - 定期轮换访问凭证
+   - 命令行参数中的敏感信息可能在进程列表中可见，生产环境建议使用环境变量
 
 5. **测试**：在生产环境使用前，先在测试环境验证脚本功能
+
+6. **帮助信息**：使用 `--help` 参数查看详细的使用说明
 
 ## 故障排除
 
 - 检查容器日志：`docker logs mysql-dump`
-- 验证环境变量配置
+- 验证命令行参数和环境变量配置
+- 使用 `--help` 参数查看正确的使用方法
 - 确认网络连接和权限设置
 - 查看工具脚本的输出日志 

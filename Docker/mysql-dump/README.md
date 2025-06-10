@@ -7,7 +7,7 @@
 
 mysql-dump is a professional MySQL backup tool that can backup all databases or specified databases. It supports multiple notification systems (Apprise, Bark), automatic cleanup of expired dump files, custom commands before and after backup, custom mysqldump options, compressed dump files, and crontab scheduling.
 
-The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm64`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`.
+The image is available for multiple architectures, including `linux/amd64`, `linux/arm64`.
 
 ## Features
 
@@ -128,7 +128,7 @@ docker run -d --name mysql-dump \
 
 ### With Post-Backup Tools
 
-Backup with automatic upload to S3 using tools:
+Backup with automatic upload to S3 using command line arguments:
 
 ```bash
 docker run -d --name mysql-dump \
@@ -136,10 +136,7 @@ docker run -d --name mysql-dump \
   -e DB_USER="root" \
   -e DB_PASSWORD="mypassword" \
   -e DB_NAMES="wordpress nextcloud" \
-  -e POST_BACKUP_COMMAND="/tools/upload_backups.sh /backup s3" \
-  -e S3_BUCKET="my-backup-bucket" \
-  -e AWS_ACCESS_KEY="your_access_key" \
-  -e AWS_SECRET_KEY="your_secret_key" \
+  -e POST_BACKUP_COMMAND="/tools/upload_backups.sh --s3-bucket my-backup-bucket --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY /backup s3" \
   -v ./backup:/backup \
   -v ./tools:/tools:ro \
   funnyzak/mysql-dump
@@ -181,12 +178,7 @@ services:
       - APPRISE_TAGS=mysql,backup
       # Custom commands
       - PRE_BACKUP_COMMAND=echo "Starting backup process"
-      - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/upload_backups.sh /backup s3
-      # S3 upload configuration
-      - S3_BUCKET=my-backup-bucket
-      - S3_PREFIX=mysql-backups
-      - AWS_ACCESS_KEY=your_access_key
-      - AWS_SECRET_KEY=your_secret_key
+      - POST_BACKUP_COMMAND=/tools/process_backups.sh --gpg-passphrase "encryption-key" /backup verify && /tools/upload_backups.sh --s3-bucket my-backup-bucket --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY /backup s3
     restart: unless-stopped
     volumes:
       - ./backup:/backup
@@ -317,29 +309,26 @@ The container includes a set of optional tools that can be mounted and used with
 
 ### Tool Usage Examples
 
-Upload to S3 after backup:
+Upload to S3 after backup (using command line arguments):
 ```yaml
 environment:
-  - POST_BACKUP_COMMAND=/tools/upload_backups.sh /backup s3
-  - S3_BUCKET=my-backup-bucket
-  - AWS_ACCESS_KEY=your_access_key
+  - POST_BACKUP_COMMAND=/tools/upload_backups.sh --s3-bucket my-backup-bucket --aws-access-key AKIAIOSFODNN7EXAMPLE --aws-secret-key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY /backup s3
 volumes:
   - ./tools:/tools:ro
 ```
 
-Verify and encrypt backups:
+Verify and encrypt backups (using command line arguments):
 ```yaml
 environment:
-  - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/process_backups.sh /backup encrypt
-  - GPG_PASSPHRASE=your_encryption_passphrase
+  - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/process_backups.sh --gpg-passphrase "my-encryption-key" /backup encrypt
 volumes:
   - ./tools:/tools:ro
 ```
 
-Combined operations:
+Combined operations (using command line arguments):
 ```yaml
 environment:
-  - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/upload_backups.sh /backup s3 && /tools/upload_backups.sh /backup ftp
+  - POST_BACKUP_COMMAND=/tools/process_backups.sh /backup verify && /tools/upload_backups.sh --s3-bucket my-s3-bucket --aws-access-key KEY --aws-secret-key SECRET /backup s3 && /tools/upload_backups.sh --ftp-host ftp.example.com --ftp-user user --ftp-pass pass /backup ftp
 volumes:
   - ./tools:/tools:ro
 ```

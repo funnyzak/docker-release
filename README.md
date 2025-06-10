@@ -488,7 +488,7 @@ For more information about cron, please check [Cron Documentation](https://githu
 
 mysql-dump is a professional MySQL backup tool that can backup all databases or specified databases. It supports multiple notification systems (Apprise, Bark), automatic cleanup of expired dump files, custom commands before and after backup, custom mysqldump options, compressed dump files, and crontab scheduling.
 
-The image is available for multiple architectures, including `linux/386`, `linux/amd64`, `linux/arm64`, `linux/arm64/v8`, `linux/ppc64le`, `linux/riscv64`.
+The image is available for multiple architectures, including `linux/amd64`, `linux/arm64`.
 
 For more information about mysql-dump, please check [MySQL Dump](https://github.com/funnyzak/docker-release/tree/main/Docker/mysql-dump/README.md).
 

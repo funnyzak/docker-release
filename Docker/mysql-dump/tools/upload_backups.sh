@@ -1,26 +1,311 @@
 #!/bin/bash
 
 # MySQL Backup Upload Tool
-# Usage: ./upload_backups.sh [backup_directory] [upload_type]
+# Usage: ./upload_backups.sh [OPTIONS] [backup_directory] [upload_type]
 # Supported upload types: s3, ftp, scp, webdav, oss, alist
 
 set -e
 
-# Configuration
-BACKUP_DIR="${1:-/backup}"
-UPLOAD_TYPE="${2:-s3}"
+# Default configuration
+DEFAULT_BACKUP_DIR="/backup"
+DEFAULT_UPLOAD_TYPE="s3"
 LOG_PREFIX="[UPLOAD]"
+
+# Initialize variables with defaults
+BACKUP_DIR=""
+UPLOAD_TYPE=""
+S3_BUCKET=""
+S3_PREFIX=""
+AWS_ACCESS_KEY=""
+AWS_SECRET_KEY=""
+FTP_HOST=""
+FTP_USER=""
+FTP_PASS=""
+FTP_PATH=""
+SSH_HOST=""
+SSH_USER=""
+SSH_KEY=""
+SSH_PATH=""
+WEBDAV_URL=""
+WEBDAV_USER=""
+WEBDAV_PASS=""
+OSS_BUCKET=""
+OSS_PREFIX=""
+OSS_ACCESS_KEY=""
+OSS_SECRET_KEY=""
+ALIST_API_URL=""
+ALIST_USERNAME=""
+ALIST_PASSWORD=""
+ALIST_REMOTE_PATH=""
+
+# Help function
+show_help() {
+    cat << EOF
+MySQL Backup Upload Tool
+
+Usage: $0 [OPTIONS] [backup_directory] [upload_type]
+
+Arguments:
+  backup_directory    Directory containing backup files (default: /backup)
+  upload_type         Upload method: s3, ftp, scp, webdav, oss, alist (default: s3)
+
+Options:
+  -h, --help          Show this help message
+
+S3 Options:
+  --s3-bucket         S3 bucket name
+  --s3-prefix         S3 prefix/folder path
+  --aws-access-key    AWS access key
+  --aws-secret-key    AWS secret key
+
+FTP Options:
+  --ftp-host          FTP server hostname
+  --ftp-user          FTP username
+  --ftp-pass          FTP password
+  --ftp-path          FTP remote path
+
+SCP Options:
+  --ssh-host          SSH server hostname
+  --ssh-user          SSH username
+  --ssh-key           SSH private key file path
+  --ssh-path          SSH remote path
+
+WebDAV Options:
+  --webdav-url        WebDAV server URL
+  --webdav-user       WebDAV username
+  --webdav-pass       WebDAV password
+
+OSS Options:
+  --oss-bucket        OSS bucket name
+  --oss-prefix        OSS prefix/folder path
+  --oss-access-key    OSS access key
+  --oss-secret-key    OSS secret key
+
+AList Options:
+  --alist-api-url     AList API URL
+  --alist-username    AList username
+  --alist-password    AList password
+  --alist-remote-path AList remote path (default: /mysql-backups)
+
+Examples:
+  # Upload to S3 with command line arguments
+  $0 --s3-bucket my-bucket --aws-access-key KEY --aws-secret-key SECRET /backup s3
+
+  # Upload to FTP
+  $0 --ftp-host ftp.example.com --ftp-user user --ftp-pass pass --ftp-path /backups /backup ftp
+
+  # Upload to AList
+  $0 --alist-api-url https://alist.example.com --alist-username user --alist-password pass /backup alist
+
+Environment Variables (used as fallback):
+  S3: S3_BUCKET, S3_PREFIX, AWS_ACCESS_KEY, AWS_SECRET_KEY
+  FTP: FTP_HOST, FTP_USER, FTP_PASS, FTP_PATH
+  SCP: SSH_HOST, SSH_USER, SSH_KEY, SSH_PATH
+  WebDAV: WEBDAV_URL, WEBDAV_USER, WEBDAV_PASS
+  OSS: OSS_BUCKET, OSS_PREFIX, OSS_ACCESS_KEY, OSS_SECRET_KEY
+  AList: ALIST_API_URL, ALIST_USERNAME, ALIST_PASSWORD, ALIST_REMOTE_PATH
+
+EOF
+}
+
+# Parse command line arguments
+parse_arguments() {
+    local positional_args=()
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            --s3-bucket)
+                S3_BUCKET="$2"
+                shift 2
+                ;;
+            --s3-prefix)
+                S3_PREFIX="$2"
+                shift 2
+                ;;
+            --aws-access-key)
+                AWS_ACCESS_KEY="$2"
+                shift 2
+                ;;
+            --aws-secret-key)
+                AWS_SECRET_KEY="$2"
+                shift 2
+                ;;
+            --ftp-host)
+                FTP_HOST="$2"
+                shift 2
+                ;;
+            --ftp-user)
+                FTP_USER="$2"
+                shift 2
+                ;;
+            --ftp-pass)
+                FTP_PASS="$2"
+                shift 2
+                ;;
+            --ftp-path)
+                FTP_PATH="$2"
+                shift 2
+                ;;
+            --ssh-host)
+                SSH_HOST="$2"
+                shift 2
+                ;;
+            --ssh-user)
+                SSH_USER="$2"
+                shift 2
+                ;;
+            --ssh-key)
+                SSH_KEY="$2"
+                shift 2
+                ;;
+            --ssh-path)
+                SSH_PATH="$2"
+                shift 2
+                ;;
+            --webdav-url)
+                WEBDAV_URL="$2"
+                shift 2
+                ;;
+            --webdav-user)
+                WEBDAV_USER="$2"
+                shift 2
+                ;;
+            --webdav-pass)
+                WEBDAV_PASS="$2"
+                shift 2
+                ;;
+            --oss-bucket)
+                OSS_BUCKET="$2"
+                shift 2
+                ;;
+            --oss-prefix)
+                OSS_PREFIX="$2"
+                shift 2
+                ;;
+            --oss-access-key)
+                OSS_ACCESS_KEY="$2"
+                shift 2
+                ;;
+            --oss-secret-key)
+                OSS_SECRET_KEY="$2"
+                shift 2
+                ;;
+            --alist-api-url)
+                ALIST_API_URL="$2"
+                shift 2
+                ;;
+            --alist-username)
+                ALIST_USERNAME="$2"
+                shift 2
+                ;;
+            --alist-password)
+                ALIST_PASSWORD="$2"
+                shift 2
+                ;;
+            --alist-remote-path)
+                ALIST_REMOTE_PATH="$2"
+                shift 2
+                ;;
+            -*)
+                echo "Unknown option: $1" >&2
+                show_help
+                exit 1
+                ;;
+            *)
+                positional_args+=("$1")
+                shift
+                ;;
+        esac
+    done
+    
+    # Set positional arguments
+    if [ ${#positional_args[@]} -ge 1 ]; then
+        BACKUP_DIR="${positional_args[0]}"
+    fi
+    if [ ${#positional_args[@]} -ge 2 ]; then
+        UPLOAD_TYPE="${positional_args[1]}"
+    fi
+}
+
+# Apply configuration with command line arguments taking priority over environment variables
+apply_configuration() {
+    # Set defaults if not provided via command line
+    BACKUP_DIR="${BACKUP_DIR:-${DEFAULT_BACKUP_DIR}}"
+    UPLOAD_TYPE="${UPLOAD_TYPE:-${DEFAULT_UPLOAD_TYPE}}"
+    
+    # Apply environment variables as fallback (only if command line argument not provided)
+    S3_BUCKET="${S3_BUCKET:-${S3_BUCKET_ENV:-}}"
+    S3_PREFIX="${S3_PREFIX:-${S3_PREFIX_ENV:-}}"
+    AWS_ACCESS_KEY="${AWS_ACCESS_KEY:-${AWS_ACCESS_KEY_ENV:-}}"
+    AWS_SECRET_KEY="${AWS_SECRET_KEY:-${AWS_SECRET_KEY_ENV:-}}"
+    
+    FTP_HOST="${FTP_HOST:-${FTP_HOST_ENV:-}}"
+    FTP_USER="${FTP_USER:-${FTP_USER_ENV:-}}"
+    FTP_PASS="${FTP_PASS:-${FTP_PASS_ENV:-}}"
+    FTP_PATH="${FTP_PATH:-${FTP_PATH_ENV:-}}"
+    
+    SSH_HOST="${SSH_HOST:-${SSH_HOST_ENV:-}}"
+    SSH_USER="${SSH_USER:-${SSH_USER_ENV:-}}"
+    SSH_KEY="${SSH_KEY:-${SSH_KEY_ENV:-}}"
+    SSH_PATH="${SSH_PATH:-${SSH_PATH_ENV:-}}"
+    
+    WEBDAV_URL="${WEBDAV_URL:-${WEBDAV_URL_ENV:-}}"
+    WEBDAV_USER="${WEBDAV_USER:-${WEBDAV_USER_ENV:-}}"
+    WEBDAV_PASS="${WEBDAV_PASS:-${WEBDAV_PASS_ENV:-}}"
+    
+    OSS_BUCKET="${OSS_BUCKET:-${OSS_BUCKET_ENV:-}}"
+    OSS_PREFIX="${OSS_PREFIX:-${OSS_PREFIX_ENV:-}}"
+    OSS_ACCESS_KEY="${OSS_ACCESS_KEY:-${OSS_ACCESS_KEY_ENV:-}}"
+    OSS_SECRET_KEY="${OSS_SECRET_KEY:-${OSS_SECRET_KEY_ENV:-}}"
+    
+    ALIST_API_URL="${ALIST_API_URL:-${ALIST_API_URL_ENV:-}}"
+    ALIST_USERNAME="${ALIST_USERNAME:-${ALIST_USERNAME_ENV:-}}"
+    ALIST_PASSWORD="${ALIST_PASSWORD:-${ALIST_PASSWORD_ENV:-}}"
+    ALIST_REMOTE_PATH="${ALIST_REMOTE_PATH:-${ALIST_REMOTE_PATH_ENV:-/mysql-backups}}"
+}
+
+# Store environment variables for fallback
+store_env_variables() {
+    S3_BUCKET_ENV="${S3_BUCKET:-}"
+    S3_PREFIX_ENV="${S3_PREFIX:-}"
+    AWS_ACCESS_KEY_ENV="${AWS_ACCESS_KEY:-}"
+    AWS_SECRET_KEY_ENV="${AWS_SECRET_KEY:-}"
+    
+    FTP_HOST_ENV="${FTP_HOST:-}"
+    FTP_USER_ENV="${FTP_USER:-}"
+    FTP_PASS_ENV="${FTP_PASS:-}"
+    FTP_PATH_ENV="${FTP_PATH:-}"
+    
+    SSH_HOST_ENV="${SSH_HOST:-}"
+    SSH_USER_ENV="${SSH_USER:-}"
+    SSH_KEY_ENV="${SSH_KEY:-}"
+    SSH_PATH_ENV="${SSH_PATH:-}"
+    
+    WEBDAV_URL_ENV="${WEBDAV_URL:-}"
+    WEBDAV_USER_ENV="${WEBDAV_USER:-}"
+    WEBDAV_PASS_ENV="${WEBDAV_PASS:-}"
+    
+    OSS_BUCKET_ENV="${OSS_BUCKET:-}"
+    OSS_PREFIX_ENV="${OSS_PREFIX:-}"
+    OSS_ACCESS_KEY_ENV="${OSS_ACCESS_KEY:-}"
+    OSS_SECRET_KEY_ENV="${OSS_SECRET_KEY:-}"
+    
+    ALIST_API_URL_ENV="${ALIST_API_URL:-}"
+    ALIST_USERNAME_ENV="${ALIST_USERNAME:-}"
+    ALIST_PASSWORD_ENV="${ALIST_PASSWORD:-}"
+    ALIST_REMOTE_PATH_ENV="${ALIST_REMOTE_PATH:-}"
+}
 
 # Logging function
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') $LOG_PREFIX $1"
 }
 
-# Check if backup directory exists
-if [ ! -d "$BACKUP_DIR" ]; then
-    log "ERROR: Backup directory $BACKUP_DIR does not exist"
-    exit 1
-fi
+
 
 # Get latest backup files (created in last 120 minutes)
 get_latest_backups() {
@@ -131,14 +416,16 @@ upload_to_alist() {
         return 1
     fi
     
-    # Check required environment variables
+    # Check required configuration
     if [ -z "$ALIST_API_URL" ] || [ -z "$ALIST_USERNAME" ] || [ -z "$ALIST_PASSWORD" ]; then
         log "ERROR: AList configuration missing. Required: ALIST_API_URL, ALIST_USERNAME, ALIST_PASSWORD"
+        log "Use command line arguments: --alist-api-url, --alist-username, --alist-password"
+        log "Or set environment variables: ALIST_API_URL, ALIST_USERNAME, ALIST_PASSWORD"
         return 1
     fi
     
-    # Set optional remote path if not specified
-    local remote_path="${ALIST_REMOTE_PATH:-/mysql-backups}"
+    # Set remote path
+    local remote_path="$ALIST_REMOTE_PATH"
     
     # Execute AList upload script
     if "$alist_script" -a "$ALIST_API_URL" -u "$ALIST_USERNAME" -p "$ALIST_PASSWORD" -r "$remote_path" "$file"; then
@@ -182,6 +469,17 @@ upload_file() {
 
 # Main execution
 main() {
+    # Initialize configuration
+    store_env_variables
+    parse_arguments "$@"
+    apply_configuration
+    
+    # Check if backup directory exists
+    if [ ! -d "$BACKUP_DIR" ]; then
+        log "ERROR: Backup directory $BACKUP_DIR does not exist"
+        exit 1
+    fi
+    
     log "Starting backup upload process..."
     log "Backup directory: $BACKUP_DIR"
     log "Upload type: $UPLOAD_TYPE"
