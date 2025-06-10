@@ -132,6 +132,9 @@ create_backup_script() {
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export SHELL="/bin/bash"
 
+# Set timezone to ensure cron runs in system timezone
+export TZ=\${TZ:-UTC}
+
 # Log start time
 echo "\$(date '+%Y-%m-%d %H:%M:%S') - Starting scheduled backup..."
 
@@ -148,13 +151,28 @@ EOF
 # Create the backup script
 create_backup_script
 
-# Set up cron job
+# Configure timezone for the system
+if [[ -n "${TZ}" ]]; then
+    echo -e "${YELLOW}Setting system timezone to: ${TZ}${NC}"
+    ln -snf /usr/share/zoneinfo/"${TZ}" /etc/localtime
+    echo "${TZ}" > /etc/timezone
+    # Set timezone for cron daemon
+    echo "TZ=${TZ}" >> /etc/environment
+fi
+
+# Set up cron job with timezone
 CRON_STRINGS="${DB_DUMP_CRON:-0 0 * * *} /run-scripts/backup-cron.sh >> /var/log/cron/cron.log 2>&1"
 
-# Create crontab for root user
-echo "$CRON_STRINGS" | crontab -
+# Create crontab for root user with timezone setting
+{
+    if [[ -n "${TZ}" ]]; then
+        echo "TZ=${TZ}"
+    fi
+    echo "$CRON_STRINGS"
+} | crontab -
 
-# Ensure cron service is configured
+# Ensure cron service is configured and restart to pick up timezone changes
+service cron stop 2>/dev/null || true
 service cron start
 
 # Execute startup command if specified (backward compatibility)
