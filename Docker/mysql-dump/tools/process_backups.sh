@@ -125,7 +125,7 @@ log() {
 
 # Get latest backup files (created in last 120 minutes)
 get_latest_backups() {
-    find "$BACKUP_DIR" -name "*.sql*" -o -name "*.tar.gz*" -o -name "*.zip*" -mmin -120 -type f | sort
+    find "$BACKUP_DIR" \( -name "*.sql*" -o -name "*.tar.gz*" -o -name "*.zip*" \) -mmin -120 -type f | sort
 }
 
 # Encrypt backup files
