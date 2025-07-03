@@ -1,9 +1,8 @@
-FROM golang:1.24.1-alpine AS builder
+FROM golang:1.24.4-alpine AS builder
 
 WORKDIR /go/src/app
 
-RUN apk update && \
-  apk add upx ca-certificates tzdata git
+RUN apk add --no-cache upx ca-certificates tzdata git
 
 ARG VERSION
 ARG BUILD_DATE
@@ -34,8 +33,8 @@ LABEL org.label-schema.name="git-sync" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-RUN apk update && \
-  apk add git su-exec
+# Install git since it's required for the application
+RUN apk add --no-cache git su-exec
 
 RUN mkdir -p /git-sync /backups
 
