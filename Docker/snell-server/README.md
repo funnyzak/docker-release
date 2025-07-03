@@ -80,3 +80,4 @@ Proxy = snell, 1.2.3.4, 6333, psk=RANDOM_KEY_HERE, version=4
 ## Reference
 
 - [Snell Server](https://manual.nssurge.com/others/snell.html)
+- [Snell Knowledge](https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell)
