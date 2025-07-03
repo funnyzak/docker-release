@@ -51,4 +51,4 @@ Default credentials:
 - Password: 1234567890
 
 
-More information can be found at [certimate](https://github.com/usual2970/certimate).
+More information can be found at [certimate](https://github.com/certimate-go/certimate).
