@@ -6,7 +6,7 @@ RUN apk add --no-cache git
 
 ARG VERSION
 
-RUN git clone https://github.com/usual2970/certimate . \
+RUN git clone https://github.com/certimate-go/certimate . \
     && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
     && echo ${VERSION:-$(git rev-parse HEAD)} > VERSION
 
@@ -41,7 +41,7 @@ LABEL org.label-schema.name="certimate" \
       org.label-schema.version="${VERSION}" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.build-date="${BUILD_DATE}" \
-      org.label-schema.url="https://github.com/usual2970/certimate"
+      org.label-schema.url="https://github.com/certimate-go/certimate"
 
 WORKDIR /app
 
