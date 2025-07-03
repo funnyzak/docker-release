@@ -34,6 +34,7 @@ docker run -d --name snell-server --restart always \
   -e TZ="Asia/Shanghai" \
   -e IPV6="false" \
   -e PORT=6180 \
+  -e EGRESS_INTERFACE="eth0" \
   -p 12303:6180 funnyzak/snell-server:latest
 
 # Echo config file
@@ -53,11 +54,21 @@ services:
       TZ: Asia/Shanghai
       IPV6: false
       PORT: 6180
+      EGRESS_INTERFACE: eth0  # Optional: specify network interface for outbound connections
     restart: always
     ports:
       - 12303:6180
 ```
 
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PSK` | Auto-generated | Pre-shared key for authentication |
+| `PORT` | `6180` | Port number for the server to listen on |
+| `IPV6` | `false` | Enable IPv6 support |
+| `EGRESS_INTERFACE` | - | Network interface name for outbound connections (e.g., `eth0`, `wlan0`) |
 
 ## Surge Configuration
 
