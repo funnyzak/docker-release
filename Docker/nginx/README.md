@@ -23,7 +23,7 @@ Already installed modules:
 - ...
 
 
-More modules can be found in [Dockerfile](https://github.com/funnyzak/nginx-docker/blob/main/Dockerfile).
+More modules can be found in [Dockerfile](https://github.com/funnyzak/docker-release/blob/main/Docker/nginx/Dockerfile).
 
 ## Pull
 
