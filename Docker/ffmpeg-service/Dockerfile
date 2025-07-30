@@ -17,6 +17,7 @@ RUN apt-get update && \
         ffmpeg \
         libmagic1 \
         wget \
+        git \
         curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

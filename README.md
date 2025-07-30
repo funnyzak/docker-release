@@ -15,6 +15,7 @@ The following images are available:
 - [**openjdk**](https://github.com/funnyzak/docker-release/tree/main/Docker/openjdk): `funnyzak/openjdk:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/openjdk))
 - [**git-sync**](https://github.com/funnyzak/docker-release/tree/main/Docker/git-sync): `funnyzak/git-sync:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/git-sync))
 - [**Snell-Server**](https://github.com/funnyzak/docker-release/tree/main/Docker/snell-server): `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
+- [**Snell-Server**](https://github.com/funnyzak/docker-release/tree/main/Docker/snell-server): `funnyzak/snell-server:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/snell-server))
 - [**One-API**](https://github.com/funnyzak/docker-release/tree/main/Docker/one-api): `funnyzak/one-api:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/one-api))
 - [**NeZha-Dashboard**](https://github.com/funnyzak/docker-release/tree/main/Docker/nezha): `funnyzak/nezha-dashboard:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/nezha-dashboard))
 - [**vCards**](https://github.com/funnyzak/docker-release/tree/main/Docker/vcards): `funnyzak/vcards:latest` ([Docker Hub](https://hub.docker.com/r/funnyzak/vcards))
