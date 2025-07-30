@@ -12,6 +12,7 @@ on:
           - openjdk
           - nezha-dashboard
           - git-sync
+          - ffmpeg-service
           - cron
           - vcards
           - certimate
@@ -105,6 +106,17 @@ jobs:
     with:
       build_context: './Docker/git-sync'
       docker_image_name: git-sync
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7' }}
+    secrets: inherit
+
+  ffmpeg_service_release:
+    if: ${{ github.event.inputs.choice_service == 'ffmpeg-service' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/ffmpeg-service'
+      docker_image_name: ffmpeg-service
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7' }}
