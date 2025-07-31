@@ -7,7 +7,7 @@
 
 A lightweight, containerized FFmpeg video processing microservice built with Flask and Python. This service provides HTTP API endpoints for video metadata extraction, screenshot capture, and format conversion.
 
-Build with the `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux/arm/v7`, `linux/arm64/v8` architectures.
+Build with the `linux/arm64`, `linux/amd64`, `linux/arm/v7` architectures.
 
 ## Features
 
@@ -18,6 +18,7 @@ Build with the `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v6`, `linux
 - **URL & File Upload Support**: Process videos from URLs or direct file uploads
 - **Automatic Cleanup**: Temporary files are automatically deleted after processing
 - **Health Monitoring**: Built-in health check endpoint
+- **API Key Authentication**: Optional API key authentication for secure access
 - **Error Handling**: Comprehensive error handling with appropriate HTTP status codes
 - **Flexible Configuration**: All settings configurable via environment variables
 - **Multi-Architecture Support**: Supports ARM and x86 architectures
@@ -88,6 +89,9 @@ services:
       - FLASK_HOST=0.0.0.0
       - FLASK_PORT=8080
       - FLASK_DEBUG=false
+      
+      # API Key authentication (optional)
+      - API_KEYS=your_secret_key_here
     ports:
       - "${HOST_PORT:-8080}:${FLASK_PORT:-8080}"
     restart: on-failure
@@ -111,6 +115,11 @@ TEMP_VOLUME=./temp
 
 # Flask settings
 FLASK_DEBUG=false
+
+# API Key authentication (optional)
+# Leave empty to disable authentication
+# Multiple keys can be separated by commas: API_KEYS=key1,key2,key3
+API_KEYS=your_secret_key_here
 ```
 
 Then run:
@@ -148,6 +157,53 @@ export FILE_RETENTION_HOURS=1
 python app.py
 ```
 
+## Authentication
+
+The service supports optional API key authentication to secure access to video processing endpoints.
+
+### Configuration
+
+Set the `API_KEYS` environment variable to enable authentication:
+
+```bash
+# Single API key
+API_KEYS=your_secret_key_here
+
+# Multiple API keys (comma-separated)
+API_KEYS=key1,key2,key3
+
+# Disable authentication (default)
+API_KEYS=
+```
+
+### Protected Endpoints
+
+The following endpoints require authentication when `API_KEYS` is configured:
+- `POST /process` - Video processing
+- `POST /info` - Video information extraction
+
+### Unprotected Endpoints
+
+The following endpoints do not require authentication:
+- `GET /health` - Health check
+- `GET /download/{filename}` - File download
+
+### Usage
+
+Include the API key in the `X-API-Key` header:
+
+```bash
+curl -X POST http://localhost:8080/process \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: your_secret_key_here" \
+  -d '{"video_url": "https://example.com/video.mp4"}'
+```
+
+### Error Responses
+
+- **401 Unauthorized**: Missing API key
+- **403 Forbidden**: Invalid API key
+
 ## API Endpoints
 
 ### Health Check
@@ -168,6 +224,14 @@ GET /health
 ```http
 POST /process
 Content-Type: application/json
+X-API-Key: your_secret_key_here
+```
+
+### Video Processing (Combined Operations)
+```http
+POST /process
+Content-Type: application/json
+X-API-Key: your_secret_key_here
 ```
 
 **Request Body:**
@@ -231,6 +295,7 @@ screenshot_timestamps: [10, 30, 60]
 ```http
 POST /info
 Content-Type: application/json
+X-API-Key: your_secret_key_here
 ```
 
 **Request Body:**
@@ -325,6 +390,7 @@ All service configurations can be customized via environment variables. This mak
 | `FLASK_HOST` | Flask server host | `0.0.0.0` | `127.0.0.1` |
 | `FLASK_PORT` | Flask server port | `8080` | `9000` |
 | `FLASK_DEBUG` | Enable debug mode | `false` | `true` |
+| `API_KEYS` | Comma-separated API keys for authentication | `` (disabled) | `key1,key2,key3` |
 
 ### Configuration Examples
 
@@ -373,6 +439,7 @@ SUPPORTED_OUTPUT_FORMATS=mp4   # Only MP4 output
 ```bash
 curl -X POST http://localhost:8080/info \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: your_secret_key_here" \
   -d '{"video_url": "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"}'
 ```
 
@@ -380,6 +447,7 @@ curl -X POST http://localhost:8080/info \
 ```bash
 curl -X POST http://localhost:8080/process \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: your_secret_key_here" \
   -d '{
     "video_url": "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
     "take_screenshots": true,
@@ -391,6 +459,7 @@ curl -X POST http://localhost:8080/process \
 ```bash
 curl -X POST http://localhost:8080/process \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: your_secret_key_here" \
   -d '{
     "video_url": "https://sample-videos.com/zip/10/avi/SampleVideo_1280x720_1mb.avi",
     "convert_format": "mp4",
@@ -402,6 +471,7 @@ curl -X POST http://localhost:8080/process \
 ```bash
 curl -X POST http://localhost:8080/process \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: your_secret_key_here" \
   -d '{
     "video_url": "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
     "extract_info": true,
@@ -424,6 +494,7 @@ curl -X POST http://localhost:8080/process \
 
 ## Security Considerations
 
+- **API Key Authentication**: Optional API key authentication for secure access to processing endpoints
 - Files are processed in isolated temporary directories
 - Automatic cleanup prevents disk space issues
 - Input validation for file types and sizes
