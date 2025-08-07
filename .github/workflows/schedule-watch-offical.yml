@@ -38,15 +38,15 @@ jobs:
       build_platforms: 'linux/amd64'
     secrets: inherit
 
-  watch_git_sync_release:
-    uses: ./.github/workflows/check-offical-release.yml
-    with:
-      image_name: git-sync
-      build_context: './Docker/git-sync'
-      get_official_version_command: 'curl -s https://api.github.com/repos/AkashRajpurohit/git-sync/releases/latest | jq -r ".tag_name // \"no-tags\""'
-      is_latest_tag: true
-      build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7'
-    secrets: inherit  
+  # watch_git_sync_release:
+  #   uses: ./.github/workflows/check-offical-release.yml
+  #   with:
+  #     image_name: git-sync
+  #     build_context: './Docker/git-sync'
+  #     get_official_version_command: 'curl -s https://api.github.com/repos/AkashRajpurohit/git-sync/releases/latest | jq -r ".tag_name // \"no-tags\""'
+  #     is_latest_tag: true
+  #     build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7'
+  #   secrets: inherit  
 
   watch_ffmpeg_service_release:
     uses: ./.github/workflows/check-offical-release.yml
