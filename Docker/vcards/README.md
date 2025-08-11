@@ -19,16 +19,6 @@ docker pull ghcr.io/funnyzak/vcards:latest
 docker pull registry.cn-beijing.aliyuncs.com/funnyzak/vcards:latest
 ```
 
-## Environment Variables
-
-- `SYNC_CRON`: Sync schedule, default is not set. For example, `0 0 * * *` means sync every day at 00:00. You can use [CronTab](https://crontab.guru/) to generate the schedule.
-- `ENV SYNC_ON_STARTUP`: Sync when the container starts, default is `false`.
-
-## Volumes
-
-- `/app/downloads`: New data will be downloaded to this folder.
-- `/app/vcards/collection-root/cn/`: The `cn` folder of the contacts.
-
 ## Usage
 
 ### Docker Deployment
@@ -40,51 +30,6 @@ docker run -d --name vcard \
     funnyzak/vcards:latest
 ```
 
-Use custom contacts data, and map to local 5232 port.
-```bash
-docker run -d --name vcard \
-    -p 5232:5232 \
-    -v ./vcards:/app/vcards/collection-root/cn/ \
-    funnyzak/vcards:latest
-```
-
-Sync every day at 00:00, and download new data to `./downloads` folder.
-```bash
-docker run -d --name vcard \
-    -p 5232:5232 \
-    -e SYNC_CRON="0 0 * * *" \
-    -v ./downloads:/app/downloads \
-    funnyzak/vcards:latest
-```
-
-Sync every day at 00:00, and download new data to `./downloads` folder, and add custom contacts data to `vcards` folder.
-```bash
-docker run -d --name vcard \
-    -p 5232:5232 \
-    -e SYNC_CRON="0 0 * * *" \
-    -v ./downloads:/app/downloads \
-    -v ./vcards:/app/vcards/collection-root/cn/ \
-    funnyzak/vcards:latest
-```
-**Note**: You must download the contacts data from [vCards](https://github.com/metowolf/vCards) and put it in the `vcards` folder.
-
-
-### Docker Compose Deployment
-
-```yaml
-version: '3.7'
-
-services:
-  vcard:
-    image: funnyzak/vcards:latest
-    container_name: vcard
-    ports:
-      - 5232:5232
-    environment:
-      - SYNC_CRON=0 0 * * *
-    volumes:
-      - ./downloads:/app/downloads
-```
 
 ## Setup on iOS and Mac
 
