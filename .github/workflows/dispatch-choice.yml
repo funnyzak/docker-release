@@ -13,6 +13,7 @@ on:
           - nezha-dashboard
           - git-sync
           - ffmpeg-service
+          - weread-bot
           - cron
           - vcards
           - certimate
@@ -252,4 +253,15 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/386,linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
+    secrets: inherit
+
+  weread_bot_release:
+    if: ${{ github.event.inputs.choice_service == 'weread-bot' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/weread-bot'
+      docker_image_name: weread-bot
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
     secrets: inherit
