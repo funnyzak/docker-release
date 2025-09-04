@@ -58,6 +58,16 @@ jobs:
       build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7'
     secrets: inherit
 
+  watch_weread_bot_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: weread-bot
+      build_context: './Docker/weread-bot'
+      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/weread-bot/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      is_latest_tag: true
+      build_platforms: 'linux/amd64,linux/arm64'
+    secrets: inherit
+
   watch_nezha_dashboard_release:
     uses: ./.github/workflows/check-offical-release.yml
     with:
