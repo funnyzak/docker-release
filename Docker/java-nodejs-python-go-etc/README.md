@@ -3,7 +3,7 @@
 [![Docker Tags](https://img.shields.io/docker/v/funnyzak/java-nodejs-python-go-etc?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/java-nodejs-python-go-etc/)
 [![Image Size](https://img.shields.io/docker/image-size/funnyzak/java-nodejs-python-go-etc)](https://hub.docker.com/r/funnyzak/java-nodejs-python-go-etc/)
 [![Docker Stars](https://img.shields.io/docker/stars/funnyzak/java-nodejs-python-go-etc.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/java-nodejs-python-go-etc/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/java-nodejs-python-go-etc.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/java-nodejs-python-go-etc/
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/java-nodejs-python-go-etc.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/java-nodejs-python-go-etc/)
 
 A comprehensive development environment container that includes Java, Node.js, Python, Go, and essential development tools. This container is designed for CI/CD pipelines, development workflows, and deployment automation, providing a complete toolkit for modern software development.
 

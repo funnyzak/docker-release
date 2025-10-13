@@ -5,7 +5,7 @@
 [![Docker Stars](https://img.shields.io/docker/stars/funnyzak/git-job.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/git-job/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/git-job.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/git-job/)
 
-Git Job is a professional webhook-based automation tool that triggers source code pulls and executes custom commands when receiving Git webhook events. Built on [funnyzak/java-nodejs-python-go-etc-docker](https://github.com/funnyzak/java-nodejs-python-go-etc-docker), it provides a complete CI/CD automation solution with build capabilities, notifications, and multi-platform support.
+Git Job is a professional webhook-based automation tool that triggers source code pulls and executes custom commands when receiving Git webhook events. Built on [funnyzak/java-nodejs-python-go-etc-docker](https://github.com/funnyzak/docker-release/tree/main/Docker/java-nodejs-python-go-etc), it provides a complete CI/CD automation solution with build capabilities, notifications, and multi-platform support.
 
 The image is available for multiple architectures, including `linux/amd64`, `linux/arm64`, and `linux/arm/v7`.
 
