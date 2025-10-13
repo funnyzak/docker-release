@@ -110,127 +110,155 @@ Configure automatic upload to AliCloud Object Storage Service:
 - `ALIYUN_OSS_AK_ID` - AliCloud Access Key ID.
 - `ALIYUN_OSS_AK_SID` - AliCloud Access Key Secret.
 
-## Volume
+## Volumes
 
-- `/app/code` - Git code folder. Must same as `CODE_DIR`. For example: `./code:/app/code`.
-- `/root/.ssh` - Git ssh key folder. For example: `./ssh:/root/.ssh`.
-- `/app/target` - The target of the code build. Must same as `TARGET_DIR`. For example: `./target:/app/target`.
-- `/app/scripts` - The main scripts folder. contains `hook.sh`, `utils.sh`, `entrypoint.sh`.
-- `/custom_scripts/on_startup` - which the scripts are executed at startup. For example: `./scripts/on_startup:/custom_scripts/on_startup`.
-- `/custom_scripts/before_pull` - which the scripts are executed at before pull. Same as `/custom_scripts/on_startup`.
-- `/custom_scripts/after_pull` - which the scripts are executed at after pull. Same as `/custom_scripts/on_startup`.
+The following volume mounts are available for persistent storage and custom scripts:
+
+### Application Volumes
+
+- `/app/code` - Git repository working directory. Must match `CODE_DIR`.
+- `/app/target` - Build output directory. Must match `TARGET_DIR`.
+- `/root/.ssh` - SSH keys for Git authentication.
+
+### Script Volumes
+
+- `/app/scripts` - Main container scripts (contains `hook.sh`, `utils.sh`, `entrypoint.sh`).
+- `/custom_scripts/on_startup` - Custom scripts executed at container startup.
+- `/custom_scripts/before_pull` - Custom scripts executed before code pull.
+- `/custom_scripts/after_pull` - Custom scripts executed after code pull.
 
 ## Usage
 
-### Command
+### Docker Command
 
-Follow the example below to use docker to start the container, you should acdjust the environment variables according to your needs.
+Basic deployment with minimal configuration:
 
 ```bash
-docker run -d -t -i --name git-job --restart on-failure:5 --privileged=true \
--e TZ=Asia/Shanghai \
--e LANG=C.UTF-8 \
--e USE_HOOK=true \
--e GIT_USER_NAME=Leon \
--e GIT_USER_EMAIL=silenceace@gmail.com \
--e GIT_REPO_URL=git@github.com:funnyzak/git-job.git \
--p 81:80 funnyzak/git-job
+docker run -d \
+  --name git-job \
+  --restart on-failure:5 \
+  --privileged=true \
+  -e TZ=Asia/Shanghai \
+  -e LANG=C.UTF-8 \
+  -e USE_HOOK=true \
+  -e GIT_USER_NAME=Leon \
+  -e GIT_USER_EMAIL=silenceace@gmail.com \
+  -e GIT_REPO_URL=git@github.com:funnyzak/git-job.git \
+  -e HOOK_TOKEN=your-webhook-token \
+  -p 8080:80 \
+  -v ./ssh:/root/.ssh \
+  funnyzak/git-job:latest
 ```
 
-### Compose
+### Docker Compose
 
-#### Full configuration
+#### Complete Configuration
 
-Follow the example below to use docker-compose to start the container, and the environment variables are fully configured.
+Full-featured setup with notifications, build pipeline, and custom scripts:
 
- ```yaml
-version: '3'
+```yaml
+version: '3.8'
 services:
-  app:
-    image: funnyzak/git-job
+  git-job:
+    image: funnyzak/git-job:latest
+    container_name: git-job
     privileged: false
-    container_name: gitjob
     working_dir: /app/code
     tty: true
+    restart: unless-stopped
     environment:
+      # Basic Configuration
       - TZ=Asia/Shanghai
       - LANG=C.UTF-8
-      # repo config
       - USE_HOOK=true
       - GIT_USER_NAME=Leon
       - GIT_USER_EMAIL=silenceace@gmail.com
-      - HOOK_TOKEN=XqMWRndVuxXQDNzbE9Z
-      - GIT_REPO_URL=git@github.com:funnyzak/git-job.git
+      - HOOK_TOKEN=${HOOK_TOKEN}
+      - GIT_REPO_URL=git@github.com:your-org/your-repo.git
       - GIT_BRANCH=main
-      # commands
-      - STARTUP_COMMANDS=echo start time:$$(date)
-      - BEFORE_PULL_COMMANDS=echo before pull time:$$(date)
-      - AFTER_PULL_COMMANDS=echo after pull time:$$(date)
-      # pushoo 
-      - SERVER_NAME=demo server
-      - PUSHOO_PUSH_PLATFORMS=dingtalk,bark
-      - PUSHOO_PUSH_TOKENS=dingtalktoken:barktoken
-      - PUSHOO_PUSH_OPTIONS={"dingtalk":{"atMobiles":["13800000000"]},"bark":{"sound":"tink"}}
-      - PUSH_MESSAGE_HEAD=This is a message head
-      - PUSH_MESSAGE_FOOT=## Other
 
-          * Click Here：[Home Page](https://www.domain.com/)
-      # custom environment for build
-      - INSTALL_DEPS_COMMAND=echo install deps time:$$(date)
-      - BUILD_COMMAND=mkdir target && zip -r ./target/release.zip ./*
-      - BUILD_OUTPUT_DIR=./dist
-      - AFTER_BUILD_COMMANDS=echo after build time:$$(date)
-      # custom environment for aliyun oss
-      - ALIYUN_OSS_ENDPOINT=oss-cn-beijing-internal.aliyuncs.com
-      - ALIYUN_OSS_AK_ID=123456789
-      - ALIYUN_OSS_AK_SID=sxgh645etrdgfjh4635wer
-      # optional
+      # Custom Commands
+      - STARTUP_COMMANDS=echo "Container started at $$(date)"
+      - BEFORE_PULL_COMMANDS=echo "Starting code pull..."
+      - AFTER_PULL_COMMANDS=echo "Code pull completed"
+
+      # Build Pipeline
+      - INSTALL_DEPS_COMMAND=npm install
+      - BUILD_COMMAND=npm run build
+      - BUILD_OUTPUT_DIR=dist
+      - AFTER_BUILD_COMMANDS=echo "Build completed successfully"
+
+      # Notifications
+      - SERVER_NAME=Production CI/CD
+      - PUSHOO_PUSH_PLATFORMS=dingtalk,bark
+      - PUSHOO_PUSH_TOKENS=${DINGTALK_TOKEN}:${BARK_TOKEN}
+      - PUSHOO_PUSH_OPTIONS={"dingtalk":{"atMobiles":["13800000000"]},"bark":{"sound":"tink"}}
+      - PUSH_MESSAGE_HEAD=🚀 Deployment Update
+      - PUSH_MESSAGE_FOOT=## View Details\n* [Dashboard](https://your-dashboard.com)
+
+      # AliCloud OSS (Optional)
+      - ALIYUN_OSS_ENDPOINT=oss-cn-beijing.aliyuncs.com
+      - ALIYUN_OSS_AK_ID=${OSS_ACCESS_KEY}
+      - ALIYUN_OSS_AK_SID=${OSS_SECRET_KEY}
+
+      # Directory Configuration
       - CODE_DIR=/app/code
       - TARGET_DIR=/app/target
-    restart: on-failure
     ports:
-      - 1038:80
+      - "8080:80"
+      - "9000:9000"
     volumes:
+      - ./code:/app/code
       - ./target:/app/target
-      - ./ssh:/root/.ssh
-      - ./scripts/after_pull/after_pull_build_app.sh:/custom_scripts/after_pull/3.sh
+      - ./ssh:/root/.ssh:ro
+      - ./scripts/custom_startup.sh:/custom_scripts/on_startup/01-startup.sh
+      - ./scripts/custom_build.sh:/custom_scripts/after_pull/02-build.sh
+```
 
- ```
+#### Simple Configuration
 
-#### Simple configuration
+Minimal setup for basic Git operations:
 
-Follow the example below to use docker-compose to start the container, and the environment variables are not fully configured.
-
- ```yaml
-version: '3'
+```yaml
+version: '3.8'
 services:
-  app:
-    image: funnyzak/git-job
-    privileged: false
-    container_name: gitjob
-    tty: true
+  git-job:
+    image: funnyzak/git-job:latest
+    container_name: git-job
+    restart: unless-stopped
     environment:
       - GIT_USER_NAME=Leon
       - GIT_USER_EMAIL=silenceace@gmail.com
-      - HOOK_TOKEN=XqMWRndVuxXQDNzbE9Z
-      - GIT_REPO_URL=git@github.com:funnyzak/git-job.git
+      - HOOK_TOKEN=${HOOK_TOKEN}
+      - GIT_REPO_URL=git@github.com:your-org/your-repo.git
       - GIT_BRANCH=main
-      # pushoo 
-      - SERVER_NAME=demo server
-      - PUSHOO_PUSH_PLATFORMS=dingtalk,bark
-      - PUSHOO_PUSH_TOKENS=dingtalk:xxxx,bark:xxxx
-      # custom environment for build
-      - INSTALL_DEPS_COMMAND=echo install deps time:$$(date)
-      - BUILD_COMMAND=mkdir target && zip -r ./target/release.zip ./*
-      - BUILD_OUTPUT_DIR=./dist
-    restart: on-failure
+      - AFTER_PULL_COMMANDS=npm install && npm run build
     ports:
-      - 1038:80
+      - "8080:80"
     volumes:
-      - ./target:/app/target
-      - ./ssh:/root/.ssh
-      - ./scripts/after_pull/after_pull_build_app.sh:/custom_scripts/after_pull/3.sh
- ```
+      - ./code:/app/code
+      - ./ssh:/root/.ssh:ro
+```
+
+### With SSH Key Authentication
+
+Generate SSH keys and mount them for secure Git operations:
+
+```bash
+# Generate SSH key pair
+ssh-keygen -t rsa -b 4096 -C "your-email@example.com" -N "" -f ./ssh/id_rsa
+
+# Add the public key to your Git repository's deploy keys
+# Then mount the SSH directory
+docker run -d \
+  --name git-job \
+  -e GIT_USER_EMAIL=your-email@example.com \
+  -e GIT_REPO_URL=git@github.com:your-org/your-repo.git \
+  -e HOOK_TOKEN=your-token \
+  -v ./ssh:/root/.ssh:ro \
+  -p 8080:80 \
+  funnyzak/git-job:latest
+```
 
 ## Other
 
