@@ -1,5 +1,8 @@
-# 基于共享基础镜像
 FROM java-nodejs-python-go-base:latest
+
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
 
 # 删除旧的 Java 安装
 RUN rm -rf /opt/java

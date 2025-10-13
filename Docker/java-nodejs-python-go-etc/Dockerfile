@@ -1,9 +1,23 @@
 FROM debian:stable-20250929-slim as base
 
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+
 ARG GO_VERSION=1.23.2
 
 ENV TZ=Asia/Shanghai
 ENV LANG=C.UTF-8
+
+
+LABEL org.label-schema.name="java-nodejs-python-go-etc" \
+    org.label-schema.description="java-nodejs-python-go-etc" \
+    org.label-schema.version="${VERSION}" \
+    org.label-schema.vcs-ref="${VCS_REF}" \
+    org.label-schema.build-date="${BUILD_DATE}" \
+    org.label-schema.vendor="Leon<silenceace@gmail.com>" \
+    org.label-schema.url="https://github.com/funnyzak/docker-release"
+
 
 # base repo
 COPY repo/sources.list /etc/apt/sources.list
