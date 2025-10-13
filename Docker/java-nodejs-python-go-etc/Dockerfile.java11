@@ -1,0 +1,25 @@
+# 基于共享基础镜像
+FROM java-nodejs-python-go-base:latest
+
+# 删除旧的 Java 安装
+RUN rm -rf /opt/java
+
+# Java 11 特定配置
+ENV JAVA_VERSION=jdk-11.0.25+9
+ENV JAVA_PACKAGE_FILENAME=OpenJDK11U-jdk_x64_linux_hotspot_11.0.25_9.tar.gz
+ENV JAVA_DOWNLOAD_LINK=https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.25%2B9/${JAVA_PACKAGE_FILENAME}
+
+# 下载并安装 Java 11
+RUN wget --no-cookies -O /tmp/${JAVA_PACKAGE_FILENAME} ${JAVA_DOWNLOAD_LINK} && \
+    mkdir -p /opt/java && \
+    tar -zxf /tmp/${JAVA_PACKAGE_FILENAME} -C /opt/java/ && \
+    rm -f /tmp/${JAVA_PACKAGE_FILENAME}
+
+# Java 环境变量
+ENV JAVA_HOME=/opt/java/jdk-11.0.25+9
+ENV PATH=${JAVA_HOME}/bin:$PATH
+
+WORKDIR /app
+
+# 保持容器运行
+CMD ["tail", "-f", "/dev/null"]

@@ -10,6 +10,7 @@ on:
         options:
           - nginx
           - openjdk
+          - java-nodejs-python-go-etc
           - nezha-dashboard
           - git-sync
           - ffmpeg-service
@@ -29,6 +30,10 @@ on:
           - watermark
           - request-hub
           - hello
+      docker_file_name:
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
+        required: false
+        type: string
       docker_tags:
         description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
         required: false
@@ -133,6 +138,18 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+
+  java_nodejs_python_go_etc_release:
+
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/java-nodejs-python-go-etc'
+      docker_image_name: java-nodejs-python-go-etc
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      docker_file_name: ${{ github.event.inputs.docker_file_name || 'Dockerfile' }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64' }}
     secrets: inherit
 
   mysql_dump_release:
