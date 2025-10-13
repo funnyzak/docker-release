@@ -18,8 +18,6 @@ LABEL org.label-schema.name="java-nodejs-python-go-etc" \
     org.label-schema.vendor="Leon<silenceace@gmail.com>" \
     org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-
-# base repo
 COPY repo/sources.list /etc/apt/sources.list
 
 # Install need modules
@@ -54,7 +52,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # yarn and pnpm
-RUN npm install -g yarn pnpm
+RUN npm install -g yarn pnpm pushoo-cli
 
 # GO
 ENV GO_BINARY_TAR_NAME=go${GO_VERSION}.linux-amd64
