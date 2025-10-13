@@ -260,19 +260,136 @@ docker run -d \
   funnyzak/git-job:latest
 ```
 
-## Other
+## Logging and Monitoring
 
-### SSH Key
+### Application Logs
 
-If you want to use ssh-key, you need to mount the ssh-key folder to `/root/.ssh`. Generally, you need to mount the `id_rsa` and `id_rsa.pub` files. For example:
+The container provides comprehensive logging for all operations:
 
- ```yaml
-volumes:
-  - ./ssh:/root/.ssh
- ```
+- **Webhook Events**: All incoming webhook requests and processing status
+- **Git Operations**: Clone, pull, and checkout operations with detailed output
+- **Build Process**: Dependency installation, build execution, and results
+- **Custom Scripts**: Execution logs for all custom script stages
+- **Notifications**: Status of notification deliveries
 
- Your can use `ssh-keygen` to generate the ssh-key.For example:
+### Log Access
 
- ```bash
-ssh-keygen -t rsa -b 4096 -C "youremail@gmail.com" -N "" -f ./id_rsa
+View logs in real-time:
+
+```bash
+# View all container logs
+docker logs -f git-job
+
+# View recent logs
+docker logs --tail 100 git-job
+
+# Filter logs by pattern
+docker logs git-job | grep "webhook\|build\|error"
 ```
+
+### Health Monitoring
+
+Monitor container health and webhook functionality:
+
+```bash
+# Check container status
+docker ps
+
+# Test webhook endpoint
+curl "http://localhost:8080/hooks/git-webhook?token=your-token" \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"ref":"refs/heads/main"}'
+```
+
+## Security Considerations
+
+### SSH Key Management
+
+For secure Git operations using SSH keys:
+
+1. **Generate SSH Keys**:
+   ```bash
+   ssh-keygen -t rsa -b 4096 -C "your-email@example.com" -N "" -f ./ssh/id_rsa
+   ```
+
+2. **Mount SSH Directory**:
+   ```yaml
+   volumes:
+     - ./ssh:/root/.ssh:ro  # Read-only for security
+   ```
+
+3. **Add Public Key to Repository**:
+   - Add `./ssh/id_rsa.pub` as a deploy key in your Git repository
+   - Ensure the key has read access (and write access if needed)
+
+### Webhook Security
+
+- Use strong, randomly generated `HOOK_TOKEN` values
+- Consider using GitHub's webhook secret validation
+- Limit webhook exposure using firewall rules
+- Use HTTPS in production environments
+
+## Troubleshooting
+
+### Common Issues
+
+#### SSH Authentication Failures
+- Verify SSH keys are properly mounted
+- Check that the public key is added to the repository
+- Ensure SSH key has correct permissions (600 for private key)
+
+#### Build Failures
+- Check build logs for specific error messages
+- Verify all dependencies are available in the base image
+- Ensure build commands are compatible with the container environment
+
+#### Webhook Not Triggering
+- Verify the webhook URL and token are correct
+- Check if the container is receiving network traffic
+- Review Nginx logs for webhook processing errors
+
+### Debug Mode
+
+Enable verbose logging for troubleshooting:
+
+```yaml
+environment:
+  - VERBOSE=true  # Enable detailed debug output
+```
+
+## Migration from Legacy Versions
+
+If you're upgrading from version 1.1.0 or earlier, note the following changes:
+
+### Breaking Changes
+
+- **Configuration Structure**: Environment variables have been reorganized
+- **Webhook Path**: Standardized to `/hooks/git-webhook`
+- **Build Pipeline**: Enhanced with more granular control
+- **Notifications**: Moved to Pushoo-based system
+
+### Migration Steps
+
+1. Update your Docker image to the latest version
+2. Review and update environment variable names
+3. Test webhook configuration with the new endpoint
+4. Verify build pipeline configuration
+
+For legacy compatibility, continue using tag `1.1.0`:
+
+```bash
+docker pull funnyzak/git-job:1.1.0
+```
+
+## Reference and Resources
+
+- **Git Job Repository**: [github.com/funnyzak/git-job](https://github.com/funnyzak/git-job)
+- **Base Image**: [java-nodejs-python-go-etc-docker](https://github.com/funnyzak/java-nodejs-python-go-etc-docker)
+- **Pushoo Notifications**: [pushoo-cli](https://github.com/funnyzak/pushoo-cli)
+- **Docker Hub**: [funnyzak/git-job](https://hub.docker.com/r/funnyzak/git-job)
+- **GitHub Container Registry**: [ghcr.io/funnyzak/git-job](https://github.com/funnyzak/git-job/pkgs/container/git-job)
+
+## License
+
+This project is licensed under the MIT License - see the repository for details.
