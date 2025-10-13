@@ -1,64 +1,114 @@
 # Git Job Docker Image
 
-Trigger a source code pull with a push event from the git webhook. And then execute the commands. Base Image: [funnyzak/java-nodejs-python-go-etc-docker](https://github.com/funnyzak/java-nodejs-python-go-etc-docker).
+[![Docker Tags](https://img.shields.io/docker/v/funnyzak/git-job?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/git-job/)
+[![Image Size](https://img.shields.io/docker/image-size/funnyzak/git-job)](https://hub.docker.com/r/funnyzak/git-job/)
+[![Docker Stars](https://img.shields.io/docker/stars/funnyzak/git-job.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/git-job/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/git-job.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/git-job/)
 
-Download size of this image is:
+Git Job is a professional webhook-based automation tool that triggers source code pulls and executes custom commands when receiving Git webhook events. Built on [funnyzak/java-nodejs-python-go-etc-docker](https://github.com/funnyzak/java-nodejs-python-go-etc-docker), it provides a complete CI/CD automation solution with build capabilities, notifications, and multi-platform support.
 
-[![Image Size][docker-image-size]][docker-hub-url]
+The image is available for multiple architectures, including `linux/amd64`, `linux/arm64`, and `linux/arm/v7`.
 
-[Docker hub image: funnyzak/git-job][docker-hub-url]
+## Quick Start
 
 **Docker Pull Command**: `docker pull funnyzak/git-job:latest`
 
-China mirror: `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/git-job:latest`
+**China Mirror**: `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/git-job:latest`
 
-The nginx service is enabled by default, and the proxy ports are 80 and 9000, default webhook event is `push`. And the webhook url path is `/hooks/git-webhook`, url parameter is `token`. For example:
+## Features
 
+- **Webhook Automation**: Trigger automated workflows via Git webhooks
+- **Multi-Platform Support**: Build and deploy on amd64, arm64, and arm/v7 architectures
+- **Build Pipeline**: Complete build automation with dependency installation and compilation
+- **Custom Scripts**: Execute custom scripts at various stages (startup, before/after pull, after build)
+- **Multi-Registry Publishing**: Built-in support for AliCloud OSS uploads
+- **Notification System**: Real-time notifications via Pushoo integration (DingTalk, Bark, etc.)
+- **SSH Key Support**: Secure Git operations with SSH key authentication
+- **Flexible Configuration**: Extensive environment variable configuration
+- **Volume Management**: Persistent storage for code, build outputs, and custom scripts
+- **Web Server**: Built-in Nginx proxy on ports 80 and 9000
+- **Comprehensive Logging**: Detailed operation logs and error handling
+
+## Webhook Configuration
+
+The container includes a built-in Nginx web server that listens for webhook events:
+
+- **Webhook URL**: `/hooks/git-webhook`
+- **Authentication**: URL parameter `?token=HOOK_TOKEN`
+- **Default Event**: `push` events
+- **Available Ports**: 80 and 9000
+
+**Example URLs**:
 - `http://hostname:80/hooks/git-webhook?token=HOOK_TOKEN`
 - `http://hostname:9000/hooks/git-webhook?token=HOOK_TOKEN`
 
-**Attention:** Current version is not compatible old version, please use tag `1.1.0` if you want to use old version.
+## Version Compatibility
 
-## Environment
+**⚠️ Important Version Notice**: The current version is not compatible with versions prior to 2.0.0. If you need to use the legacy version, please use tag `1.1.0`:
+
+```bash
+docker pull funnyzak/git-job:1.1.0
+```
+
+## Configuration
 
 The following environment variables are used to configure the container:
 
 ### Required
 
-The following flags are a list of all the currently supported options that can be changed by passing in the variables to docker with the -e flag.
+The following environment variables are required for basic operation:
 
 - `GIT_USER_EMAIL` - The email of the git committer. Required.
-- `GIT_REPO_URL` - The remote url of the git repository. Required. Example: `git@github.com:funnyzak/vp-starter.git`.
-- `HOOK_TOKEN` - The token of the webhook. Required.
+- `GIT_REPO_URL` - The remote URL of the git repository. Required. Example: `git@github.com:funnyzak/vp-starter.git`.
+- `HOOK_TOKEN` - The authentication token for the webhook. Required.
 
-### Optional
+### Basic Options
 
-The following environment variables are optional:
+Commonly used configuration options:
 
-- `USE_HOOK` - Set to `true` to enable the webhook. Default is `true`.
-- `GIT_USER_NAME` - The username of the git. Optional.
-- `GIT_BRANCH` - The branch of the git repository to pull. Optional. Default is the repo main branch.
-- `STARTUP_COMMANDS` - Optional. A shell command that will be run at the end of the start shell script. left blank, will not execute.
-- `BEFORE_PULL_COMMANDS` - Optional. A shell command that will be run before pull code. left blank, will not execute.
-- `AFTER_PULL_COMMANDS` - Optional. A shell command that will be run after pull code. left blank, will not execute.
-- `CODE_DIR` - The code dir of the git repository. Optional. Default is `/app/code`.
-- `TARGET_DIR` - If after pull code, you want to execute build action, you can set the target dir. Optional. Default is `/app/target`.
-- `INSTALL_DEPS_COMMAND` - If after pull code, you want to execute install dependencies action, you can set the install command. Optional. For example: `npm install`.
-- `BUILD_COMMAND` - If after install deps, you want to execute build action, you can set the build command. Optional. For example: `npm run build`.
-- `BUILD_OUTPUT_DIR` - Set the build output dir. Optional. It is relative to `CODE_DIR`. For example: `dist`. Build output dir will rsync to `TARGET_DIR`.
-- `AFTER_BUILD_COMMANDS` - If after build, you want to execute other action, you can set the commands. Optional. For example: `npm run deploy`.
+- `USE_HOOK` - Enable or disable the webhook listener. Default: `true`.
+- `GIT_USER_NAME` - The username of the git committer. Optional.
+- `GIT_BRANCH` - The branch to pull from the repository. Default: the repository's main branch.
+- `CODE_DIR` - The directory where git repository will be cloned. Default: `/app/code`.
+- `TARGET_DIR` - The directory for build outputs and deployment. Default: `/app/target`.
 
-### Pushoo
+### Build Pipeline
 
-If you want to receive message with pushoo, you need to set `PUSHOO_PUSH_PLATFORMS` and `PUSHOO_PUSH_TOKENS`.
+Configure the automated build process:
 
-- `SERVER_NAME` - The server name, used for pushoo message. Optional.
-- `PUSHOO_PUSH_PLATFORMS` - The push platforms, separated by commas. Optional.
-- `PUSHOO_PUSH_TOKENS` - The push tokens, separated by commas. Optional.
-- `PUSH_MESSAGE_HEAD` - The push message head. Optional. Default is empty.
-- `PUSH_MESSGE_FOOT` - The push message foot. Optional. Default is empty.
+- `INSTALL_DEPS_COMMAND` - Command to install dependencies after pulling code. Example: `npm install`, `pip install -r requirements.txt`.
+- `BUILD_COMMAND` - Command to build the project after installing dependencies. Example: `npm run build`, `mvn package`.
+- `BUILD_OUTPUT_DIR` - Build output directory relative to `CODE_DIR`. Example: `dist`, `build`, `target`.
+- `AFTER_BUILD_COMMANDS` - Commands to execute after successful build. Example: `npm run deploy`, `docker-compose up -d`.
 
-For more details, please refer to [pushoo-cli](https://github.com/funnyzak/pushoo-cli).
+### Custom Scripts
+
+Execute custom commands at different stages:
+
+- `STARTUP_COMMANDS` - Commands executed when container starts.
+- `BEFORE_PULL_COMMANDS` - Commands executed before pulling code from repository.
+- `AFTER_PULL_COMMANDS` - Commands executed after pulling code from repository.
+
+### Notifications
+
+Configure notification system using Pushoo:
+
+- `SERVER_NAME` - Server name displayed in notification messages. Optional.
+- `PUSHOO_PUSH_PLATFORMS` - Notification platforms, separated by commas. Example: `dingtalk,bark,wechat`.
+- `PUSHOO_PUSH_TOKENS` - Authentication tokens for notification platforms, separated by commas.
+- `PUSHOO_PUSH_OPTIONS` - JSON object with platform-specific options. Example: `{"dingtalk":{"atMobiles":["13800000000"]},"bark":{"sound":"tink"}}`.
+- `PUSH_MESSAGE_HEAD` - Custom header text for notification messages.
+- `PUSH_MESSAGE_FOOT` - Custom footer text for notification messages.
+
+For more details about Pushoo configuration, please refer to [pushoo-cli](https://github.com/funnyzak/pushoo-cli).
+
+### AliCloud OSS
+
+Configure automatic upload to AliCloud Object Storage Service:
+
+- `ALIYUN_OSS_ENDPOINT` - AliCloud OSS endpoint. Example: `oss-cn-beijing-internal.aliyuncs.com`.
+- `ALIYUN_OSS_AK_ID` - AliCloud Access Key ID.
+- `ALIYUN_OSS_AK_SID` - AliCloud Access Key Secret.
 
 ## Volume
 
