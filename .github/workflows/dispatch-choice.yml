@@ -31,10 +31,6 @@ on:
           - watermark
           - request-hub
           - hello
-      docker_file_name:
-        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
-        required: false
-        type: string
       docker_tags:
         description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
         required: false
@@ -48,6 +44,10 @@ on:
         required: false
         type: string
 
+      docker_file_name:
+        description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
+        required: false
+        type: string
 permissions:
   contents: write
   packages: write
