@@ -4,7 +4,7 @@
 [![GitHub Container Registry](https://img.shields.io/badge/GHCR-funnyzak-blue)](https://github.com/funnyzak/docker-release)
 [![License](https://img.shields.io/github/license/funnyzak/docker-release)](https://github.com/funnyzak/docker-release)
 
-**Docker Release** is a comprehensive repository that provides optimized Docker images for various services and applications. All images are automatically published to Docker Hub, GitHub Container Registry, and AliCloud Container Registry. The images are built with the latest source code and support multiple architectures including AMD64, ARM64, and ARMv7.
+**Docker Release** is a comprehensive repository that provides optimized Docker images for various services and applications. All images are automatically published to Docker Hub, GitHub Container Registry, and AliCloud Container Registry. The images are built with the latest source code and support multiple architectures including AMD64, ARM64, and more.
 
 ## Features
 
