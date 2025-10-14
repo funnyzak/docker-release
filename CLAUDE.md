@@ -2,101 +2,110 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Overview
+## Project Overview
 
-This is a Docker release repository that builds and publishes Docker images for various services to multiple registries (Docker Hub, GitHub Container Registry, and AliCloud Container Registry). The repository contains a monorepo structure with each service having its own directory under `./Docker/`.
+This is a comprehensive Docker release repository that provides optimized Docker images for various services and applications. All images are automatically published to multiple registries (Docker Hub, GitHub Container Registry, AliCloud Container Registry) with multi-architecture support (linux/amd64, linux/arm64, etc.).
 
 ## Architecture
 
-- **Docker Images**: Each service has its own directory under `./Docker/` containing a Dockerfile and associated files
-- **GitHub Actions**: Automated CI/CD workflows for building and publishing images
-- **Multi-Platform Support**: Images are built for multiple architectures (amd64, arm64, arm/v7, etc.)
-- **Multi-Registry Publishing**: Images are published to Docker Hub, GHCR, and AliCloud registries
+### Directory Structure
+- `./Docker/[service-name]/`: Individual service containerizations
+  - `Dockerfile`: Container build instructions
+  - `README.md`: Service documentation
+  - `docker-compose.yml`: Local testing configuration (optional)
+  - Supporting configuration files and scripts
+
+### CI/CD Pipeline
+The repository uses GitHub Actions with the main workflow in `.github/workflows/release.yml` that:
+- Supports workflow calls and manual dispatch
+- Builds multi-architecture Docker images
+- Publishes to three registries automatically
+- Includes build args for VERSION, VCS_REF, BUILD_DATE
+- Sends notifications via Apprise
+
+### Common Build Pattern
+Most Dockerfiles follow this pattern:
+- Multi-stage builds for optimization
+- Standardized labels (org.label-schema.*)
+- Support for VERSION, VCS_REF, BUILD_DATE build args
+- Health checks where applicable
+- Security-focused minimal base images
 
 ## Common Development Commands
 
-### Building Images Locally
-
-To build any Docker image locally:
-
+### Build and Test Locally
 ```bash
-# Navigate to the service directory
-cd ./Docker/[service-name]
+# Build a specific service image
+docker build -t funnyzak/[service-name] ./Docker/[service-name]/
 
-# Build the image
-docker build -t [service-name]:latest .
-```
-
-### Testing Images
-
-Most services include docker-compose.yml files for local testing:
-
-```bash
-# Navigate to service directory
-cd ./Docker/[service-name]
-
-# Start with docker-compose
+# Test with docker-compose (if available)
+cd ./Docker/[service-name]/
 docker-compose up -d
 
 # View logs
 docker-compose logs -f
-
-# Stop services
-docker-compose down
 ```
 
-### GitHub Actions Workflows
+### Manual Release (for testing)
+```bash
+# Trigger release workflow manually
+gh workflow run release.yml \
+  --field build_context='./Docker/[service-name]' \
+  --field docker_tags='latest,test' \
+  --field build_platforms='linux/amd64,linux/arm64'
+```
 
-The repository uses several GitHub Actions workflows:
+### Registry Operations
+```bash
+# Pull from different registries
+docker pull funnyzak/[service-name]:latest
+docker pull ghcr.io/funnyzak/[service-name]:latest
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/[service-name]:latest
+```
 
-- **release.yml**: Main workflow for building and publishing Docker images
-- **dispatch-*.yml**: Workflows for specific service releases
-- **schedule-watch-offical.yml**: Scheduled workflow to watch for upstream updates
-- **check-offical-release.yml**: Workflow to check for new official releases
+## Key Development Patterns
 
-### Service-Specific Operations
+### Dockerfile Standards
+- Use multi-stage builds for size optimization
+- Include proper labels with version, build date, VCS ref
+- Set appropriate WORKDIR and USER directives
+- Add HEALTHCHECK instructions where applicable
+- Use specific version tags instead of `latest` for base images
 
-Each service directory contains:
-- `Dockerfile`: Container build instructions
-- `README.md`: Service-specific documentation and deployment instructions
-- `docker-compose.yml` (optional): Local testing configuration
-- `entrypoint.sh` (optional): Custom container entrypoint scripts
+### Service Integration
+- Many services clone from upstream Git repositories
+- VERSION build argument controls git checkout
+- Default to latest stable version if VERSION not specified
+- Include VERSION file in container for reference
 
-## Working with Services
+### Configuration Management
+- Environment variables for runtime configuration
+- Default values provided in Dockerfile
+- Volume mounts for persistent data where needed
+- Port exposure documented in README files
 
-### Adding New Services
+## Workflow Parameters
 
-1. Create a new directory under `./Docker/[service-name]`
-2. Add a Dockerfile following the repository's conventions
-3. Add a README.md with deployment instructions
-4. Update the main README.md to include the new service
-5. Create a dispatch workflow if needed
+The main release workflow accepts these parameters:
+- `build_context`: Path to Docker build directory
+- `docker_tags`: Comma-separated list of tags (default: latest)
+- `docker_file_name`: Dockerfile name (default: Dockerfile)
+- `build_platforms`: Target platforms (default: linux/amd64)
+- `docker_image_name`: Override image name (default: directory name)
+- `build_args`: Additional build arguments
 
-### Updating Existing Services
+## Adding New Services
 
-1. Modify the Dockerfile or related files in the service directory
-2. Test locally using docker-compose if available
-3. Update README.md if necessary
-4. The automated workflows will handle building and publishing
+1. Create directory: `./Docker/[service-name]/`
+2. Add Dockerfile following project patterns
+3. Add comprehensive README.md with usage examples
+4. Test locally with docker-compose if needed
+5. Update main README.md service list
+6. Trigger release workflow for testing
 
-## Key Files and Directories
+## Multi-Registry Publishing
 
-- `./Docker/`: Contains all service directories
-- `.github/workflows/`: CI/CD workflows
-- `README.md`: Main repository documentation with service list and deployment examples
-
-## Build Args and Environment Variables
-
-The build system automatically injects these build args:
-- `BUILD_DATE`: Build timestamp
-- `VCS_REF`: Git commit SHA
-- `VERSION`: Image version (inferred from tag when not "latest")
-
-Additional build args can be specified through workflow inputs.
-
-## Multi-Registry Support
-
-Images are automatically tagged and published to:
-- Docker Hub: `funnyzak/[service-name]:[tag]`
-- GitHub Container Registry: `ghcr.io/funnyzak/[service-name]:[tag]`
-- AliCloud Container Registry: `registry.cn-beijing.aliyuncs.com/funnyzak/[service-name]:[tag]`
+All images are automatically published to:
+- Docker Hub: `funnyzak/[service]:[tag]`
+- GitHub Container Registry: `ghcr.io/funnyzak/[service]:[tag]`
+- Aliyun Container Registry: `registry.cn-beijing.aliyuncs.com/funnyzak/[service]:[tag]`
