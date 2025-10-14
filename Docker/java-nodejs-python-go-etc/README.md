@@ -7,18 +7,27 @@
 
 A comprehensive development environment container that includes Java, Node.js, Python, Go, and essential development tools. This container is designed for CI/CD pipelines, development workflows, and deployment automation, providing a complete toolkit for modern software development.
 
-The image is available for multiple architectures, including `linux/amd64`, `linux/arm64`.
+The image is available for linux/amd64 architecture.
+
+## Pull
+
+```bash
+docker pull funnyzak/java-nodejs-python-go-etc:latest
+# GHCR
+docker pull ghcr.io/funnyzak/java-nodejs-python-go-etc:latest
+# Aliyun
+docker pull registry.cn-beijing.aliyuncs.com/funnyzak/java-nodejs-python-go-etc:latest
+```
 
 ## Features
 
 - **Multiple Language Support**: Java 8, Node.js with npm/yarn/pnpm, Python 3 with pip, Go 1.23.2
 - **Package Managers**: Maven for Java, npm/yarn/pnpm for Node.js, pip for Python, Go modules
-- **Development Tools**: Git, Vim, Curl, Wget, Tree, Rsync, Rclone
-- **Cloud Storage Tools**: Minio Client, AliCloud OSSutil
+- **Development Tools**: Git, Vim, Curl, Wget, Rsync, Rclone
+- **Cloud Storage Tools**: AliCloud OSSutil
 - **Webhook Support**: Go Webhook for automated deployments
-- **Notification System**: Apprise for multi-platform notifications
+- **Notification System**: Apprise and Pushoo-CLI for multi-platform notifications
 - **Compression Tools**: Zip, Unzip, Gzip, Tar for archive management
-- **Font Support**: Microsoft Core Fonts for document processing
 - **Security**: SSL certificates and GnuPG for secure operations
 
 ## Included Software
@@ -30,7 +39,7 @@ The image is available for multiple architectures, including `linux/amd64`, `lin
   - Environment: `JAVA_HOME`, `JRE_HOME`, `CLASSPATH`
 
 - **Node.js** (latest from Debian repositories)
-  - Package managers: npm, yarn, pnpm (globally installed)
+  - Package managers: npm, yarn, pnpm, pushoo-cli (globally installed)
 
 - **Python 3** (from Debian repositories)
   - Includes: python3-venv, python3-pip
@@ -51,16 +60,12 @@ The image is available for multiple architectures, including `linux/amd64`, `lin
 - **Version Control**: Git
 - **Text Editors**: Vim
 - **Network Tools**: Curl, Wget
-- **File Management**: Tree, Rsync, Rclone
+- **File Management**: Rsync, Rclone
 - **Archive Tools**: Zip, Unzip, Gzip, Tar
 - **Process Management**: procps (includes ps, top)
 - **SSL/TLS**: ca-certificates, OpenSSL
 
 ### Cloud & Storage Tools
-
-- **Minio Client** (`mc`)
-  - Location: `/opt/minio-binaries/mc`
-  - Global symlink: `/usr/local/bin/mc`
 
 - **AliCloud OSSutil** (v2.0.3-beta)
   - Location: `/opt/ossutil`
@@ -76,13 +81,16 @@ The image is available for multiple architectures, including `linux/amd64`, `lin
   - Multi-platform notification system
   - Supports 80+ notification services
 
+- **Pushoo-CLI**
+  - Universal push notification CLI tool
+  - Supports multiple platforms (DingTalk, Lark, WeChat, etc.)
+
 ### System Components
 
 - **Base OS**: Debian stable (slim version)
 - **Package Management**: apt with custom sources
 - **Timezone**: Asia/Shanghai (configurable)
 - **Locale**: C.UTF-8
-- **Fonts**: Microsoft Core Fonts (ttf-mscorefonts-installer)
 
 ## Environment Variables
 
@@ -323,19 +331,6 @@ GOOS=linux GOARCH=amd64 go build -o app-linux-amd64 .
 GOOS=windows GOARCH=amd64 go build -o app-windows-amd64.exe .
 ```
 
-### Minio Client
-
-```bash
-# List buckets
-mc ls s3
-
-# Sync files
-mc mirror ./local-files s3/my-bucket/
-
-# Download files
-mc cp s3/my-bucket/file.txt ./local-file.txt
-```
-
 ### OSSutil
 
 ```bash
@@ -363,6 +358,19 @@ apprise -c config.ini --body="Build completed successfully"
 
 # Test notification service
 apprise -t "Test" -b "Test message" "discord://webhook_id/webhook_token"
+```
+
+### Pushoo-CLI Notifications
+
+```bash
+# Send DingTalk notification
+pushoo -p dingtalk -t "webhook_token" -c "Build completed successfully"
+
+# Send Lark notification
+pushoo -p lark -t "webhook_token" -c "Deployment finished"
+
+# Send with title and content
+pushoo -p wecom -t "webhook_key" --title "Alert" -c "Server status check"
 ```
 
 ## Use Cases
@@ -408,7 +416,6 @@ apprise -t "Test" -b "Test message" "discord://webhook_id/webhook_token"
 
 - Container runs as root by default (standard for build environments)
 - Includes SSL certificates for secure communications
-- Microsoft Core Fonts may have licensing considerations
 - Regular security updates through Debian stable packages
 
 ## Troubleshooting
@@ -457,6 +464,7 @@ The container is regularly updated with:
 - [Python Official Documentation](https://docs.python.org/3/)
 - [Go Official Documentation](https://golang.org/doc/)
 - [Maven Official Documentation](https://maven.apache.org/guides/)
-- [Minio Client Documentation](https://docs.min.io/docs/minio-client-complete-guide.html)
+- [AliCloud OSSutil Documentation](https://help.aliyun.com/document_detail/120075.html)
 - [Apprise Notification Documentation](https://github.com/caronc/apprise)
+- [Pushoo-CLI Documentation](https://github.com/itering/pushoo-cli)
 - [Go Webhook Documentation](https://github.com/adnanh/webhook)

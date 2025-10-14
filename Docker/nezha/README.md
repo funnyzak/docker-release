@@ -11,8 +11,7 @@ A NeZha dashboard docker image.
 
 Build with the  `linux/arm64`, `linux/amd64` architectures.
 
-
-### Pull
+## Pull
 
 ```bash
 docker pull funnyzak/nezha-dashboard:latest
@@ -23,9 +22,9 @@ docker pull registry.cn-beijing.aliyuncs.com/funnyzak/nezha-dashboard:latest
 ```
 
 
-### Usage
+## Usage
 
-#### Run NeZha Dashboard with Docker
+### Run NeZha Dashboard with Docker
 
 ```bash
 docker run -d \

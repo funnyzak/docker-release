@@ -7,7 +7,7 @@
 
 Git Job is a professional webhook-based automation tool that triggers source code pulls and executes custom commands when receiving Git webhook events. Built on [funnyzak/java-nodejs-python-go-etc-docker](https://github.com/funnyzak/docker-release/tree/main/Docker/java-nodejs-python-go-etc), it provides a complete CI/CD automation solution with build capabilities, notifications, and multi-platform support.
 
-The image is available for multiple architectures, including `linux/amd64`, `linux/arm64`, and `linux/arm/v7`.
+The image is available for multiple architectures, including `linux/amd64`.
 
 ## Quick Start
 
@@ -357,39 +357,3 @@ Enable verbose logging for troubleshooting:
 environment:
   - VERBOSE=true  # Enable detailed debug output
 ```
-
-## Migration from Legacy Versions
-
-If you're upgrading from version 1.1.0 or earlier, note the following changes:
-
-### Breaking Changes
-
-- **Configuration Structure**: Environment variables have been reorganized
-- **Webhook Path**: Standardized to `/hooks/git-webhook`
-- **Build Pipeline**: Enhanced with more granular control
-- **Notifications**: Moved to Pushoo-based system
-
-### Migration Steps
-
-1. Update your Docker image to the latest version
-2. Review and update environment variable names
-3. Test webhook configuration with the new endpoint
-4. Verify build pipeline configuration
-
-For legacy compatibility, continue using tag `1.1.0`:
-
-```bash
-docker pull funnyzak/git-job:1.1.0
-```
-
-## Reference and Resources
-
-- **Git Job Repository**: [github.com/funnyzak/git-job](https://github.com/funnyzak/git-job)
-- **Base Image**: [java-nodejs-python-go-etc-docker](https://github.com/funnyzak/java-nodejs-python-go-etc-docker)
-- **Pushoo Notifications**: [pushoo-cli](https://github.com/funnyzak/pushoo-cli)
-- **Docker Hub**: [funnyzak/git-job](https://hub.docker.com/r/funnyzak/git-job)
-- **GitHub Container Registry**: [ghcr.io/funnyzak/git-job](https://github.com/funnyzak/git-job/pkgs/container/git-job)
-
-## License
-
-This project is licensed under the MIT License - see the repository for details.

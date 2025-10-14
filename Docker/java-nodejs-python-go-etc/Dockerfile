@@ -2,13 +2,12 @@ FROM debian:stable-20250929-slim as base
 
 ARG BUILD_DATE
 ARG VCS_REF
-ARG VERSION
+ARG VERSION 2.0.1
 
 ARG GO_VERSION=1.23.2
 
 ENV TZ=Asia/Shanghai
 ENV LANG=C.UTF-8
-
 
 LABEL org.label-schema.name="java-nodejs-python-go-etc" \
     org.label-schema.description="java-nodejs-python-go-etc" \
@@ -22,10 +21,8 @@ COPY repo/sources.list /etc/apt/sources.list
 
 # Install need modules
 RUN apt-get update && \
-    # gyp compilation
-    apt-get install -y g++ gcc make && \
     # base modules
-    apt-get install -y gnupg2 openssl tree bash git vim curl wget && \
+    apt-get install -y gnupg2 openssl bash git vim curl wget && \
     # clean
     rm -rf /var/lib/apt/lists/*
 
@@ -35,8 +32,6 @@ RUN apt-get update && \
     # Install modules
     apt-get install -y rsync rclone && \
     apt-get install -y zip unzip gzip tar tzdata && \
-    # ms fonts
-    apt-get install -y ttf-mscorefonts-installer && \
     # cert
     apt-get install -y ca-certificates && \
     # command ps
@@ -80,11 +75,6 @@ RUN curl -Lo /tmp/ossutil.zip https://gosspublic.alicdn.com/ossutil/v2-beta/2.0.
     chmod 755 /opt/ossutil && \
     ln -s /opt/ossutil /usr/local/bin && \
     rm -f /tmp/ossutil.zip
-
-# Minio Client
-RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc --create-dirs -o /opt/minio-binaries/mc && \
-    chmod +x /opt/minio-binaries/mc && \
-    ln -s /opt/minio-binaries/mc /usr/local/bin
 
 # Java 8 配置
 ENV JAVA_VERSION=jdk8u432-b06
