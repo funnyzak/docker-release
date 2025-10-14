@@ -65,7 +65,7 @@ jobs:
     secrets: inherit
 
   git_job_release:
-
+    if: ${{ github.event.inputs.choice_service == 'git-job' }}
     uses: ./.github/workflows/release.yml
     with:
       build_context: './Docker/git-job'
@@ -153,7 +153,7 @@ jobs:
     secrets: inherit
 
   java_nodejs_python_go_etc_release:
-
+    if: ${{ github.event.inputs.choice_service == 'java-nodejs-python-go-etc' }}
     uses: ./.github/workflows/release.yml
     with:
       build_context: './Docker/java-nodejs-python-go-etc'
