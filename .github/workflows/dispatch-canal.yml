@@ -38,8 +38,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tag }}
       build_args: CANAL_NAME=adapter,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   canal_admin_release:
@@ -51,13 +49,18 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tag }}
       build_args: CANAL_NAME=admin,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   canal_deployer_release:
     if: contains('${{ github.event.inputs.build_components }}', 'deployer')
     uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/canal/canal-adapter'
+      docker_image_name: canal-deployer
+      docker_tags: ${{ github.event.inputs.docker_tag }}
+      build_args: CANAL_NAME=deployer,VERSION=${{ github.event.inputs.canal_version }}
+      build_platforms: ${{ github.event.inputs.build_platforms }}
+b/workflows/release.yml
     with:
       build_context: './Docker/canal/canal-adapter'
       docker_image_name: canal-deployer

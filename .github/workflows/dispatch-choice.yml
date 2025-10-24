@@ -62,8 +62,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   git_job_release:
@@ -75,8 +73,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   nezha_dashboard_release:
@@ -88,8 +84,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
   
   vcards_release:
@@ -101,8 +95,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
     
   env_mock_data_release:
@@ -114,8 +106,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   certimate_release:
@@ -127,8 +117,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm64/v8' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   git_sync_release:
@@ -140,8 +128,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   ffmpeg_service_release:
@@ -153,8 +139,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   openjdk_release:
@@ -166,8 +150,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   java_nodejs_python_go_etc_release:
@@ -180,8 +162,6 @@ jobs:
       docker_file_name: ${{ github.event.inputs.docker_file_name || 'Dockerfile' }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   mysql_dump_release:
@@ -193,8 +173,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   cron_release:
@@ -206,8 +184,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/386,linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/riscv64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
     
   one_api_release:
@@ -219,8 +195,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   snell_server_release:
@@ -232,8 +206,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/386' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   nginx_release:
@@ -245,8 +217,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/arm64,linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit  
 
   abracadabra_web_release:
@@ -258,8 +228,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   watermark_release:
@@ -271,8 +239,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   libreoffice_server_release:
@@ -284,8 +250,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   y_webrtc_signaling_release:
@@ -297,8 +261,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   request_hub_release:
@@ -310,8 +272,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/s390x' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
     
   hello_release:
@@ -323,8 +283,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/386,linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   weread_bot_release:
@@ -336,8 +294,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   ai_goofish_monitor_release:
@@ -349,6 +305,4 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
-      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
-      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
