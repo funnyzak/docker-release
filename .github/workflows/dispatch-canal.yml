@@ -38,6 +38,8 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tag }}
       build_args: CANAL_NAME=adapter,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
+      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
+      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   canal_admin_release:
@@ -49,6 +51,8 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tag }}
       build_args: CANAL_NAME=admin,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
+      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
+      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
 
   canal_deployer_release:
@@ -60,4 +64,6 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tag }}
       build_args: CANAL_NAME=deployer,VERSION=${{ github.event.inputs.canal_version }}
       build_platforms: ${{ github.event.inputs.build_platforms }}
+      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
+      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit

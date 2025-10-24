@@ -118,4 +118,6 @@ jobs:
       docker_tags: ${{ needs.check_offical_release.outputs.docker_tags }}
       build_args: VERSION=${{ needs.check_offical_release.outputs.new_release_version }},${{ github.event.inputs.build_args || inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || inputs.build_platforms || 'linux/arm64' }}
+      docker_hub_username: ${{ secrets.DEFAULT_DOCKER_HUB_USERNAME || github.actor }}
+      aliyuncs_username: ${{ secrets.DEFAULT_ALIYUNCS_USERNAME || github.actor }}
     secrets: inherit
