@@ -92,6 +92,8 @@ The main release workflow accepts these parameters:
 - `docker_file_name`: Dockerfile name (default: Dockerfile)
 - `build_platforms`: Target platforms (default: linux/amd64)
 - `docker_image_name`: Override image name (default: directory name)
+- `docker_hub_username`: Docker Hub username (default: github.actor)
+- `aliyuncs_username`: Aliyun Container Registry username (default: github.actor)
 - `build_args`: Additional build arguments
 
 ## Adding New Services
@@ -106,6 +108,21 @@ The main release workflow accepts these parameters:
 ## Multi-Registry Publishing
 
 All images are automatically published to:
-- Docker Hub: `funnyzak/[service]:[tag]`
-- GitHub Container Registry: `ghcr.io/funnyzak/[service]:[tag]`
-- Aliyun Container Registry: `registry.cn-beijing.aliyuncs.com/funnyzak/[service]:[tag]`
+- Docker Hub: `[docker_hub_username]/[service]:[tag]` (default: `github.actor/[service]:[tag]`)
+- GitHub Container Registry: `ghcr.io/[github.actor]/[service]:[tag]`
+- Aliyun Container Registry: `registry.cn-beijing.aliyuncs.com/[aliyuncs_username]/[service]:[tag]` (default: `github.actor/[service]:[tag]`)
+
+### Username Configuration
+
+- **Docker Hub**: Uses `docker_hub_username` parameter (defaults to `github.actor`)
+- **GitHub Container Registry**: Always uses `github.actor` (cannot be customized)
+- **Aliyun Container Registry**: Uses `aliyuncs_username` parameter (defaults to `github.actor`)
+
+Example usage:
+```bash
+# Use custom usernames for different registries
+gh workflow run release.yml \
+  --field build_context='./Docker/nginx' \
+  --field docker_hub_username='funnyzak' \
+  --field aliyuncs_username='wolfmaz'
+```
