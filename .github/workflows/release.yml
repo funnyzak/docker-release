@@ -138,12 +138,12 @@ jobs:
           fi
 
           # Set usernames for different registries
-          DOCKER_HUB_USERNAME="${{ github.event.inputs.docker_hub_username || inputs.docker_hub_username || secrets.DEFAULT_DOCKER_HUB_USERNAME }}"
+          DOCKER_HUB_USERNAME="${{ github.event.inputs.docker_hub_username || inputs.docker_hub_username }}"
           if [ -z "$DOCKER_HUB_USERNAME" ]; then
             DOCKER_HUB_USERNAME="${{ github.actor }}"
           fi
 
-          ALIYUNCS_USERNAME="${{ github.event.inputs.aliyuncs_username || inputs.aliyuncs_username || secrets.DEFAULT_ALIYUNCS_USERNAME }}"
+          ALIYUNCS_USERNAME="${{ github.event.inputs.aliyuncs_username || inputs.aliyuncs_username }}"
           if [ -z "$ALIYUNCS_USERNAME" ]; then
             ALIYUNCS_USERNAME="${{ github.actor }}"
           fi
