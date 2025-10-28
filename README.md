@@ -31,6 +31,7 @@
 - [**Certimate**](https://github.com/funnyzak/docker-release/tree/main/Docker/certimate): SSL certificate management service
 - [**Watermark**](https://github.com/funnyzak/docker-release/tree/main/Docker/watermark): Image watermarking service
 - [**Environment Mock Data**](https://github.com/funnyzak/docker-release/tree/main/Docker/other): Configurable mock data generation service
+- [**brt-data-forwarder**](https://github.com/funnyzak/docker-release/tree/main/Docker/brt-data-forwarder): A brt data forward service.
 
 ### 🛠️ Development Tools & Utilities
 
@@ -92,6 +93,8 @@
 | [Certimate](https://github.com/funnyzak/docker-release/tree/main/Docker/certimate/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/certimate?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/certimate) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/certimate)](https://hub.docker.com/r/funnyzak/certimate) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/certimate.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/certimate) |
 | [Watermark](https://github.com/funnyzak/docker-release/tree/main/Docker/watermark/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/watermark?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/watermark) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/watermark)](https://hub.docker.com/r/funnyzak/watermark) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/watermark.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/watermark) |
 | [vCards](https://github.com/funnyzak/docker-release/tree/main/Docker/vcards/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/vcards?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/vcards) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/vcards)](https://hub.docker.com/r/funnyzak/vcards) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/vcards.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/vcards) |
+| [brt-data-forwarder](https://github.com/funnyzak/docker-release/tree/main/Docker/brt-data-forwarder/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/brt-data-forwarder?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/brt-data-forwarder) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/brt-data-forwarder)](https://hub.docker.com/r/funnyzak/brt-data-forwarder) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/brt-data-forwarder.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/brt-data-forwarder) |
+
 
 </details>
 
