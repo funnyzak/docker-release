@@ -18,6 +18,7 @@ on:
           - weread-bot
           - ai-goofish-monitor
           - cron
+          - brt-data-forwarder
           - vcards
           - certimate
           - mysql-dump
@@ -81,6 +82,17 @@ jobs:
     with:
       build_context: './Docker/nezha/nezha-dashboard'
       docker_image_name: nezha-dashboard
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+  
+  brt_data_forwarder_release:
+    if: ${{ github.event.inputs.choice_service == 'brt-data-forwarder' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/brt-data-forwarder'
+      docker_image_name: brt-data-forwarder
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
