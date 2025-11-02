@@ -15,7 +15,7 @@ LABEL org.label-schema.name="ffmpeg-service" \
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y --no-install-recommends \
         ffmpeg \
-        libmagic1 \
+        libmagic1t64 \
         wget \
         git \
         curl && \
