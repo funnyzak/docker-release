@@ -12,7 +12,7 @@ LABEL org.label-schema.name="ffmpeg-service" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y --no-install-recommends \
         ffmpeg \
         libmagic1 \
