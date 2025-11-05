@@ -10,6 +10,7 @@ on:
         options:
           - nginx
           - openjdk
+          - reqtap
           - java-nodejs-python-go-etc
           - git-job
           - nezha-dashboard
@@ -162,6 +163,18 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+
+  reqtap_release:
+    if: ${{ github.event.inputs.choice_service == 'reqtap' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/reqtap'
+      docker_image_name: reqtap
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+      docker_file_name: ${{ github.event.inputs.docker_file_name || 'Dockerfile' }}
     secrets: inherit
 
   java_nodejs_python_go_etc_release:
