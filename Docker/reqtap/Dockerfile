@@ -3,6 +3,8 @@ FROM alpine:3.19 AS builder
 
 # Set build arguments
 ARG VERSION=latest
+ARG BUILD_DATE
+ARG VCS_REF
 ARG TARGETPLATFORM
 ARG TARGETARCH
 
@@ -13,36 +15,33 @@ RUN apk add --no-cache \
     gzip \
     ca-certificates
 
-# Determine architecture
-RUN case "${TARGETARCH}" in \
-    "amd64") ARCH="amd64" ;; \
-    "arm64") ARCH="arm64" ;; \
-    "arm") ARCH="armv7" ;; \
-    "s390x") ARCH="s390x" ;; \
-    "ppc64le") ARCH="ppc64le" ;; \
-    "386") ARCH="i386" ;; \
-    "riscv64") ARCH="riscv64" ;; \
-    "armv6") ARCH="armv6l" ;; \
-    "armv7") ARCH="armv7l" ;; \
-    *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
-    esac && echo "ARCH=${ARCH}" > /tmp/arch
-
-# Read architecture
-RUN source /tmp/arch
-
-# Download reqtap from GitHub releases
-RUN if [ "${VERSION}" = "latest" ]; then \
+# Determine architecture and download reqtap from GitHub releases
+RUN ARCH=$(case "${TARGETARCH}" in \
+        "amd64") echo "amd64" ;; \
+        "arm64") echo "arm64" ;; \
+        "arm") echo "arm" ;; \
+        "s390x") echo "s390x" ;; \
+        "ppc64le") echo "ppc64le" ;; \
+        "riscv64") echo "riscv64" ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
+    esac) && \
+    if [ "${VERSION}" = "latest" ]; then \
         VERSION=$(curl -s https://api.github.com/repos/funnyzak/reqtap/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'); \
     fi && \
-    ARCH=$(cat /tmp/arch | cut -d'=' -f2) && \
     echo "Downloading reqtap version: ${VERSION} for architecture: ${ARCH}" && \
-    curl -sL "https://github.com/funnyzak/reqtap/releases/download/${VERSION}/reqtap-linux-${ARCH}.tar.gz" -o /tmp/reqtap.tar.gz && \
+    curl -sfL "https://github.com/funnyzak/reqtap/releases/download/${VERSION}/reqtap-linux-${ARCH}.tar.gz" -o /tmp/reqtap.tar.gz && \
     cd /tmp && \
     tar -xzf reqtap.tar.gz && \
-    chmod +x /tmp/reqtap
+    chmod +x /tmp/reqtap && \
+    rm -f /tmp/reqtap.tar.gz
 
 # Runtime stage
 FROM alpine:3.19
+
+# Set build arguments
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
 
 # Set labels
 LABEL maintainer="funnyzak <funnyzak@163.com>" \
@@ -60,7 +59,6 @@ LABEL maintainer="funnyzak <funnyzak@163.com>" \
 RUN apk add --no-cache \
     ca-certificates \
     tzdata \
-    curl \
     && rm -rf /var/cache/apk/*
 
 # Create non-root user
@@ -74,8 +72,9 @@ RUN mkdir -p /etc/reqtap /var/log/reqtap /tmp/reqtap && \
 # Copy binary from builder stage
 COPY --from=builder /tmp/reqtap /usr/local/bin/reqtap
 
-# Set ownership
-RUN chown reqtap:reqtap /usr/local/bin/reqtap
+# Set ownership and permissions
+RUN chown reqtap:reqtap /usr/local/bin/reqtap && \
+    chmod +x /usr/local/bin/reqtap
 
 # Switch to non-root user
 USER reqtap
