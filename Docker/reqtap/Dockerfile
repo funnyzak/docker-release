@@ -36,7 +36,7 @@ RUN if [ "${VERSION}" = "latest" ]; then \
     fi && \
     ARCH=$(cat /tmp/arch | cut -d'=' -f2) && \
     echo "Downloading reqtap version: ${VERSION} for architecture: ${ARCH}" && \
-    curl -sL "https://github.com/funnyzak/reqtap/releases/download/${VERSION}/reqtap-${VERSION#v}-linux-${ARCH}.tar.gz" -o /tmp/reqtap.tar.gz && \
+    curl -sL "https://github.com/funnyzak/reqtap/releases/download/${VERSION}/reqtap-linux-${ARCH}.tar.gz" -o /tmp/reqtap.tar.gz && \
     cd /tmp && \
     tar -xzf reqtap.tar.gz && \
     chmod +x /tmp/reqtap
