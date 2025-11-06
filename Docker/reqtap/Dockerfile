@@ -36,7 +36,7 @@ RUN ARCH=$(case "${TARGETARCH}" in \
     rm -f /tmp/reqtap.tar.gz
 
 # Runtime stage
-FROM alpine:3.19
+FROM scratch
 
 # Set build arguments
 ARG BUILD_DATE
@@ -55,32 +55,11 @@ LABEL maintainer="funnyzak <funnyzak@163.com>" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.version="${VERSION}"
 
-# Install runtime dependencies
-RUN apk add --no-cache \
-    ca-certificates \
-    tzdata \
-    && rm -rf /var/cache/apk/*
-
-# Create non-root user
-RUN addgroup -g 1000 reqtap && \
-    adduser -D -s /bin/sh -u 1000 -G reqtap reqtap
-
-# Create directories
-RUN mkdir -p /etc/reqtap /var/log/reqtap /tmp/reqtap && \
-    chown -R reqtap:reqtap /etc/reqtap /var/log/reqtap /tmp/reqtap
+# Copy CA certificates from builder (needed for HTTPS requests)
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Copy binary from builder stage
-COPY --from=builder /tmp/reqtap /usr/local/bin/reqtap
-
-# Set ownership and permissions
-RUN chown reqtap:reqtap /usr/local/bin/reqtap && \
-    chmod +x /usr/local/bin/reqtap
-
-# Switch to non-root user
-USER reqtap
-
-# Set working directory
-WORKDIR /app
+COPY --from=builder /tmp/reqtap /reqtap
 
 # Default command
-CMD ["/usr/local/bin/reqtap"]
+ENTRYPOINT ["/reqtap"]
