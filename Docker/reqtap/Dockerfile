@@ -1,5 +1,5 @@
 # Build stage
-FROM alpine:3.19 AS builder
+FROM alpine:3.22 AS builder
 
 # Set build arguments
 ARG VERSION=latest
@@ -62,4 +62,4 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /tmp/reqtap /reqtap
 
 # Default command
-ENTRYPOINT ["/reqtap"]
+CMD ["/reqtap"]
