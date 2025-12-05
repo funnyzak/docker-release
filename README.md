@@ -151,23 +151,6 @@ All images are published to three registries for maximum accessibility:
 - **Docker Hub**: `docker pull funnyzak/[service]:latest`
 - **GitHub Container Registry**: `docker pull ghcr.io/funnyzak/[service]:latest`
 - **Aliyun Container Registry**: `docker pull registry.cn-beijing.aliyuncs.com/funnyzak/[service]:latest`
-
-## Contributing
-
-We welcome contributions! Please feel free to:
-
-- **Report Issues**: Found a bug or have a suggestion? [Open an issue](https://github.com/funnyzak/docker-release/issues)
-- **Submit Pull Requests**: Want to add a new service or improve existing ones?
-- **Request Services**: Need a specific service containerized?
-
-### Development Guidelines
-
-- Follow Docker best practices
-- Include comprehensive README documentation
-- Support multiple architectures
-- Use minimal, secure base images
-- Include proper health checks and labels
-
 ## License
 
 This project is licensed under the [MIT License](https://github.com/funnyzak/docker-release/blob/main/LICENSE).
