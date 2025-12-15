@@ -1,4 +1,4 @@
-FROM node:20-alpine3.19 AS front-builder
+FROM node:24-alpine AS front-builder
 
 WORKDIR /app
 
