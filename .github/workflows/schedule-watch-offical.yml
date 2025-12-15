@@ -124,7 +124,7 @@ jobs:
       image_name: certimate
       get_official_version_command: 'curl -s https://api.github.com/repos/certimate-go/certimate/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
-      build_platforms: 'linux/amd64,linux/arm64,linux/arm64/v8'
+      build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
 
   watch_watermark_release:
