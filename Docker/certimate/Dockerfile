@@ -1,5 +1,5 @@
 # Build stage
-FROM alpine:3.22 AS builder
+FROM alpine:3.22 AS server-builder
 
 # Set build arguments
 ARG VERSION=latest
@@ -29,13 +29,15 @@ RUN ARCH=$(case "${TARGETARCH}" in \
     [ -z "${VERSION}" ] && echo "VERSION is empty" && exit 1; \
     echo "Downloading certimate version: ${VERSION} for architecture: ${ARCH}" && \
     curl -sfL "https://github.com/certimate-go/certimate/releases/download/${VERSION}/certimate_${VERSION}_linux_${ARCH}.zip" -o /tmp/certimate.zip || (echo "Failed to download certimate ${VERSION} for ${ARCH}" && exit 1) && \
+    mkdir -p /app && \
     cd /tmp && \
     unzip -q certimate.zip || (echo "Failed to extract certimate.zip" && exit 1) && \
-    chmod +x /tmp/certimate && \
+    mv /tmp/certimate /app/certimate && \
+    chmod +x /app/certimate && \
     rm -f /tmp/certimate.zip
 
 # Runtime stage
-FROM scratch
+FROM alpine:latest
 
 # Set build arguments
 ARG BUILD_DATE
@@ -54,11 +56,9 @@ LABEL maintainer="funnyzak <funnyzak@163.com>" \
       org.label-schema.build-date="${BUILD_DATE}" \
       org.label-schema.version="${VERSION}"
 
-# Copy CA certificates from builder (needed for HTTPS requests)
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+WORKDIR /app
 
 # Copy binary from builder stage
-COPY --from=builder /tmp/certimate /certimate
+COPY --from=server-builder /app/certimate .
 
-# Default command
-CMD ["/certimate"]
+ENTRYPOINT ["./certimate", "serve", "--http", "0.0.0.0:8090"]
