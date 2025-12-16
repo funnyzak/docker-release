@@ -19,14 +19,14 @@ jobs:
       build_platforms: 'linux/arm64,linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8'
     secrets: inherit
 
-  # watch_snell_server_release:
-  #   uses: ./.github/workflows/check-offical-release.yml
-  #   with:
-  #     image_name: snell-server
-  #     get_official_version_command: 'curl -s https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell | grep -oP "snell-server-v\K[0-9]+\.[0-9]+\.[0-9]+(?=-linux)" | head -n 1'
-  #     build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7,linux/386'
-  #     is_latest_tag: true
-  #   secrets: inherit
+  watch_snell_server_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: snell-server
+      get_official_version_command: 'curl -s https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell | grep -oP "snell-server-v\K[0-9]+\.[0-9]+\.[0-9]+(?=-linux)" | head -n 1'
+      build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7,linux/386'
+      is_latest_tag: true
+    secrets: inherit
 
   watch_oneapi_release:
     uses: ./.github/workflows/check-offical-release.yml
