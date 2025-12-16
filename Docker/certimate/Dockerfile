@@ -22,12 +22,15 @@ RUN ARCH=$(case "${TARGETARCH}" in \
         *) echo "Unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
     esac) && \
     if [ "${VERSION}" = "latest" ]; then \
-        VERSION=$(curl -s https://api.github.com/repos/certimate-go/certimate/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'); \
+        VERSION=$(curl -s https://api.github.com/repos/certimate-go/certimate/releases/latest | grep '"tag_name":' | head -1 | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/') || exit 1; \
+        [ -z "${VERSION}" ] && echo "Failed to get latest version from GitHub API" && exit 1; \
+        echo "Resolved latest version to: ${VERSION}"; \
     fi && \
+    [ -z "${VERSION}" ] && echo "VERSION is empty" && exit 1; \
     echo "Downloading certimate version: ${VERSION} for architecture: ${ARCH}" && \
-    curl -sfL "https://github.com/certimate-go/certimate/releases/download/${VERSION}/certimate_${VERSION}_linux_${ARCH}.zip" -o /tmp/certimate.zip && \
+    curl -sfL "https://github.com/certimate-go/certimate/releases/download/${VERSION}/certimate_${VERSION}_linux_${ARCH}.zip" -o /tmp/certimate.zip || (echo "Failed to download certimate ${VERSION} for ${ARCH}" && exit 1) && \
     cd /tmp && \
-    unzip -q certimate.zip && \
+    unzip -q certimate.zip || (echo "Failed to extract certimate.zip" && exit 1) && \
     chmod +x /tmp/certimate && \
     rm -f /tmp/certimate.zip
 
