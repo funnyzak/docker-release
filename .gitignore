@@ -1,0 +1,11 @@
+/tmp
+/temp
+/test
+**/test
+**/tmp
+**/temp
+test.*
+logs/
+vcards-data
+
+__pycache__/
