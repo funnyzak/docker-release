@@ -32,6 +32,7 @@ on:
           - y-webrtc-signaling
           - watermark
           - request-hub
+          - MTranServer
           - hello
       docker_tags:
         description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
@@ -316,6 +317,17 @@ jobs:
     with:
       build_context: './Docker/weread-bot'
       docker_image_name: weread-bot
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+
+  MTranServer_release:
+    if: ${{ github.event.inputs.choice_service == 'MTranServer' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/MTranServer'
+      docker_image_name: MTranServer
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
