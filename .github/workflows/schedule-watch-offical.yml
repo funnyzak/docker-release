@@ -68,6 +68,16 @@ jobs:
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
 
+  watch_mtran_server_release:
+    uses: ./.github/workflows/check-offical-release.yml
+    with:
+      image_name: mtran-server
+      build_context: './Docker/mtran-server'
+      get_official_version_command: 'curl -s https://api.github.com/repos/xxnuo/MTranServer/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      is_latest_tag: true
+      build_platforms: 'linux/amd64,linux/arm64'
+    secrets: inherit
+    
   watch_reqtap_release:
     uses: ./.github/workflows/check-offical-release.yml
     with:
