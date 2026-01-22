@@ -1,4 +1,4 @@
-FROM debian:stable-20250929-slim as base
+FROM debian:stable-20260112-slim as base
 
 ARG BUILD_DATE
 ARG VCS_REF
