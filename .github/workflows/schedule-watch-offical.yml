@@ -68,7 +68,7 @@ jobs:
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
 
-  watch_mtran_server_release:
+  watch_mtranserver_release:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: mtranserver
