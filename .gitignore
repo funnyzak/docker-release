@@ -9,3 +9,5 @@ logs/
 vcards-data
 
 __pycache__/
+
+models/

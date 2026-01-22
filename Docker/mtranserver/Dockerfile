@@ -1,4 +1,4 @@
-FROM node:22 AS node-builder
+FROM node:22 AS source-builder
 
 ARG VERSION
 ARG BUILD_DATE
@@ -14,12 +14,22 @@ FROM oven/bun:1 AS builder
 
 WORKDIR /app
 
-COPY --from=node-builder /app/ /app/
+ARG VERSION
+ENV VERSION=${VERSION}
 
-RUN bun install --frozen-lockfile
-RUN cd ui && bun install --frozen-lockfile
+COPY --from=source-builder /app/ /app/
 
-RUN bun run build:docker
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
+
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    cd ui && bun install --frozen-lockfile
+
+RUN if [ -z "$VERSION" ]; then VERSION=$(bun -p "require('./package.json').version"); fi; \
+    bun run bump "$VERSION"
+
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun run build:node
 
 FROM node:22-alpine
 
@@ -38,7 +48,6 @@ LABEL org.label-schema.name="MTranServer" \
 WORKDIR /app
 
 COPY --from=builder /app/dist ./
-COPY --from=builder /app/node_modules ./node_modules
 
 ENV MT_HOST=0.0.0.0 \
     MT_PORT=8989 \
