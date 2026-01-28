@@ -22,6 +22,7 @@ on:
           - brt-data-forwarder
           - vcards
           - certimate
+          - libreoffice-rest-api
           - mysql-dump
           - dify2openai
           - snell-server
@@ -131,6 +132,17 @@ jobs:
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7' }}
+    secrets: inherit
+
+  libreoffice_rest_api_release:
+    if: ${{ github.event.inputs.choice_service == 'libreoffice-rest-api' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/libreoffice-rest-api'
+      docker_image_name: libreoffice-rest-api
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
     secrets: inherit
 
   git_sync_release:
