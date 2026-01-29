@@ -11,7 +11,7 @@ ARG TARGETPLATFORM
 USER root
 
 RUN set -e; \
-    apk add --no-cache ca-certificates curl jq tar; \
+    apk add --no-cache ca-certificates curl jq tar gcompat libstdc++ libgcc; \
     if ! apk add --no-cache font-noto-cjk; then \
       apk add --no-cache wqy-zenhei; \
     fi; \
