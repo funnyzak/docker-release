@@ -1,0 +1,7 @@
+certifi==2019.6.16
+chardet==3.0.4
+charset-normalizer==3.4.0
+idna==2.8
+requests==2.32.3
+schedule==0.6.0
+urllib3==2.2.3
