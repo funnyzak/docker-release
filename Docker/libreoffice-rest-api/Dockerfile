@@ -15,7 +15,7 @@ RUN set -e; \
     if ! apk add --no-cache font-noto-cjk; then \
       apk add --no-cache wqy-zenhei; \
     fi; \
-    mkdir -p /app /app/storage /app/logs; \
+    mkdir -p /app /app/storage /app/logs /app/scripts; \
     os="${TARGETOS:-linux}"; \
     arch="${TARGETARCH:-}"; \
     if [ -z "$arch" ]; then \
@@ -67,6 +67,12 @@ RUN set -e; \
     fi; \
     curl -fsSL -o /app/config.yaml.example "$config_example_url"; \
     cp /app/config.yaml.example /app/config.yaml; \
+    uno_convert_url=$(echo "$release_obj" | jq -r '.assets[] | select(.name == "uno_convert.py") | .browser_download_url' | head -n 1); \
+    if [ -z "$uno_convert_url" ] || [ "$uno_convert_url" = "null" ]; then \
+      uno_convert_url="https://github.com/${GITHUB_REPO}/releases/download/${tag_name}/uno_convert.py"; \
+    fi; \
+    curl -fsSL -o /app/scripts/uno_convert.py "$uno_convert_url"; \
+    chmod +x /app/scripts/uno_convert.py; \
     if id -u abc >/dev/null 2>&1; then \
       chown -R abc:abc /app; \
     fi
