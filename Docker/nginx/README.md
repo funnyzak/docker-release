@@ -22,7 +22,6 @@ Already installed modules:
 - [headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module)
 - ...
 
-
 More modules can be found in [Dockerfile](https://github.com/funnyzak/docker-release/blob/main/Docker/nginx/Dockerfile).
 
 ## Pull
@@ -58,7 +57,56 @@ docker run -d -t -i --name nginx3 --restart on-failure \
   -v ./nginx/html:/etc/nginx/html \
   -p 1690:80 \
   funnyzak/nginx
+
+# Run nginx container with environment-variable-driven default server config
+docker run -d -t -i --name nginx4 --restart on-failure \
+  -e NGINX_SERVER_NAME=example.com \
+  -e NGINX_LISTEN_PORT=8080 \
+  -p 18080:8080 \
+  funnyzak/nginx
 ```
+
+### Default Template Variables
+
+On first start, if you do not mount your own `conf.d`, the image renders `/etc/nginx/templates/default.conf.template` into `/etc/nginx/conf.d/default.conf`. The entrypoint checks `/etc/nginx/templates/default.conf.template` first and then falls back to `/data/nginx/templates/default.conf.template`. The built-in static `default.conf` is kept under `/data/nginx/conf.d` as a fallback when template rendering is unavailable.
+
+The built-in template has these defaults:
+
+- `NGINX_LISTEN_PORT`: listen port, default `80`
+- `NGINX_SERVER_NAME`: server name, default `_`
+- `NGINX_WEB_ROOT`: root path used by `location /`, default `html`
+- `NGINX_INDEX_FILES`: index files, default `index.html index.htm`
+- `NGINX_SERVER_BUILD`: value used in `Server-Build` response header, default `build via @funnyzak`
+
+For custom mounted templates, the entrypoint will automatically detect and render every placeholder written as `${ENV_NAME}`. This means you can define any container environment variable and reference it directly in your own `default.conf.template` without changing the image script.
+
+Example:
+
+```bash
+docker run -d --name nginx-template \
+  -e APP_DOMAIN=demo.local \
+  -e APP_UPSTREAM=http://host.docker.internal:3000 \
+  -v ./default.conf.template:/etc/nginx/templates/default.conf.template \
+  -p 8080:80 \
+  funnyzak/nginx
+```
+
+```nginx
+server {
+    listen 80;
+    server_name ${APP_DOMAIN};
+
+    location / {
+        proxy_pass ${APP_UPSTREAM};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+Use `${ENV_NAME}` for environment placeholders. Nginx runtime variables like `$host` and `$remote_addr` can stay unchanged.
+
+If you mount your own non-empty `/etc/nginx/conf.d`, the container will not overwrite it with the template. If you mount your own `default.conf.template`, it will be rendered only when `/etc/nginx/conf.d` is empty.
 
 ### Docker Compose
 
@@ -90,7 +138,7 @@ services:
 ```bash
 docker build \
 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
---build-arg VERSION="1.27.3"
+--build-arg VERSION="1.27.3" \
 -t funnyzak/nginx:1.27.3 .
 ```
 

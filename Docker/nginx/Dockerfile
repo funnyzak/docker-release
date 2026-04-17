@@ -10,9 +10,9 @@ RUN apk --no-cache add wget openssl-dev pcre-dev zlib-dev build-base \
     NGINX_VERSION=nginx-${VERSION:-$LATEST_VERSION} && \
     echo "Latest version is $NGINX_VERSION" && \
     mkdir -p /tmp && \
-    wget http://nginx.org/download/${NGINX_VERSION}.tar.gz -O /tmp/${NGINX_VERSION}.tar.gz && \
+    wget https://nginx.org/download/${NGINX_VERSION}.tar.gz -O /tmp/${NGINX_VERSION}.tar.gz && \
     wget https://github.com/openresty/headers-more-nginx-module/archive/v${HEADERS_MORE_NGINX_MODULE}.tar.gz -O /tmp/headers-more-nginx-module.tar.gz && \
-    wget http://github.com/aperezdc/ngx-fancyindex/archive/v${FANCY_INDEX}.tar.gz -O /tmp/ngx-fancyindex.tar.gz && \
+    wget https://github.com/aperezdc/ngx-fancyindex/archive/v${FANCY_INDEX}.tar.gz -O /tmp/ngx-fancyindex.tar.gz && \
     cd /tmp && \
     tar -zxvf ${NGINX_VERSION}.tar.gz && \
     tar -zxvf headers-more-nginx-module.tar.gz && \
@@ -88,7 +88,7 @@ LABEL org.label-schema.name="nginx" \
       org.label-schema.vendor="Leon<silenceace@gmail.com>" \
       org.label-schema.url="https://github.com/funnyzak/docker-release"
 
-RUN apk --no-cache add pcre zlib gd libxslt libxml2 geoip perl tzdata && \
+RUN apk --no-cache add pcre zlib gd libxslt libxml2 geoip perl tzdata gettext && \
     addgroup -S nginx && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx && \
     mkdir -p /var/log/nginx /var/cache/nginx /var/run/nginx && \
     chown -R nginx:nginx /var/log/nginx /var/cache/nginx /var/run/nginx
@@ -99,11 +99,15 @@ COPY --from=builder /usr/lib64/nginx /usr/lib64/nginx
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/conf.d /etc/nginx/conf.d
+COPY conf/templates /etc/nginx/templates
 
-RUN mkdir -p /data/nginx/html /data/nginx/conf.d && \
+RUN mkdir -p /data/nginx/html /data/nginx/conf.d /data/nginx/templates && \
     cp -r /etc/nginx/html /data/nginx && \
     cp -r /etc/nginx/conf.d /data/nginx && \
-    cp /etc/nginx/nginx.conf /data/nginx/nginx.conf
+    cp -r /etc/nginx/templates /data/nginx && \
+    cp /etc/nginx/nginx.conf /data/nginx/nginx.conf && \
+    rm -rf /etc/nginx/conf.d/* && \
+    chown -R nginx:nginx /etc/nginx /data/nginx
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
