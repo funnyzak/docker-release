@@ -1,4 +1,4 @@
-FROM node:alpine3.22 AS builder
+FROM node:22-alpine3.22 AS builder
 
 ARG VERSION
 
@@ -6,15 +6,19 @@ WORKDIR /app
 
 RUN apk add --no-cache git
 
-WORKDIR /app
+RUN git init . \
+    && git remote add origin https://github.com/metowolf/vCards.git \
+    && if [ -n "${VERSION}" ]; then \
+      git fetch --depth 1 origin "${VERSION}"; \
+    else \
+      git fetch --depth 1 origin master; \
+    fi \
+    && git checkout --detach FETCH_HEAD \
+    && echo "${VERSION:-$(git rev-parse HEAD)}" > VERSION
 
-RUN git clone https://github.com/metowolf/vCards . \
-    && git checkout ${VERSION} || git checkout $(git remote show origin | awk '/HEAD branch/ {print $NF}') \
-    && echo ${VERSION:-$(git rev-parse HEAD)} > VERSION
+RUN npm ci && npm run radicale
 
-RUN yarn && yarn radicale
-
-FROM alpine:edge
+FROM alpine:3.22
 
 ARG VERSION
 ARG BUILD_DATE
@@ -30,6 +34,7 @@ LABEL org.label-schema.name="MetoWolf-vCards" \
 
 RUN apk add --no-cache \
     radicale \
+    py3-six \
   && rm -rf /var/cache/apk/* \
   \
   && { \
