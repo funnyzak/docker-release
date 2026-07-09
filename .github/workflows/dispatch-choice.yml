@@ -254,7 +254,7 @@ jobs:
       docker_image_name: nginx
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
-      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/arm64,linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8' }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/arm64,linux/386,linux/amd64,linux/arm/v7' }}
     secrets: inherit  
 
   abracadabra_web_release:
