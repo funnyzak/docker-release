@@ -1,0 +1,52 @@
+# BRT Cloud Data Forwarder 配置文件示例
+# 复制此文件为 config.yaml 并根据需要修改配置
+
+# 服务器配置
+server:
+  host: "0.0.0.0"  # 监听地址
+  port: 8080       # 监听端口
+  debug: false     # 调试模式
+
+# 数据接收配置
+receiver:
+  path: "/receive_brt_data"  # 接收接口路径
+  auth:
+    enabled: true                    # 是否启用认证
+    query_param: "auth_token"        # URL参数名
+    header: "Authorization"          # HTTP头名
+    valid_tokens:                    # 有效token列表
+      - "your-secret-token-123"      # 请修改为实际的token
+      - "another-token-456"
+
+# 转发配置
+forwarder:
+  targets:
+    - url: "http://192.168.0.120/post_data"  # 转发目标1
+      timeout: 5
+    - url: "http://192.168.0.121/api/data?abc=123"  # 转发目标2
+      timeout: 5
+  retry:
+    enabled: true
+    max_attempts: 1  # 失败后重试次数
+
+# 缓存配置
+cache:
+  file_path: "./data/cache.json"  # 缓存文件路径
+  special_metrics:  # 需要缓存处理的特殊指标
+    - co2
+    - hcho
+    - lux
+    - uva_class
+    - uva_raw
+    - voc
+  invalid_patterns:  # 无效值模式（大小写不敏感）
+    - "FFFF"
+    - "FFFE"
+
+# 日志配置
+logging:
+  level: "INFO"  # 日志级别: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file_path: "./logs/forwarder.log"  # 日志文件路径
+  max_bytes: 10485760  # 单文件最大大小（10MB）
+  backup_count: 7      # 备份文件数量
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

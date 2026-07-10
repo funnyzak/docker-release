@@ -1,0 +1,37 @@
+server {
+    listen       ${NGINX_LISTEN_PORT};
+    server_name  ${NGINX_SERVER_NAME};
+
+    more_set_headers 'Server-Build: ${NGINX_SERVER_BUILD}';
+
+    error_page 403 @jump_to_403;
+    location @jump_to_403 {
+        default_type text/html;
+        return 403 '<html><title>403 Forbidden</title><body><h1>403 Forbidden</h1></body></html>';
+    }
+
+    error_page 401 @jump_to_401;
+    location @jump_to_401 {
+        default_type text/html;
+        return 401 '<html><title>401 Unauthorized</title><body><h1>401 Unauthorized</h1></body></html>';
+    }
+
+    error_page 404 @jump_to_404;
+    location @jump_to_404 {
+        default_type text/html;
+        return 404 '<html><title>404 Not Found</title><body><h1>Not Found</h1></body></html>';
+    }
+
+    error_page 500 502 503 504 @jump_to_error;
+    location @jump_to_error {
+        default_type text/html;
+        return 500 '<html><title>500 Internal Server Error</title><body><h1>500 Internal Server Error</h1></body></html>';
+    }
+
+    location / {
+        root   ${NGINX_WEB_ROOT};
+        index  ${NGINX_INDEX_FILES};
+        # add_header Content-Type text/html;
+        # return 200 '<div style="height:100vh;width:100vw;display:flex;justify-content: center;align-items: center;"><h1 style="padding:50px;text-align:center;">This is the end of the internet, so you may need to search for information elsewhere.</h1></div>';
+    }
+}
