@@ -1,6 +1,6 @@
 # Docker Release 🚀
 
-[![Build Status](https://github.com/funnyzak/docker-release/actions/workflows/release.yml/badge.svg)](https://github.com/funnyzak/docker-release)
+[![Schedule Watch Offical Release](https://github.com/funnyzak/docker-release/actions/workflows/schedule-watch-offical.yml/badge.svg)](https://github.com/funnyzak/docker-release/actions/workflows/schedule-watch-offical.yml)
 [![GitHub Container Registry](https://img.shields.io/badge/GHCR-funnyzak-blue)](https://github.com/funnyzak/docker-release)
 [![License](https://img.shields.io/github/license/funnyzak/docker-release)](https://github.com/funnyzak/docker-release)
 
