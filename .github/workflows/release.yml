@@ -31,6 +31,11 @@ on:
         description: 'Aliyun Container Registry username, default is github.actor'
         required: false
         type: string
+      push_to_aliyuncs:
+        description: 'Whether to push to Aliyun Container Registry, default is false'
+        required: false
+        type: boolean
+        default: false
       build_args:
         description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
         required: false
@@ -67,6 +72,11 @@ on:
         description: 'Aliyun Container Registry username, default is github.actor'
         required: false
         type: string
+      push_to_aliyuncs:
+        description: 'Whether to push to Aliyun Container Registry, default is false'
+        required: false
+        type: boolean
+        default: false
       build_args:
         description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
         required: false
@@ -87,6 +97,7 @@ jobs:
       ALIYUNCS_IMAGE_NAME: ${{ steps.set_vars.outputs.ALIYUNCS_IMAGE_NAME }}
       GHCR_IMAGE_NAME: ${{ steps.set_vars.outputs.GHCR_IMAGE_NAME }}
       IMAGE_TAG_LIST: ${{ steps.set_vars.outputs.IMAGE_TAG_LIST }}
+      PUSH_TO_ALIYUNCS: ${{ steps.set_vars.outputs.PUSH_TO_ALIYUNCS }}
       BUILD_CONTEXT: ${{ steps.determine-context.outputs.BUILD_CONTEXT }}
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
       BUILD_PLATFORMS: ${{ steps.set_vars.outputs.BUILD_PLATFORMS }}
@@ -173,6 +184,7 @@ jobs:
             echo "GHCR_IMAGE_NAME=${{ github.actor }}/$DOCKER_IMAGE_NAME"
             echo "BUILD_ARGS=$BUILD_ARGS"
             echo "BUILD_PLATFORMS=$BUILD_PLATFORMS"
+            echo "PUSH_TO_ALIYUNCS=${{ github.event.inputs.push_to_aliyuncs || inputs.push_to_aliyuncs || 'false' }}"
             echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
@@ -205,6 +217,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Log in to ALIYUNCS
+        if: needs.setup.outputs.PUSH_TO_ALIYUNCS == 'true'
         uses: docker/login-action@v3
         with:
           registry: registry.cn-beijing.aliyuncs.com
@@ -233,6 +246,17 @@ jobs:
           echo "BUILD_ARGS: $BUILD_ARGS"
           echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
 
+          # Build dynamic tags list
+          TAGS="${{ needs.setup.outputs.DOCKER_HUB_IMAGE_NAME }}:${DOCKER_TAG}
+          ghcr.io/${{ needs.setup.outputs.GHCR_IMAGE_NAME }}:${DOCKER_TAG}"
+          if [ "${{ needs.setup.outputs.PUSH_TO_ALIYUNCS }}" = "true" ]; then
+            TAGS="registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.ALIYUNCS_IMAGE_NAME }}:${DOCKER_TAG}
+          ${TAGS}"
+          fi
+          echo "BUILD_TAGS<<EOF" >> $GITHUB_OUTPUT
+          echo "${TAGS}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
           IFS=',' read -r -a build_args <<< "${BUILD_ARGS}"
           for i in {1..7}; do
             eval "BUILD_ARGS_$i=${build_args[$i-1]:-}"
@@ -260,10 +284,7 @@ jobs:
           context: ${{ needs.setup.outputs.BUILD_CONTEXT }}
           file: ${{ needs.setup.outputs.BUILD_FILE }}
           push: true
-          tags: |
-            ${{ needs.setup.outputs.DOCKER_HUB_IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
-            registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.ALIYUNCS_IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
-            ghcr.io/${{ needs.setup.outputs.GHCR_IMAGE_NAME }}:${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+          tags: ${{ steps.build_vars_format.outputs.BUILD_TAGS }}
           platforms: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
           build-args: |
             ${{ steps.build_vars_format.outputs.BUILD_ARGS_1 }}
@@ -282,7 +303,7 @@ jobs:
       
           📦 镜像信息
           • Docker Hub：[${{ needs.setup.outputs.DOCKER_HUB_IMAGE_NAME }}](https://hub.docker.com/r/${{ needs.setup.outputs.DOCKER_HUB_IMAGE_NAME }})
-          • Aliyun：registry.cn-beijing.aliyuncs.com/${{ needs.setup.outputs.ALIYUNCS_IMAGE_NAME }}
+          ${{ needs.setup.outputs.PUSH_TO_ALIYUNCS == 'true' && format('• Aliyun：registry.cn-beijing.aliyuncs.com/{0}', needs.setup.outputs.ALIYUNCS_IMAGE_NAME) || '' }}
           • GHCR：ghcr.io/${{ needs.setup.outputs.GHCR_IMAGE_NAME }}
           • 版本：${{ steps.build_vars_format.outputs.DOCKER_TAG }}
 
