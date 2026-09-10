@@ -228,6 +228,25 @@ runtime 进程可以读取 `BUILD_ID`、`BUILD_SHA`、`BUILD_REF`、`BUILD_RELEA
 
 每个事件可设置 `enabled`、`title`、`body`、`tag`。模板变量为 `{project}`、`{job_id}`、`{ref}`、`{sha}`、`{event}`、`{step}`、`{status}`、`{error}`、`{artifact_dir}`、`{duration_seconds}`、`{time}`，只做文字替换，不执行模板代码。
 
+默认正文只显示该阶段已有的信息，排队消息不显示尚未产生的步骤、耗时、产物和错误。自定义 `body` 仍按原样替换变量，应按事件选择已有字段。
+
+例如，只在最终成功或失败时通知：
+
+```json
+"notifications": {
+  "queued": { "enabled": false },
+  "started": { "enabled": false },
+  "runtime.started": { "enabled": false },
+  "succeeded": { "enabled": true },
+  "failed": { "enabled": true },
+  "timed_out": { "enabled": true },
+  "interrupted": { "enabled": true },
+  "runtime.failed": { "enabled": true }
+}
+```
+
+其余阶段默认关闭；若已有配置显式开启了 `step.started` 等事件，也需将其设为 `false`。只收失败消息时再关闭 `succeeded`；只收成功消息时关闭上例中的四类失败事件。修改配置后等当前构建结束，再重建构建容器使其加载配置。
+
 通知按顺序异步发送，不阻塞构建和入队。连接超时 5 秒、请求上限 15 秒，网络错误、429 和 5xx 最多额外重试一次。只有 HTTP 200 算发送成功，204（无有效渠道配置）记录为失败。网络重试可能产生重复消息。
 
 通知失败记录 `notification.failed`，不修改构建结果。通知发送队列不持久化，容器强制退出可能丢失未发送消息；阶段事件文件仍可查询。通知不包含命令输出全文。Token 等已知敏感环境变量会做日志脱敏，但业务脚本仍须避免打印其他凭据。

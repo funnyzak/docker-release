@@ -42,9 +42,15 @@ export class Runner {
     const enabled = rule.enabled ?? !['checkout.succeeded', 'step.started', 'step.succeeded', 'after_build.started', 'after_build.succeeded', 'artifacts.succeeded'].includes(event);
     if (!enabled || !process.env.APPRISE_NOTIFY_URL) return;
     const render = template => redact(template.replace(/\{([a-z_]+)\}/g, (match, key) => String(values[key] ?? match)));
+    const defaultBody = [
+      ['Task', values.job_id], ['Ref', values.ref], ['Commit', values.sha],
+      ['Step', values.step], ['Duration', values.duration_seconds === '' ? '' : `${values.duration_seconds}s`],
+      ['Artifacts', values.artifact_dir], ['Error', values.error],
+    ].filter(([, value]) => value !== '' && value !== undefined && value !== null)
+      .map(([label, value]) => `${label}: ${value}`).join('\n');
     const body = {
       title: render(rule.title || '[{project}] {event}'),
-      body: render(rule.body || 'Task: {job_id}\nRef: {ref}\nCommit: {sha}\nStep: {step}\nDuration: {duration_seconds}s\nArtifacts: {artifact_dir}\nError: {error}'),
+      body: rule.body ? render(rule.body) : redact(defaultBody),
       type: ['failed', 'timed_out', 'interrupted', 'runtime.failed'].includes(event) ? 'failure' : event === 'succeeded' ? 'success' : 'info',
       format: 'text',
     };
