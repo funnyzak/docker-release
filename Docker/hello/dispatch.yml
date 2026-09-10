@@ -1,0 +1,58 @@
+name: Dispatch Release Images
+on:
+  workflow_dispatch:
+    inputs:
+      search_path:
+        description: 'Search path for Dockerfile, e.g. ./Docker'
+        required: true
+        type: string
+        default: './Docker'
+      docker_tags:
+        description: 'Docker image tags, e.g. 1.0.0,1.0.1,latest, support multiple tags, default is latest'
+        required: false
+        type: string
+      build_args:
+        description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
+        required: false
+        type: string
+      build_platforms:
+        description: 'Docker build platforms, e.g. linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64'
+        required: false
+        type: string
+        default: 'linux/amd64'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set matrix
+        id: set-matrix
+        run: |
+          ALL_DOCKER_FILES=$(find "${{ github.event.inputs.search_path }}" -name Dockerfile -printf '%h\n' | sort -u)
+          CONTEXTS=$(jq -n --arg contexts "$ALL_DOCKER_FILES" '$contexts | split("\n") | map(select(length>0)) | {dockerfile_context: .}' ｜ jq -c .)
+          echo "List of Dockerfile contexts: $CONTEXTS"
+          echo "matrix=$CONTEXTS" >> $GITHUB_OUTPUT
+
+  docker_build:
+    needs: setup
+    if: ${{ fromJson(needs.setup.outputs.matrix).dockerfile_context.length }} > 0
+    strategy:
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: ${{ matrix.dockerfile_context }}
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms }}
+    secrets: inherit

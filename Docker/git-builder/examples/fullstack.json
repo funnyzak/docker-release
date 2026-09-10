@@ -1,0 +1,23 @@
+{
+  "project": "fullstack-app",
+  "provider": "github",
+  "refs": ["refs/heads/main"],
+  "queue_limit": 20,
+  "timeout_seconds": 3600,
+  "keep_runs": 20,
+  "steps": [
+    { "name": "backend", "cwd": "backend", "run": "mvn -B clean package", "timeout_seconds": 1800 },
+    { "name": "frontend-install", "cwd": "frontend", "run": "pnpm install --frozen-lockfile" },
+    { "name": "frontend-build", "cwd": "frontend", "run": "pnpm build" }
+  ],
+  "artifacts": [
+    { "name": "backend", "path": "backend/target/app.jar" },
+    { "name": "frontend", "path": "frontend/dist" }
+  ],
+  "after_build": [],
+  "notifications": {
+    "step.started": { "enabled": true, "title": "[{project}] 开始 {step}" },
+    "succeeded": { "enabled": true },
+    "failed": { "enabled": true, "title": "[{project}] {step} 失败", "body": "任务：{job_id}\n提交：{sha}\n错误：{error}\n已归档产物：{artifact_dir}" }
+  }
+}

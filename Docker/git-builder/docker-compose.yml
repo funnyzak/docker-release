@@ -1,0 +1,30 @@
+services:
+  git-builder:
+    image: ${GIT_BUILDER_IMAGE:-funnyzak/git-builder:1.0.0}
+    build:
+      context: .
+    restart: unless-stopped
+    stop_grace_period: 60s
+    environment:
+      WEBHOOK_AUTH_MODE: ${WEBHOOK_AUTH_MODE:-query}
+      WEBHOOK_TOKEN: ${WEBHOOK_TOKEN:?Set WEBHOOK_TOKEN in .env}
+      GIT_REPO_URL: ${GIT_REPO_URL:?Set GIT_REPO_URL in .env}
+      GIT_REPO_NAME: ${GIT_REPO_NAME:?Set GIT_REPO_NAME in .env}
+      APPRISE_NOTIFY_URL: ${APPRISE_NOTIFY_URL:-}
+      APPRISE_TAG: ${APPRISE_TAG:-}
+      APPRISE_AUTHORIZATION: ${APPRISE_AUTHORIZATION:-}
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:${HOST_PORT:-9000}:9000'
+    volumes:
+      - ${PIPELINE_FILE:-./pipeline.json}:/config/pipeline.json:ro
+      - builder-data:/data
+      # 私有仓库和部署凭据按 README 单独挂载，不写入镜像或 pipeline.json。
+      # - ./secrets/ssh:/home/node/.ssh:ro
+      # - ./secrets/maven-settings.xml:/home/node/.m2/settings.xml:ro
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  builder-data:
