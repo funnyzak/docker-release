@@ -1,0 +1,26 @@
+{
+  "project": "java-service",
+  "provider": "github",
+  "refs": ["refs/heads/main"],
+  "timeout_seconds": 3600,
+  "steps": [
+    { "name": "backend", "cwd": "backend", "run": "mvn -B clean package" }
+  ],
+  "artifacts": [
+    { "name": "backend", "path": "backend/target/app.jar" }
+  ],
+  "runtime": {
+    "artifact": "backend",
+    "cwd": ".",
+    "run": "exec java -jar backend/target/app.jar --spring.config.additional-location=optional:file:/config/application-runtime.yml",
+    "healthcheck_url": "http://127.0.0.1:8080/actuator/health",
+    "start_timeout_seconds": 120,
+    "stop_timeout_seconds": 20
+  },
+  "notifications": {
+    "runtime.started": { "enabled": true, "title": "[{project}] 新版本启动成功" },
+    "runtime.failed": { "enabled": true },
+    "failed": { "enabled": true },
+    "succeeded": { "enabled": true }
+  }
+}

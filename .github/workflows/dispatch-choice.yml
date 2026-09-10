@@ -13,6 +13,7 @@ on:
           - reqtap
           - java-nodejs-python-go-etc
           - git-job
+          - git-builder
           - nezha-dashboard
           - git-sync
           - ffmpeg-service
@@ -57,6 +58,18 @@ permissions:
   packages: write
 
 jobs:
+  git_builder_release:
+    if: ${{ github.event.inputs.choice_service == 'git-builder' }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/git-builder'
+      docker_image_name: git-builder
+      docker_hub_username: funnyzak
+      docker_tags: ${{ github.event.inputs.docker_tags }}
+      build_args: ${{ github.event.inputs.build_args }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit
+
   dify2openai_release:
     if: ${{ github.event.inputs.choice_service == 'dify2openai' }}
     uses: ./.github/workflows/release.yml

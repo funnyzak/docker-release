@@ -1,0 +1,24 @@
+{
+  "project": "npm-project",
+  "provider": "generic",
+  "refs": ["refs/heads/main"],
+  "queue_limit": 20,
+  "timeout_seconds": 1800,
+  "keep_runs": 20,
+  "steps": [
+    { "name": "install", "cwd": ".", "run": "npm ci" },
+    { "name": "build", "cwd": ".", "run": "npm run build" }
+  ],
+  "artifacts": [
+    { "name": "web", "path": "dist" }
+  ],
+  "after_build": [],
+  "notifications": {
+    "queued": { "enabled": true },
+    "started": { "enabled": true },
+    "succeeded": { "enabled": true, "title": "[{project}] 构建完成", "body": "任务：{job_id}\n提交：{sha}\n耗时：{duration_seconds} 秒\n产物：{artifact_dir}" },
+    "failed": { "enabled": true },
+    "timed_out": { "enabled": true },
+    "interrupted": { "enabled": true }
+  }
+}

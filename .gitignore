@@ -11,3 +11,4 @@ vcards-data
 __pycache__/
 
 models/
+temp_files/

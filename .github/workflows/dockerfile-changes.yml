@@ -5,6 +5,9 @@ on:
     paths:
       - '**/Dockerfile'
       - '**/Dockerfile.*'
+      - 'Docker/git-builder/app/**'
+      - 'Docker/git-builder/scripts/**'
+      - 'Docker/git-builder/.dockerignore'
 
 permissions:
   contents: write
@@ -26,21 +29,24 @@ jobs:
         uses: tj-actions/changed-files@v45
         id: changed-files
         with:
-          files: | 
-            '**/Dockerfile'
-            '**/Dockerfile*'
+          files: |
+            **/Dockerfile
+            **/Dockerfile*
+            Docker/git-builder/app/**
+            Docker/git-builder/scripts/**
+            Docker/git-builder/.dockerignore
 
       - name: Set matrix
         id: set-matrix
         run: |
           echo "All changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
-          DOCKER_FILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split(" ") | map(select(length>0)) | {dockerfile: map(.)}' | jq '.dockerfile |= map(gsub("\\n"; ""))' -c)
+          DOCKER_FILES=$(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq -R -s 'split(" ") | map(gsub("\\n"; "")) | map(select(length>0)) | map(if startswith("Docker/git-builder/") then "Docker/git-builder/Dockerfile" else . end) | unique | {dockerfile: .}' -c)
           echo "List of Dockerfile: $DOCKER_FILES"
           echo "matrix=$DOCKER_FILES" >> $GITHUB_OUTPUT
 
   run_docker_build:
     needs: check_dockerfiles
-    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile.length > 0 && fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile[0] != '' }}
+    if: ${{ fromJson(needs.check_dockerfiles.outputs.matrix).dockerfile[0] != '' }}
     strategy:
       matrix: ${{ fromJson(needs.check_dockerfiles.outputs.matrix) }}
     uses: ./.github/workflows/release.yml
@@ -48,5 +54,6 @@ jobs:
       docker_file_name: $(echo ${{ matrix.dockerfile }} | awk -F'/' '{print $NF}')
       build_context: $(dirname ${{ matrix.dockerfile }})
       docker_tags: nightly
-      build_platforms: linux/amd64
+      docker_hub_username: ${{ matrix.dockerfile == 'Docker/git-builder/Dockerfile' && 'funnyzak' || github.actor }}
+      build_platforms: ${{ matrix.dockerfile == 'Docker/git-builder/Dockerfile' && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
     secrets: inherit
