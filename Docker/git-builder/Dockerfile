@@ -32,6 +32,7 @@ ENV JAVA_HOME=/opt/java/openjdk \
     npm_config_cache=/data/cache/npm
 RUN apt-get update && apt-get install -y --no-install-recommends \
       ca-certificates git openssh-client curl tar gzip zip unzip rsync tini util-linux tzdata \
+      fontconfig fonts-dejavu-core fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/* \
     && npm install --global pnpm@${PNPM_VERSION} \
     && npm cache clean --force \

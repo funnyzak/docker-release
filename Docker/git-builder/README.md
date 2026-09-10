@@ -15,6 +15,7 @@
 | Maven | 3.9.9 |
 | pnpm | 10.18.2 |
 | Webhook | adnanh/webhook 2.8.3 |
+| 字体 | fontconfig、DejaVu、Noto CJK，支持 Java 无图形界面的图片绘制及中文文字 |
 | 基础系统 | Debian Bookworm slim，包含 Git、SSH、curl、rsync、tar、zip |
 
 Dockerfile 面向 `linux/amd64`（x64）和 `linux/arm64`（ARM64）。发布流程默认生成双架构清单，不支持 32 位 ARM。构建发生在容器当前架构；带原生依赖的 Node/Next.js 包应部署到相同架构与兼容系统。
