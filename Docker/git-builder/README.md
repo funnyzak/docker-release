@@ -11,7 +11,7 @@
 | 工具 | 镜像版本 |
 | --- | --- |
 | Node.js / npm | Node 24.14.0 / 随该 Node 镜像提供的 npm |
-| JDK | Eclipse Temurin 17.0.18+8 |
+| JDK | Eclipse Temurin 17.0.20+8（默认 tag）；另有 8u502-b07、11.0.32+9、25.0.4+7 变体，见下文镜像 tag |
 | Maven | 3.9.9 |
 | pnpm | 10.18.2 |
 | Webhook | adnanh/webhook 2.8.3 |
@@ -20,7 +20,18 @@
 
 Dockerfile 面向 `linux/amd64`（x64）和 `linux/arm64`（ARM64）。发布流程默认生成双架构清单，不支持 32 位 ARM。构建发生在容器当前架构；带原生依赖的 Node/Next.js 包应部署到相同架构与兼容系统。
 
-镜像不包含 Docker daemon、Apprise 服务或原生 Node 模块编译工具。业务包在构建后生成，可通过下文 runtime 配置在同容器运行。需要 Python/make/g++ 的项目应派生构建镜像安装相应依赖。Java 其他版本也使用独立派生镜像，不在启动时升级工具链。
+镜像不包含 Docker daemon、Apprise 服务或原生 Node 模块编译工具。业务包在构建后生成，可通过下文 runtime 配置在同容器运行。需要 Python/make/g++ 的项目应派生构建镜像安装相应依赖。JDK 版本由镜像 tag 决定，不在启动时升级工具链。
+
+### 镜像 tag
+
+| Java | 版本 tag | 浮动 tag |
+| --- | --- | --- |
+| 17（默认） | `1.0.0` | `latest` |
+| 8 | `1.0.0-java8` | `java8` |
+| 11 | `1.0.0-java11` | `java11` |
+| 25 | `1.0.0-java25` | `java25` |
+
+四个变体只有 JDK 不同，Node.js、Maven、pnpm、Webhook 和系统工具一致；`latest` 和裸版本号始终指向 Java 17。镜像标签 `io.github.funnyzak.git-builder.java` 记录内置 JDK 主版本，`docker inspect` 可查。
 
 ## 快速开始
 
@@ -48,7 +59,7 @@ docker compose logs --tail=100 git-builder
 HOST_PORT=9001 docker compose -p builder-example up -d --build
 ```
 
-默认 Compose 使用 `funnyzak/git-builder:1.0.0`。使用源码构建时运行 `docker compose up -d --build`；使用镜像仓库中已发布的版本时，设置 `GIT_BUILDER_IMAGE`，再运行 `docker compose pull && docker compose up -d --no-build`。
+默认 Compose 使用 `funnyzak/git-builder:1.0.0`（Java 17）。使用镜像仓库中已发布的版本时，设置 `GIT_BUILDER_IMAGE`，例如 `funnyzak/git-builder:1.0.0-java8`，再运行 `docker compose pull && docker compose up -d --no-build`。使用源码构建时运行 `docker compose up -d --build`，通过 `JAVA_VERSION=8|11|17|25` 选择内置 JDK。
 
 ## Webhook 与认证
 
@@ -319,17 +330,25 @@ docker compose cp git-builder:/data/artifacts/<任务id> ./release
 ## 构建、检查与发布
 
 ```sh
-# 当前架构构建和工具链冒烟
+# 当前架构构建和工具链冒烟，JAVA_VERSION 不传即 17
 docker build -t funnyzak/git-builder:dev .
+docker build --build-arg JAVA_VERSION=8 -t funnyzak/git-builder:dev-java8 .
 docker run --rm funnyzak/git-builder:dev sh -ec 'node -v; npm -v; pnpm -v; java -version; mvn -v; webhook -version'
 
 # 双架构发布
 docker buildx build --platform linux/amd64,linux/arm64 \
   -t funnyzak/git-builder:1.0.0 --push .
+docker buildx build --platform linux/amd64,linux/arm64 --build-arg JAVA_VERSION=8 \
+  -t funnyzak/git-builder:1.0.0-java8 -t funnyzak/git-builder:java8 --push .
 docker buildx imagetools inspect funnyzak/git-builder:1.0.0
 ```
 
-通过 GitHub Actions 发布时，在 **Release Choice Image** 中选择 `git-builder`，默认构建 AMD64 和 ARM64 镜像。Dockerfile、app、scripts 或 `.dockerignore` 修改会触发 nightly 构建；镜像仓库凭据通过 Actions secrets 配置。
+通过 GitHub Actions 发布有两个入口，都默认构建 AMD64 和 ARM64 镜像，镜像仓库凭据通过 Actions secrets 配置：
+
+- **Release git-builder Variants**：一次发布多个 Java 变体。`docker_tags` 填基础 tag（如 `1.0.0,latest`），`java_versions` 默认 `17,8,11,25`；Java 17 按原样打 tag，其他版本自动改为 `1.0.0-java8` 和 `java8` 这类形式。
+- **Release Choice Image**：选择 `git-builder`，再用 `java_version` 选一个 JDK；tag 改写规则同上。
+
+Dockerfile、app、scripts 或 `.dockerignore` 修改会触发 nightly 构建，只构建 Java 17。
 
 验证范围包括工具版本、三种认证成功/失败、精确提交、连续投递串行化、重复 delivery 去重、非允许 ref 忽略、构建失败、超时、归档和 after_build 失败、Apprise HTTP 200/204/500、运行版本替换、失败恢复及容器重启恢复。检查脚本可运行 `shellcheck scripts/*.sh examples/*.sh`。真实业务配置和部署目标需要单独验证。
 
