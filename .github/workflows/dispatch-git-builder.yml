@@ -1,0 +1,66 @@
+name: Release git-builder Variants
+# Publishes every selected Java variant of git-builder in one run.
+# Java 17 keeps the tags as typed (the default image); 8/11/25 become <tag>-java<N> and java<N>.
+on:
+  workflow_dispatch:
+    inputs:
+      docker_tags:
+        description: 'Base tags applied to every variant, e.g. 1.0.0,latest. Default is latest'
+        required: false
+        default: 'latest'
+        type: string
+      java_versions:
+        description: 'Java variants to publish, comma separated subset of 8,11,17,25'
+        required: false
+        default: '17,8,11,25'
+        type: string
+      build_platforms:
+        description: 'Docker build platforms, default is linux/amd64,linux/arm64'
+        required: false
+        type: string
+      build_args:
+        description: 'Extra docker build args, comma separated. JAVA_VERSION, VCS_REF, BUILD_DATE and VERSION are added automatically'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  setup:
+    name: Resolve variants
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Build variant matrix
+        id: matrix
+        run: |
+          VERSIONS="${{ github.event.inputs.java_versions || '17,8,11,25' }}"
+          for v in $(echo "$VERSIONS" | tr ',' ' '); do
+            case "$v" in
+              8|11|17|25) ;;
+              *) echo "Unsupported Java version: $v (allowed: 8, 11, 17, 25)"; exit 1 ;;
+            esac
+          done
+          MATRIX=$(echo "$VERSIONS" | jq -R -c 'split(",") | map(gsub("\\s"; "") | select(length>0)) | unique | map({java: ., suffix: (if . == "17" then "" else "java" + . end)}) | {include: .}')
+          echo "Variant matrix: $MATRIX"
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+
+  release:
+    name: Java ${{ matrix.java }}
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+    uses: ./.github/workflows/release.yml
+    with:
+      build_context: './Docker/git-builder'
+      docker_image_name: git-builder
+      docker_hub_username: funnyzak
+      docker_tags: ${{ github.event.inputs.docker_tags || 'latest' }}
+      docker_tag_suffix: ${{ matrix.suffix }}
+      build_args: ${{ format('JAVA_VERSION={0}{1}', matrix.java, github.event.inputs.build_args && format(',{0}', github.event.inputs.build_args) || '') }}
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
+    secrets: inherit

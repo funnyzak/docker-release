@@ -3,6 +3,8 @@ services:
     image: ${GIT_BUILDER_IMAGE:-funnyzak/git-builder:1.0.0}
     build:
       context: .
+      args:
+        JAVA_VERSION: ${JAVA_VERSION:-17}
     logging:
       driver: local
       options:

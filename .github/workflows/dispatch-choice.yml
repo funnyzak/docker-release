@@ -53,6 +53,16 @@ on:
         description: 'Docker file name in the build context, e.g. Dockerfile, default is Dockerfile'
         required: false
         type: string
+      java_version:
+        description: 'git-builder only: JDK bundled in the image. 17 is the default image and keeps the tags as typed; 8/11/25 publish <tag>-java<N> and java<N>'
+        required: false
+        default: '17'
+        type: choice
+        options:
+          - '17'
+          - '8'
+          - '11'
+          - '25'
 permissions:
   contents: write
   packages: write
@@ -66,7 +76,9 @@ jobs:
       docker_image_name: git-builder
       docker_hub_username: funnyzak
       docker_tags: ${{ github.event.inputs.docker_tags }}
-      build_args: ${{ github.event.inputs.build_args }}
+      # Java 17 is the default image; other JDKs get a java<N> tag suffix and select their Dockerfile stage via JAVA_VERSION.
+      docker_tag_suffix: ${{ (github.event.inputs.java_version || '17') != '17' && format('java{0}', github.event.inputs.java_version) || '' }}
+      build_args: ${{ format('JAVA_VERSION={0}{1}', github.event.inputs.java_version || '17', github.event.inputs.build_args && format(',{0}', github.event.inputs.build_args) || '') }}
       build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64' }}
     secrets: inherit
 

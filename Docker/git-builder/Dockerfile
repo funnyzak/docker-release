@@ -1,3 +1,5 @@
+# JDK major version bundled in the image: 8, 11, 17 (default) or 25. Only the selected stage is built.
+ARG JAVA_VERSION=17
 FROM --platform=$BUILDPLATFORM golang:1.25.7-bookworm@sha256:564e366a28ad1d70f460a2b97d1d299a562f08707eb0ecb24b659e5bd6c108e1 AS webhook-build
 ARG TARGETOS
 ARG TARGETARCH
@@ -5,20 +7,27 @@ ARG WEBHOOK_VERSION=2.8.3
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
     go install github.com/adnanh/webhook@${WEBHOOK_VERSION}
 
-FROM eclipse-temurin:17.0.18_8-jdk-jammy@sha256:978ed38b7785312f7761bee5e24cfcd7ac2fe466c5f07acee7b322e0bae6d0ec AS java
+FROM eclipse-temurin:8u502-b07-jdk-jammy@sha256:d57e5d0e3e5dd4cabb74feccfdb36249a58c76a3354a33ee8737813df93b7e0d AS java-8
+FROM eclipse-temurin:11.0.32_9-jdk-jammy@sha256:d47c552b2078dcb4d21471c3914194d501f351d7e85ec18a3f2bb1e452adecf9 AS java-11
+FROM eclipse-temurin:17.0.20_8-jdk-jammy@sha256:ef4374b4b6b9d813dd3f5b593a35ec9a820cfb64a55994798147cc73435a0208 AS java-17
+FROM eclipse-temurin:25.0.4_7-jdk-jammy@sha256:02eecc58b9c7cb20e55765c7bcdcdee0c6d210440aca1b0a1fbd81ecfe8e772e AS java-25
+FROM java-${JAVA_VERSION} AS java
+# Maven is JDK independent; the same distribution is copied into every Java variant.
 FROM maven:3.9.9-eclipse-temurin-17@sha256:f58d59b6273e785ac0a4477f6e9b5ba1d7731c75b906c0f7b34076f1851318cc AS maven
 FROM node:24.14.0-bookworm-slim@sha256:d8e448a56fc63242f70026718378bd4b00f8c82e78d20eefb199224a4d8e33d8
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION=1.0.0
+ARG JAVA_VERSION
 ARG PNPM_VERSION=10.18.2
 LABEL org.opencontainers.image.title="git-builder" \
       org.opencontainers.image.description="Configurable Git webhook builds, deployment scripts, managed services and Apprise HTTP notifications for Node.js and Java projects" \
       org.opencontainers.image.source="https://github.com/funnyzak/docker-release" \
       org.opencontainers.image.version=${VERSION} \
       org.opencontainers.image.revision=${VCS_REF} \
-      org.opencontainers.image.created=${BUILD_DATE}
+      org.opencontainers.image.created=${BUILD_DATE} \
+      io.github.funnyzak.git-builder.java=${JAVA_VERSION}
 ENV JAVA_HOME=/opt/java/openjdk \
     MAVEN_HOME=/opt/maven \
     PATH=/opt/java/openjdk/bin:/opt/maven/bin:$PATH \

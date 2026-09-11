@@ -40,6 +40,10 @@ on:
         description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
         required: false
         type: string
+      docker_tag_suffix:
+        description: 'Optional suffix appended to every tag, e.g. java8 turns 1.0.0 into 1.0.0-java8 and latest into java8. VERSION is derived from the tag without the suffix.'
+        required: false
+        type: string
 
   workflow_dispatch:
     inputs:
@@ -81,6 +85,10 @@ on:
         description: 'Docker build args list, e.g. BUILD_DATE=VERSION=1.0.0,$(date +%Y-%m-%d). If the build args does not contain VCS_REF and BUILD_DATE, it will be added automatically. If the build args does not contain VERSION and the docker_tag is not latest, it will be added automatically.'
         required: false
         type: string
+      docker_tag_suffix:
+        description: 'Optional suffix appended to every tag, e.g. java8 turns 1.0.0 into 1.0.0-java8 and latest into java8. VERSION is derived from the tag without the suffix.'
+        required: false
+        type: string
 
 permissions:
   packages: write
@@ -102,6 +110,7 @@ jobs:
       BUILD_FILE: ${{ steps.set_vars.outputs.BUILD_FILE }}
       BUILD_PLATFORMS: ${{ steps.set_vars.outputs.BUILD_PLATFORMS }}
       BUILD_ARGS: ${{ steps.set_vars.outputs.BUILD_ARGS }}
+      TAG_SUFFIX: ${{ steps.set_vars.outputs.TAG_SUFFIX }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -119,6 +128,7 @@ jobs:
           echo "The build args are ${{ github.event.inputs.build_args || inputs.build_args }}"
           echo "The build platforms are ${{ github.event.inputs.build_platforms || inputs.build_platforms }}"
           echo "The docker file is ${{ github.event.inputs.docker_file_name || inputs.docker_file_name }}"
+          echo "The docker tag suffix is ${{ github.event.inputs.docker_tag_suffix || inputs.docker_tag_suffix }}"
 
       - name: Determine Docker Context
         id: determine-context
@@ -141,6 +151,8 @@ jobs:
           if [ -z "$DOKCER_IMAGE_TAGS" ]; then
             DOKCER_IMAGE_TAGS="latest"
           fi
+          # Suffix turns 1.0.0 into 1.0.0-<suffix> and latest into <suffix>, used for image variants.
+          TAG_SUFFIX="${{ github.event.inputs.docker_tag_suffix || inputs.docker_tag_suffix }}"
 
           if [ -z "${{ github.event.inputs.docker_image_name || inputs.docker_image_name }}" ]; then
             DOCKER_IMAGE_NAME=$(basename $CONTEXT)
@@ -185,7 +197,8 @@ jobs:
             echo "BUILD_ARGS=$BUILD_ARGS"
             echo "BUILD_PLATFORMS=$BUILD_PLATFORMS"
             echo "PUSH_TO_ALIYUNCS=${{ github.event.inputs.push_to_aliyuncs || inputs.push_to_aliyuncs || 'false' }}"
-            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | jq -R -s 'split(",") | map(select(length>0) | gsub(" "; "")) | {tag: .}' -c)
+            echo "TAG_SUFFIX=$TAG_SUFFIX"
+            echo IMAGE_TAG_LIST=$(echo ${DOKCER_IMAGE_TAGS} | jq -R -s --arg suffix "$TAG_SUFFIX" 'split(",") | map(gsub("\\s"; "") | select(length>0)) | map(if $suffix == "" then . elif . == "latest" then $suffix else . + "-" + $suffix end) | {tag: .}' -c)
             echo "BUILD_FILE=${{ steps.determine-context.outputs.BUILD_CONTEXT }}/${{ github.event.inputs.docker_file_name || inputs.docker_file_name || 'Dockerfile' }}"
           } >> $GITHUB_OUTPUT
         
@@ -240,8 +253,18 @@ jobs:
           echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_OUTPUT
 
           BUILD_ARGS=${{ needs.setup.outputs.BUILD_ARGS }}
-          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ $DOCKER_TAG != "latest" ]] && [[ $DOCKER_TAG != "dev" ]] && [[ $DOCKER_TAG != "main" ]] && [[ $DOCKER_TAG != "nightly" ]]; then
-            BUILD_ARGS="VERSION=${DOCKER_TAG},$BUILD_ARGS"
+          # VERSION comes from the tag without the variant suffix; the floating suffix tag (e.g. java8) counts as latest.
+          TAG_SUFFIX="${{ needs.setup.outputs.TAG_SUFFIX }}"
+          VERSION_TAG="$DOCKER_TAG"
+          if [ -n "$TAG_SUFFIX" ]; then
+            if [ "$DOCKER_TAG" = "$TAG_SUFFIX" ]; then
+              VERSION_TAG="latest"
+            else
+              VERSION_TAG="${DOCKER_TAG%-"$TAG_SUFFIX"}"
+            fi
+          fi
+          if [[ $BUILD_ARGS != *"VERSION="* ]] && [[ $VERSION_TAG != "latest" ]] && [[ $VERSION_TAG != "dev" ]] && [[ $VERSION_TAG != "main" ]] && [[ $VERSION_TAG != "nightly" ]]; then
+            BUILD_ARGS="VERSION=${VERSION_TAG},$BUILD_ARGS"
           fi
           echo "BUILD_ARGS: $BUILD_ARGS"
           echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
