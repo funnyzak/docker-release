@@ -16,18 +16,7 @@ FROM java-${JAVA_VERSION} AS java
 FROM maven:3.9.9-eclipse-temurin-17@sha256:f58d59b6273e785ac0a4477f6e9b5ba1d7731c75b906c0f7b34076f1851318cc AS maven
 FROM node:24.14.0-bookworm-slim@sha256:d8e448a56fc63242f70026718378bd4b00f8c82e78d20eefb199224a4d8e33d8
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VERSION=1.0.0
-ARG JAVA_VERSION
 ARG PNPM_VERSION=10.18.2
-LABEL org.opencontainers.image.title="git-builder" \
-      org.opencontainers.image.description="Configurable Git webhook builds, deployment scripts, managed services and Apprise HTTP notifications for Node.js and Java projects" \
-      org.opencontainers.image.source="https://github.com/funnyzak/docker-release" \
-      org.opencontainers.image.version=${VERSION} \
-      org.opencontainers.image.revision=${VCS_REF} \
-      org.opencontainers.image.created=${BUILD_DATE} \
-      io.github.funnyzak.git-builder.java=${JAVA_VERSION}
 ENV JAVA_HOME=/opt/java/openjdk \
     MAVEN_HOME=/opt/maven \
     PATH=/opt/java/openjdk/bin:/opt/maven/bin:$PATH \
@@ -47,6 +36,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && npm cache clean --force \
     && mkdir -p /data /config /home/node/.m2 /home/node/.ssh \
     && chown -R node:node /data /home/node
+# Build metadata comes after the apt layer so changing BUILD_DATE, VERSION or JAVA_VERSION keeps it cached.
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION=1.0.0
+ARG JAVA_VERSION
+LABEL org.opencontainers.image.title="git-builder" \
+      org.opencontainers.image.description="Configurable Git webhook builds, deployment scripts, managed services and Apprise HTTP notifications for Node.js and Java projects" \
+      org.opencontainers.image.source="https://github.com/funnyzak/docker-release" \
+      org.opencontainers.image.version=${VERSION} \
+      org.opencontainers.image.revision=${VCS_REF} \
+      org.opencontainers.image.created=${BUILD_DATE} \
+      io.github.funnyzak.git-builder.java=${JAVA_VERSION}
 COPY --from=java /opt/java/openjdk /opt/java/openjdk
 COPY --from=maven /usr/share/maven /opt/maven
 # Cross-compiling go install puts the binary under GOOS_GOARCH; native builds use /go/bin.
