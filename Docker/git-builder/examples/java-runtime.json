@@ -3,6 +3,9 @@
   "provider": "github",
   "refs": ["refs/heads/main"],
   "timeout_seconds": 3600,
+  "keep_runs": 20,
+  "keep_days": 15,
+  "cache_max_mb": 4096,
   "steps": [
     { "name": "backend", "cwd": "backend", "run": "mvn -B clean package" }
   ],

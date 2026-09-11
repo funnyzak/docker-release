@@ -5,6 +5,8 @@
   "queue_limit": 20,
   "timeout_seconds": 1800,
   "keep_runs": 20,
+  "keep_days": 15,
+  "cache_max_mb": 4096,
   "steps": [
     { "name": "install", "cwd": ".", "run": "npm ci" },
     { "name": "build", "cwd": ".", "run": "npm run build" }

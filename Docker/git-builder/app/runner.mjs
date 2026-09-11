@@ -253,18 +253,77 @@ export class Runner {
       fs.rmSync(workspace, { recursive: true, force: true });
       this.active = null;
     }
-    this.prune();
+    await this.prune();
   }
 
-  prune() {
-    const finished = jobs().filter(job => !['queued', 'running'].includes(job.status));
-    const latestPath = path.join(dataDir, 'artifacts', 'latest-success');
-    const latest = fs.existsSync(latestPath) ? fs.readlinkSync(latestPath) : '';
-    for (const job of finished.slice(0, Math.max(0, finished.length - this.config.keep_runs))) {
-      if (job.id === latest) continue;
-      fs.rmSync(path.join(dataDir, 'artifacts', job.id), { recursive: true, force: true });
-      for (const suffix of ['.log', '.events.jsonl']) fs.rmSync(path.join(dataDir, 'logs', job.id + suffix), { force: true });
-      fs.rmSync(jobFile(job.id));
+  async prune() {
+    if (this.active) return;
+    let removed = 0;
+    let freed = 0;
+    let cacheReset = false;
+    const size = async file => {
+      const stat = await fs.promises.lstat(file).catch(error => {
+        if (error.code === 'ENOENT') return null;
+        throw error;
+      });
+      if (!stat) return 0;
+      if (!stat.isDirectory()) return stat.size;
+      let bytes = 0;
+      for (const name of await fs.promises.readdir(file)) bytes += await size(path.join(file, name));
+      return bytes;
+    };
+    try {
+      // Never traverse a substituted storage root while deleting managed data.
+      for (const name of ['artifacts', 'logs', 'jobs', 'runtime', 'cache']) {
+        const stat = await fs.promises.lstat(path.join(dataDir, name)).catch(error => {
+          if (error.code === 'ENOENT') return null;
+          throw error;
+        });
+        if (stat && !stat.isDirectory()) throw new Error(`Invalid cleanup directory: ${name}`);
+      }
+      const protectedIds = new Set();
+      const latestPath = path.join(dataDir, 'artifacts', 'latest-success');
+      try { protectedIds.add(await fs.promises.readlink(latestPath)); }
+      catch (error) { if (error.code !== 'ENOENT') throw error; }
+      if (this.runtime) {
+        if (this.runtime.current) protectedIds.add(this.runtime.current.id);
+        // Runtime keeps current and previous releases, including pre-upgrade volumes.
+        const releases = path.join(dataDir, 'runtime', 'releases');
+        if (!(await fs.promises.lstat(releases)).isDirectory()) throw new Error('Invalid runtime releases directory');
+        for (const id of await fs.promises.readdir(releases)) protectedIds.add(id);
+      }
+      const finished = jobs().filter(job => !['queued', 'running'].includes(job.status));
+      const cutoff = Date.now() - (this.config.keep_days || 0) * 86400000;
+      for (const [index, job] of finished.entries()) {
+        const expired = this.config.keep_days > 0 && Date.parse(job.finished_at) < cutoff;
+        if ((!expired && index >= finished.length - this.config.keep_runs) || protectedIds.has(job.id)) continue;
+        if (!/^[a-f0-9]{64}$/.test(job.id)) throw new Error('Invalid cleanup job ID');
+        const files = [path.join(dataDir, 'artifacts', job.id),
+          ...['.log', '.events.jsonl'].map(suffix => path.join(dataDir, 'logs', job.id + suffix)), jobFile(job.id)];
+        for (const file of files) {
+          const bytes = await size(file);
+          await fs.promises.rm(file, { recursive: true, force: true });
+          freed += bytes;
+        }
+        removed++;
+      }
+      if (this.config.cache_max_mb > 0) {
+        const caches = ['maven', 'npm', 'pnpm'].map(name => path.join(dataDir, 'cache', name));
+        let bytes = 0;
+        for (const directory of caches) bytes += await size(directory);
+        if (bytes > this.config.cache_max_mb * 1024 * 1024) {
+          for (const directory of caches) {
+            const bytes = await size(directory);
+            await fs.promises.rm(directory, { recursive: true, force: true });
+            freed += bytes;
+            await fs.promises.mkdir(directory, { recursive: true });
+          }
+          cacheReset = true;
+        }
+      }
+      log('cleanup.succeeded', { removed_jobs: removed, freed_bytes: freed, cache_reset: cacheReset });
+    } catch (error) {
+      log('cleanup.failed', { removed_jobs: removed, freed_bytes: freed, error: redact(error.message) });
     }
   }
 }

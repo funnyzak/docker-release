@@ -5,6 +5,8 @@
   "queue_limit": 20,
   "timeout_seconds": 3600,
   "keep_runs": 20,
+  "keep_days": 15,
+  "cache_max_mb": 4096,
   "steps": [
     { "name": "backend", "cwd": "backend", "run": "mvn -B clean package", "timeout_seconds": 1800 },
     { "name": "frontend-install", "cwd": "frontend", "run": "pnpm install --frozen-lockfile" },

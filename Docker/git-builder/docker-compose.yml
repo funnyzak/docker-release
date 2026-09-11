@@ -3,6 +3,11 @@ services:
     image: ${GIT_BUILDER_IMAGE:-funnyzak/git-builder:1.0.0}
     build:
       context: .
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: unless-stopped
     stop_grace_period: 60s
     environment:

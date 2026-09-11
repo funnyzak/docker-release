@@ -29,6 +29,9 @@ export function readConfig() {
   c.queue_limit ??= 20;
   c.timeout_seconds ??= 1800;
   c.keep_runs ??= 20;
+  c.keep_days ??= 0;
+  c.cache_max_mb ??= 0;
+  for (const key of ['keep_days', 'cache_max_mb']) requireValue(Number.isSafeInteger(c[key]) && c[key] >= 0, `Invalid ${key}`);
   c.max_log_bytes ??= 10485760;
   for (const key of ['queue_limit', 'timeout_seconds', 'keep_runs', 'max_log_bytes']) requireValue(positive(c[key]), `Invalid ${key}`);
   c.after_build ??= [];

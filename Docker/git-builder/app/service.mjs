@@ -100,7 +100,7 @@ async function serve() {
   // Nothing in work is reusable across runs, including a checkout left by SIGKILL.
   for (const name of fs.readdirSync(path.join(dataDir, 'work'))) fs.rmSync(path.join(dataDir, 'work', name), { recursive: true, force: true });
   fs.rmSync(path.join(dataDir, 'artifacts', 'latest-success.tmp'), { force: true });
-  runner.prune();
+  await runner.prune();
   fs.rmSync(socketPath, { force: true });
   let gateway;
   let ready = false;
