@@ -108,6 +108,10 @@ Use `${ENV_NAME}` for environment placeholders. Nginx runtime variables like `$h
 
 If you mount your own non-empty `/etc/nginx/conf.d`, the container will not overwrite it with the template. If you mount your own `default.conf.template`, it will be rendered only when `/etc/nginx/conf.d` is empty.
 
+### Log Output
+
+By default, `/var/log/nginx/access.log` and `/var/log/nginx/error.log` point to container stdout and stderr. You can bind-mount regular files at either path; the entrypoint preserves mounted files instead of replacing them with symbolic links. Do not mount a directory at an individual log-file path. To persist the complete log directory, mount the directory at `/var/log/nginx`.
+
 ### Docker Compose
 
 First, create a `docker-compose.yml` file in your project directory:

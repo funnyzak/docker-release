@@ -24,6 +24,22 @@ copy_dir_contents_if_present() {
     fi
 }
 
+configure_log_output() {
+    log_path="$1"
+    stream_path="$2"
+
+    if [ -d "$log_path" ]; then
+        echo "Error: $log_path is a directory; mount a file at this path or mount the parent log directory." >&2
+        return 1
+    fi
+
+    if [ -L "$log_path" ]; then
+        [ "$(readlink "$log_path")" = "$stream_path" ] || ln -sfn "$stream_path" "$log_path"
+    elif [ ! -e "$log_path" ]; then
+        ln -s "$stream_path" "$log_path"
+    fi
+}
+
 render_default_template() {
     template_path=""
     template_vars=""
@@ -76,18 +92,18 @@ if directory_is_empty /etc/nginx/html; then
     copy_dir_contents_if_present /data/nginx/html /etc/nginx/html
 fi
 
-ln -sf /dev/stdout /var/log/nginx/access.log
-ln -sf /dev/stderr /var/log/nginx/error.log
+configure_log_output /var/log/nginx/access.log /dev/stdout
+configure_log_output /var/log/nginx/error.log /dev/stderr
 
-echo -e "${GREEN}Docker Hub: https://hub.docker.com/r/funnyzak/nginx${NC}"
-echo -e "${GREEN}GitHub: https://github.com/funnyzak/docker-release\n"
+printf '%b\n' "${GREEN}Docker Hub: https://hub.docker.com/r/funnyzak/nginx${NC}"
+printf '%b\n\n' "${GREEN}GitHub: https://github.com/funnyzak/docker-release${NC}"
 
-echo -e "${GREEN}$(nginx -v 2>&1)${NC}"
-echo -e "\n${YELLOW}Installed extra modules:${NC}"
-echo -e "${BLUE}ngx_http_geoip_module${NC}, ${BLUE}ngx_http_image_filter_module${NC}, ${BLUE}ngx_http_perl_module${NC}, ${BLUE}ngx_http_xslt_filter_module${NC}, ${BLUE}ngx_mail_module${NC}, ${BLUE}ngx_stream_geoip_module${NC}, ${BLUE}ngx_stream_module${NC}, ${BLUE}ngx-fancyindex${NC}, ${BLUE}headers-more-nginx-module${NC}, etc."
-echo -e "\n${YELLOW}nginx.conf configuration file path:${NC} ${RED}/etc/nginx/nginx.conf${NC}"
-echo -e "${YELLOW}server configuration file path:${NC} ${RED}/etc/nginx/conf.d${NC}"
-echo -e "${YELLOW}server template file path:${NC} ${RED}/etc/nginx/templates/default.conf.template${NC}"
+printf '%b\n' "${GREEN}$(nginx -v 2>&1)${NC}"
+printf '\n%b\n' "${YELLOW}Installed extra modules:${NC}"
+printf '%b\n' "${BLUE}ngx_http_geoip_module${NC}, ${BLUE}ngx_http_image_filter_module${NC}, ${BLUE}ngx_http_perl_module${NC}, ${BLUE}ngx_http_xslt_filter_module${NC}, ${BLUE}ngx_mail_module${NC}, ${BLUE}ngx_stream_geoip_module${NC}, ${BLUE}ngx_stream_module${NC}, ${BLUE}ngx-fancyindex${NC}, ${BLUE}headers-more-nginx-module${NC}, etc."
+printf '\n%b\n' "${YELLOW}nginx.conf configuration file path:${NC} ${RED}/etc/nginx/nginx.conf${NC}"
+printf '%b\n' "${YELLOW}server configuration file path:${NC} ${RED}/etc/nginx/conf.d${NC}"
+printf '%b\n' "${YELLOW}server template file path:${NC} ${RED}/etc/nginx/templates/default.conf.template${NC}"
 
 nginx -t
 nginx -g "daemon off;"
