@@ -160,7 +160,7 @@ printf '%b\n\n' "${GREEN}GitHub: https://github.com/funnyzak/docker-release${NC}
 
 printf '%b\n' "${GREEN}$(nginx -v 2>&1)${NC}"
 printf '\n%b\n' "${YELLOW}Optional modules (uncomment load_module lines in /etc/nginx/nginx.conf):${NC}"
-printf '%b\n' "${BLUE}$(ls /usr/lib/nginx/modules 2>/dev/null | tr '\n' ' ')${NC}"
+printf '%b\n' "${BLUE}$( (cd /usr/lib/nginx/modules 2>/dev/null && find . -maxdepth 1 -type f) | sed 's|^\./||' | tr '\n' ' ')${NC}"
 printf '\n%b\n' "${YELLOW}nginx.conf configuration file path:${NC} ${RED}/etc/nginx/nginx.conf${NC}"
 printf '%b\n' "${YELLOW}server configuration file path:${NC} ${RED}/etc/nginx/conf.d${NC}"
 printf '%b\n' "${YELLOW}server template file path:${NC} ${RED}/etc/nginx/templates/default.conf.template${NC}"

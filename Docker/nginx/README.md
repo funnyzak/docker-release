@@ -19,16 +19,16 @@ Build with the `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v7` archite
 All modules below are compiled as **dynamic modules**. The top of the built-in [`nginx.conf`](./conf/nginx.conf) lists a `load_module` line for every one of them: `headers-more` is active by default (the built-in configuration uses it to hide the `Server` header) — **uncomment the lines you need**. With the published image, mount your edited `nginx.conf` at `/etc/nginx/nginx.conf` to override the built-in one.
 
 | Module | Docs |
-| --- | --- | --- |
-| headers-more | `http_headers_more` (loaded by default) | [headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module) |
-| brotli | `http_brotli` (dynamic + static) | [ngx_brotli](https://github.com/google/ngx_brotli) |
-| fancyindex | `http_fancyindex` | [ngx-fancyindex](https://github.com/aperezdc/ngx-fancyindex) |
-| geoip2 | `http_geoip2` | [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module) |
-| image filter | `http_image_filter` | [ngx_http_image_filter_module](https://nginx.org/en/docs/http/ngx_http_image_filter_module.html) |
-| xslt filter | `http_xslt_filter` | [ngx_http_xslt_module](https://nginx.org/en/docs/http/ngx_http_xslt_module.html) |
-| perl | `http_perl` | [ngx_http_perl_module](https://nginx.org/en/docs/http/ngx_http_perl_module.html) |
-| mail | `mail` | [ngx_mail_core_module](https://nginx.org/en/docs/mail/ngx_mail_core_module.html) |
-| stream (incl. ssl/realip/ssl_preread) | `stream` | [ngx_stream_core_module](https://nginx.org/en/docs/stream/ngx_stream_core_module.html) |
+| --- | --- |
+| headers-more (always on) | [headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module) |
+| brotli (filter + static) | [ngx_brotli](https://github.com/google/ngx_brotli) |
+| fancyindex | [ngx-fancyindex](https://github.com/aperezdc/ngx-fancyindex) |
+| geoip2 (http + stream) | [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module) |
+| image filter | [ngx_http_image_filter_module](https://nginx.org/en/docs/http/ngx_http_image_filter_module.html) |
+| xslt filter | [ngx_http_xslt_module](https://nginx.org/en/docs/http/ngx_http_xslt_module.html) |
+| perl | [ngx_http_perl_module](https://nginx.org/en/docs/http/ngx_http_perl_module.html) |
+| mail | [ngx_mail_core_module](https://nginx.org/en/docs/mail/ngx_mail_core_module.html) |
+| stream (incl. ssl/realip/ssl_preread) | [ngx_stream_core_module](https://nginx.org/en/docs/stream/ngx_stream_core_module.html) |
 
 HTTP/3 (QUIC) is compiled into the binary itself — no module enabling needed; serve it with `listen 443 quic;` plus an `Alt-Svc` header. The `geoip2` module needs a MaxMind mmdb database mounted into the container and registered via the `geoip2` directive.
 
