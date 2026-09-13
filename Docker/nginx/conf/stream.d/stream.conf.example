@@ -1,0 +1,38 @@
+# Copy this file to stream.conf and enable the matching module(s) to activate:
+#   NGINX_ENABLED_MODULES=stream        for stream
+#   NGINX_ENABLED_MODULES=mail          for mail
+# Only one stream{} and one mail{} block may exist in the whole configuration,
+# so keep every server of the same kind inside this single file.
+
+# stream {
+#     # TCP proxy: front a database and split traffic between two backends.
+#     server {
+#         listen 3306;
+#         proxy_pass 10.0.0.2:3306;
+#         proxy_connect_timeout 5s;
+#     }
+#
+#     server {
+#         listen 3307;
+#         proxy_pass backend_tcp;
+#     }
+#
+#     upstream backend_tcp {
+#         server 10.0.0.2:3306;
+#         server 10.0.0.3:3306 backup;
+#     }
+#
+#     # UDP proxy: DNS forwarding.
+#     server {
+#         listen 53 udp;
+#         proxy_pass 10.0.0.4:53;
+#     }
+# }
+
+# mail {
+#     server {
+#         listen 25;
+#         protocol smtp;
+#         proxy_pass 10.0.0.5:25;
+#     }
+# }

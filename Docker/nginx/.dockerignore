@@ -1,0 +1,3 @@
+# Keep the build context minimal; only what the image needs.
+docker-compose.yml
+README.md
