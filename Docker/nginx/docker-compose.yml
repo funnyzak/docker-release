@@ -10,8 +10,8 @@ services:
     environment:
       TZ: Asia/Shanghai
       NGINX_LISTEN_PORT: "8080"
-      # Extra dynamic modules to load at startup, e.g. "stream,fancyindex".
-      # NGINX_ENABLED_MODULES: "stream"
+      # Extra modules: uncomment the matching load_module lines in
+      # ./conf/nginx.conf (mounted below).
     cap_drop:
       - ALL
     security_opt:

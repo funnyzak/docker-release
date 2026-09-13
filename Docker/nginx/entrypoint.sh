@@ -88,46 +88,6 @@ validate_template_variables() {
     reject_config_metachars "$NGINX_SERVER_BUILD" NGINX_SERVER_BUILD
 }
 
-available_modules() {
-    (cd /etc/nginx/modules-available 2>/dev/null && find . -maxdepth 1 -type f) \
-        | sed -e 's|^\./10_||' -e 's/\.conf$//' | tr '\n' ' '
-}
-
-# NGINX_ENABLED_MODULES is a comma-separated list of module names as printed by
-# available_modules (e.g. "stream,fancyindex"); the matching loader snippet is
-# copied from /etc/nginx/modules-available into /etc/nginx/modules.
-enable_optional_modules() {
-    [ -z "${NGINX_ENABLED_MODULES:-}" ] && return 0
-
-    if [ ! -w /etc/nginx/modules ]; then
-        die "/etc/nginx/modules is not writable, cannot enable NGINX_ENABLED_MODULES modules."
-    fi
-
-    for module_name in $(printf '%s' "$NGINX_ENABLED_MODULES" | tr ',' ' '); do
-        [ -n "$module_name" ] || continue
-
-        case $module_name in
-            *[!A-Za-z0-9_-]*)
-                die "Invalid module name '$module_name' in NGINX_ENABLED_MODULES. Available: $(available_modules)"
-                ;;
-        esac
-
-        matches=$(find /etc/nginx/modules-available -maxdepth 1 -name "*_${module_name}.conf" | sort)
-        match_count=$(printf '%s\n' "$matches" | grep -c .)
-
-        if [ "$match_count" -eq 0 ]; then
-            die "Unknown module '$module_name' in NGINX_ENABLED_MODULES. Available: $(available_modules)"
-        fi
-
-        if [ "$match_count" -gt 1 ]; then
-            die "Ambiguous module name '$module_name'. Use the full name, e.g. http_geoip or stream_geoip."
-        fi
-
-        cp "$matches" /etc/nginx/modules/
-        printf '%b\n' "${GREEN}Enabled module: ${BLUE}${module_name}${NC}"
-    done
-}
-
 render_default_template() {
     template_path=""
     template_vars=""
@@ -192,8 +152,6 @@ if directory_is_empty /etc/nginx/html; then
     copy_dir_contents_if_present /data/nginx/html /etc/nginx/html
 fi
 
-enable_optional_modules
-
 configure_log_output /var/log/nginx/access.log /dev/stdout
 configure_log_output /var/log/nginx/error.log /dev/stderr
 
@@ -201,8 +159,8 @@ printf '%b\n' "${GREEN}Docker Hub: https://hub.docker.com/r/funnyzak/nginx${NC}"
 printf '%b\n\n' "${GREEN}GitHub: https://github.com/funnyzak/docker-release${NC}"
 
 printf '%b\n' "${GREEN}$(nginx -v 2>&1)${NC}"
-printf '\n%b\n' "${YELLOW}Optional modules (enable via NGINX_ENABLED_MODULES):${NC}"
-printf '%b\n' "${BLUE}$(available_modules)${NC}"
+printf '\n%b\n' "${YELLOW}Optional modules (uncomment load_module lines in /etc/nginx/nginx.conf):${NC}"
+printf '%b\n' "${BLUE}$(ls /usr/lib/nginx/modules 2>/dev/null | tr '\n' ' ')${NC}"
 printf '\n%b\n' "${YELLOW}nginx.conf configuration file path:${NC} ${RED}/etc/nginx/nginx.conf${NC}"
 printf '%b\n' "${YELLOW}server configuration file path:${NC} ${RED}/etc/nginx/conf.d${NC}"
 printf '%b\n' "${YELLOW}server template file path:${NC} ${RED}/etc/nginx/templates/default.conf.template${NC}"

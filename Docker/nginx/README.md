@@ -16,15 +16,9 @@ Build with the `linux/arm64`, `linux/386`, `linux/amd64`, `linux/arm/v7` archite
 
 ### Modules
 
-All modules below are **compiled as dynamic modules**, but only `headers-more` is **loaded** by default (the built-in configuration uses it to hide the `Server` header). Enable the others per deployment:
+All modules below are compiled as **dynamic modules**. The top of the built-in [`nginx.conf`](./conf/nginx.conf) lists a `load_module` line for every one of them: `headers-more` is active by default (the built-in configuration uses it to hide the `Server` header) — **uncomment the lines you need**. With the published image, mount your edited `nginx.conf` at `/etc/nginx/nginx.conf` to override the built-in one.
 
-```bash
-docker run -e NGINX_ENABLED_MODULES="stream,http_fancyindex" ... funnyzak/nginx
-```
-
-or by mounting loader snippets into `/etc/nginx/modules/*.conf` (see `/etc/nginx/modules-available` inside the image for the available snippets).
-
-| Module | Name for `NGINX_ENABLED_MODULES` | Docs |
+| Module | Docs |
 | --- | --- | --- |
 | headers-more | `http_headers_more` (loaded by default) | [headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module) |
 | brotli | `http_brotli` (dynamic + static) | [ngx_brotli](https://github.com/google/ngx_brotli) |
@@ -38,7 +32,7 @@ or by mounting loader snippets into `/etc/nginx/modules/*.conf` (see `/etc/nginx
 
 HTTP/3 (QUIC) is compiled into the binary itself — no module enabling needed; serve it with `listen 443 quic;` plus an `Alt-Svc` header. The `geoip2` module needs a MaxMind mmdb database mounted into the container and registered via the `geoip2` directive.
 
-Every optional module ships with a commented, ready-to-uncomment example: http-level blocks (brotli/gzip, geoip2 with a China-only access map, headers-more) in the built-in [`nginx.conf`](./conf/nginx.conf), server-level blocks (fancyindex, image filter, xslt, perl, real_ip, stub_status, "allow access from China only") plus a full HTTPS + HTTP/3 server in [`default.conf.template`](./conf/templates/default.conf.template), and TCP/UDP/mail proxying in [`conf/stream.d/stream.conf.example`](./conf/stream.d/stream.conf.example). Uncomment what you need and enable the matching module.
+Every optional module ships with a commented, ready-to-uncomment example: http-level blocks (brotli/gzip, geoip2 with a China-only access map, headers-more) in the built-in [`nginx.conf`](./conf/nginx.conf), server-level blocks (fancyindex, image filter, xslt, perl, real_ip, stub_status, "allow access from China only") plus a full HTTPS + HTTP/3 server in [`default.conf.template`](./conf/templates/default.conf.template), and TCP/UDP/mail proxying in [`conf/stream.d/stream.conf.example`](./conf/stream.d/stream.conf.example). Uncomment what you need, together with the matching `load_module` line in `nginx.conf`.
 
 ## Pull
 
@@ -102,8 +96,6 @@ The built-in template has these defaults:
 - `NGINX_SERVER_BUILD`: value for the optional `Server-Build` response header, default `build via @funnyzak` (no quotes, semicolons or control characters). The header itself is commented out by default — it fingerprints the image — uncomment the `more_set_headers` line in the template to enable it.
 
 Values that could break out of the rendered configuration (semicolons, braces, quotes, newlines) or malformed ports make the entrypoint exit with a clear error **before** nginx starts.
-
-`NGINX_ENABLED_MODULES` (comma-separated, see [Modules](#modules)) is validated the same way: unknown or ambiguous names fail fast with the list of available names.
 
 For custom mounted templates, the entrypoint will automatically detect and render every placeholder written as `${ENV_NAME}`. This means you can define any container environment variable and reference it directly in your own `default.conf.template` without changing the image script.
 

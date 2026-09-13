@@ -124,20 +124,9 @@ RUN apk add --no-cache --virtual .nginx-build-deps \
         --with-openssl-opt=no-nextprotoneg \
     && make -j"$(nproc)" \
     && make install \
-    # Loader drop-ins mirror the Alpine nginx package layout: only headers-more
-    # (used by the built-in configuration) is enabled by default, the rest are
-    # opt-in via NGINX_ENABLED_MODULES or mounts into /etc/nginx/modules.
-    && mkdir -p /etc/nginx/modules-available /etc/nginx/modules /run/nginx \
-    && for m in http_fancyindex http_image_filter http_perl http_xslt_filter mail stream; do \
-           echo "load_module /usr/lib/nginx/modules/ngx_${m}_module.so;" > "/etc/nginx/modules-available/10_${m}.conf"; \
-       done \
-    && { echo "load_module /usr/lib/nginx/modules/ngx_http_brotli_filter_module.so;"; \
-         echo "load_module /usr/lib/nginx/modules/ngx_http_brotli_static_module.so;"; } \
-        > /etc/nginx/modules-available/10_http_brotli.conf \
-    && echo "load_module /usr/lib/nginx/modules/ngx_http_geoip2_module.so;" \
-        > /etc/nginx/modules-available/10_http_geoip2.conf \
-    && echo "load_module /usr/lib/nginx/modules/ngx_http_headers_more_filter_module.so;" \
-        > /etc/nginx/modules/10_http_headers_more.conf \
+    # Module loading is handled by the load_module lines at the top of
+    # /etc/nginx/nginx.conf (headers-more on, everything else commented).
+    && mkdir -p /run/nginx \
     && mkdir -p /data/nginx/html /data/nginx/conf.d /data/nginx/templates /var/cache/nginx /var/log/nginx \
     && cp /etc/nginx/html/index.html /etc/nginx/html/50x.html /data/nginx/html/ \
     && chown -R nginx:nginx /run/nginx /var/cache/nginx /var/log/nginx \
@@ -155,7 +144,7 @@ RUN cp /etc/nginx/nginx.conf /data/nginx/nginx.conf \
     && rm -rf /etc/nginx/conf.d/* \
     # Directories the entrypoint writes to at runtime run as the nginx user;
     # the rest of /etc/nginx stays root-owned.
-    && chown -R nginx:nginx /etc/nginx/conf.d /etc/nginx/html /etc/nginx/modules /data/nginx
+    && chown -R nginx:nginx /etc/nginx/conf.d /etc/nginx/html /data/nginx
 
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
 

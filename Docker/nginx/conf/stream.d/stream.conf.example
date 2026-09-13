@@ -1,6 +1,6 @@
-# Copy this file to stream.conf and enable the matching module(s) to activate:
-#   NGINX_ENABLED_MODULES=stream        for stream
-#   NGINX_ENABLED_MODULES=mail          for mail
+# Copy this file to stream.conf, uncomment the ngx_stream_module and/or
+# ngx_mail_module load_module lines at the top of /etc/nginx/nginx.conf,
+# then uncomment the block you need.
 # Only one stream{} and one mail{} block may exist in the whole configuration,
 # so keep every server of the same kind inside this single file.
 
