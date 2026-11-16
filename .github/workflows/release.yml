@@ -313,6 +313,22 @@ jobs:
           echo "BUILD_TRIGGER_DESCRIPTION=$BUILD_TRIGGER_DESCRIPTION" >> $GITHUB_OUTPUT
           echo "Description: $BUILD_TRIGGER_DESCRIPTION"
 
+      - name: Smoke test Snell entrypoint before publication
+        if: endsWith(needs.setup.outputs.DOCKER_HUB_IMAGE_NAME, '/snell-server')
+        env:
+          BUILD_ARGS: ${{ steps.build_vars_format.outputs.BUILD_ARGS }}
+          BUILD_FILE: ${{ needs.setup.outputs.BUILD_FILE }}
+          BUILD_CONTEXT: ${{ needs.setup.outputs.BUILD_CONTEXT }}
+        run: |
+          set -euo pipefail
+          IFS=',' read -r -a values <<< "$BUILD_ARGS"
+          args=()
+          for value in "${values[@]}"; do
+            if [ -n "$value" ]; then args+=(--build-arg "$value"); fi
+          done
+          docker build --platform linux/amd64 "${args[@]}" -f "$BUILD_FILE" -t snell-release-smoke "$BUILD_CONTEXT"
+          bash Docker/snell-server/tests/entrypoint-test.sh snell-release-smoke linux/amd64
+
       - name: Docker build and push
         uses: docker/build-push-action@v6
         with:

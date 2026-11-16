@@ -29,6 +29,28 @@ client settings; upstream documents v5 compatibility with v4 clients. Users who
 need v6 must explicitly pin `6.0.0`. Recreate/restart is required to use a newly
 pulled image.
 
+## Credential handling
+
+The entrypoint does not print the PSK or configuration. Newly generated
+configuration files have mode `0600`; mounted configurations are used unchanged,
+including read-only mounts. A minimal init (`tini`) forwards stop signals to the server and reaps children.
+When no PSK is supplied, a random 32-character hexadecimal PSK is generated. Use a
+secret/configuration management process to retrieve or distribute it privately,
+not centralized container logs. Environment variables remain visible to users
+with Docker administration privileges; use a protected mounted configuration if
+that is unsuitable.
+
+Existing logs and previously published images are not retroactively cleaned.
+Rotate any PSK that was exposed outside its intended administrators. After pulling
+a repaired image, recreate the container to activate the fix. The explicit v6
+Beta `6.0.0` image has not been republished by this stable-channel repair.
+
+Regression test (build a local image first):
+
+```bash
+bash Docker/snell-server/tests/entrypoint-test.sh snell:test linux/amd64
+```
+
 ## Docker Pull
 
 ```bash
@@ -55,8 +77,8 @@ docker run -d --name snell-server --restart always \
   -e EGRESS_INTERFACE="eth0" \
   -p 12303:6180 funnyzak/snell-server:latest
 
-# Echo config file
-docker exec -it snell-server cat /etc/snell-server.conf
+# Check the server version (does not print credentials)
+docker exec snell-server /opt/snell-server/snell-server --version
 ```
 
 ## Docker Compose

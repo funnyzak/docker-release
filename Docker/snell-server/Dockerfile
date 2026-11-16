@@ -35,7 +35,10 @@ WORKDIR /opt/snell-server
 COPY --from=builder /opt/snell-server/snell-server .
 COPY entrypoint.sh .
 
-RUN chmod +x snell-server entrypoint.sh
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends tini && \
+    rm -rf /var/lib/apt/lists/* && \
+    chmod +x snell-server entrypoint.sh
 
 ENV LANG=C.UTF-8 \
     VERSION=${VERSION} \
@@ -47,4 +50,4 @@ ENV LANG=C.UTF-8 \
 
 EXPOSE ${PORT}/tcp
 
-ENTRYPOINT ["/opt/snell-server/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/opt/snell-server/entrypoint.sh"]
