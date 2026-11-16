@@ -256,7 +256,8 @@ jobs:
       docker_image_name: snell-server
       docker_tags: ${{ github.event.inputs.docker_tags }}
       build_args: ${{ github.event.inputs.build_args }}
-      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/386' }}
+      # Default follows stable 5.x; explicit 6.x builds must omit ARMv7.
+      build_platforms: ${{ github.event.inputs.build_platforms || 'linux/amd64,linux/arm64,linux/arm/v7,linux/386' }}
     secrets: inherit
 
   nginx_release:

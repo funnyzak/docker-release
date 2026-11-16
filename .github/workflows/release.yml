@@ -208,7 +208,10 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    if: ${{ fromJson(needs.setup.outputs.IMAGE_TAG_LIST).tag.length }} > 0
+    if: ${{ fromJson(needs.setup.outputs.IMAGE_TAG_LIST).tag[0] != '' }}
+    concurrency:
+      group: release-${{ needs.setup.outputs.DOCKER_HUB_IMAGE_NAME }}-${{ matrix.tag }}
+      cancel-in-progress: false
     strategy:
       matrix: ${{ fromJson(needs.setup.outputs.IMAGE_TAG_LIST) }}
     steps:
@@ -238,7 +241,7 @@ jobs:
           password: ${{ secrets.DOCKER_ALIYUNCS_PASSWORD }}
 
       - name: Log in to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -287,6 +290,15 @@ jobs:
             echo "BUILD_ARGS_$i=${build_args[$i-1]:-}" >> $GITHUB_OUTPUT
           done
       
+      - name: Guard Snell stable latest
+        env:
+          IMAGE_NAME: ${{ needs.setup.outputs.DOCKER_HUB_IMAGE_NAME }}
+          DOCKER_TAG: ${{ steps.build_vars_format.outputs.DOCKER_TAG }}
+          BUILD_ARGS: ${{ steps.build_vars_format.outputs.BUILD_ARGS }}
+          BUILD_FILE: ${{ needs.setup.outputs.BUILD_FILE }}
+          BUILD_PLATFORMS: ${{ needs.setup.outputs.BUILD_PLATFORMS }}
+        run: bash .github/scripts/check-snell-latest.sh
+
       - name: Output build description
         id: output_build_description
         run: |

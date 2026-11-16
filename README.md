@@ -167,8 +167,9 @@ This project is licensed under the [MIT License](https://github.com/funnyzak/doc
 The release probe validates upstream tags and distinguishes Docker Hub HTTP 200
 (existing) from 404 (new); other HTTP failures stop the probe rather than silently
 skipping a release. Run `bash .github/scripts/tests/check-release-test.sh` before
-changing it. Scheduled Snell 6.x builds exclude ARMv7 because upstream no longer
-provides that binary.
+changing it. Snell `latest` follows the reviewed stable allowlist in
+`Docker/snell-server/stable-release.json`; Beta releases must use explicit tags.
+Run `bash .github/scripts/tests/check-snell-latest-test.sh` when changing this policy.
 
 GitHub may disable scheduled workflows in inactive public repositories. Check the
 workflow state in Actions after long inactive periods; a final scheduled run does

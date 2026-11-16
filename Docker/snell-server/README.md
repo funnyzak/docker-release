@@ -7,7 +7,27 @@
 
 Snell Server is a lean encrypted proxy protocol. It is designed to be simple, lightweight.
 
-This image is build from the latest source code of [Snell Server](https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell). The current 6.x release supports `linux/amd64`, `linux/arm64` and `linux/386`. Upstream does not provide a 6.0.0 ARMv7 binary, so ARMv7 is excluded from scheduled builds; use a verified older version tag where available.
+## Release channels
+
+`latest` tracks the reviewed stable **5.0.1** release, supporting `linux/amd64`,
+`linux/arm64`, `linux/arm/v7` and `linux/386`. The explicit `6.0.0` tag is retained
+for opt-in testing: [upstream release notes](https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell)
+currently describe v6 as **Beta**. Its image supports amd64, arm64 and 386 only.
+
+Do not infer stability from a numeric download filename. The scheduled job uses
+`stable-release.json`, not the first download link. Update that allowlist only
+after reviewing upstream release status, available architectures and image smoke
+tests. The shared release workflow refuses to publish Snell `latest` with an
+unreviewed VERSION. Stable channel promotion uses the **Promote Snell Stable**
+manual workflow to copy the exact reviewed digest in Docker Hub and GHCR; it does
+not rebuild or modify the version tag. Update the Dockerfile default and scheduled
+platform list together when changing the stable version.
+
+Moving `latest` from v6 Beta back to v5 changes the protocol generation. Existing
+containers are not changed automatically. Before recreating a container, check
+client settings; upstream documents v5 compatibility with v4 clients. Users who
+need v6 must explicitly pin `6.0.0`. Recreate/restart is required to use a newly
+pulled image.
 
 ## Docker Pull
 

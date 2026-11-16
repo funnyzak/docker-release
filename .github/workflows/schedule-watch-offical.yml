@@ -23,8 +23,10 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: snell-server
-      get_official_version_command: 'curl -s https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell | grep -oP "snell-server-v\K[0-9]+\.[0-9]+\.[0-9]+(?=-linux)" | sed -n "1p"'
-      build_platforms: 'linux/amd64,linux/arm64,linux/386'
+      # Review upstream release notes before updating the stable allowlist.
+      # Numeric version strings alone do not identify Beta releases.
+      get_official_version_command: 'jq -er .version Docker/snell-server/stable-release.json'
+      build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7,linux/386'
       is_latest_tag: true
     secrets: inherit
 
