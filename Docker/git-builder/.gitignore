@@ -1,0 +1,4 @@
+.env
+pipeline.json
+secrets/
+data/

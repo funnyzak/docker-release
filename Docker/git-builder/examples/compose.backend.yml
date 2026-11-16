@@ -1,0 +1,13 @@
+# Spring Boot 运行示例，与 java-runtime.json 配套；端口和配置文件按应用调整。
+# 与主 docker-compose.yml 合并；路径相对主 Compose 文件目录。
+services:
+  git-builder:
+    stop_grace_period: 90s
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:${BACKEND_HOST_PORT:-8080}:8080'
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      SERVER_PORT: '8080'
+      SERVER_ADDRESS: '0.0.0.0'
+    volumes:
+      - ./secrets/application-runtime.yml:/config/application-runtime.yml:ro
