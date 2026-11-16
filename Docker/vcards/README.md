@@ -49,3 +49,13 @@ When syncing is complete, you can see the contacts in the Contacts app.
 
 
 More information can be found at [vCards](https://github.com/metowolf/vCards).
+## Build verification
+
+Current upstream uses Bun 1.4.4 and `bun.lock`. The build stage runs on the builder architecture and generates architecture-independent contact files; the Radicale runtime is still built for each target architecture.
+
+```bash
+docker build --build-arg VERSION=2026.10.28-003420 -t vcards:test .
+docker run --rm -d --name vcards-test -p 127.0.0.1:15232:5232 vcards:test
+curl -f -u cn:test -X PROPFIND -H 'Depth: 1' http://127.0.0.1:15232/cn/
+docker stop vcards-test
+```

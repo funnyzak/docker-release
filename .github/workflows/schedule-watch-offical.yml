@@ -14,7 +14,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: nginx
-      get_official_version_command: 'curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9]+\.[0-9]+\.[0-9]" | head -n 1'
+      get_official_version_command: 'curl -s https://nginx.org/en/download.html | grep -oP "nginx-\K[0-9]+\.[0-9]+\.[0-9]" | sed -n "1p"'
       is_latest_tag: true
       build_platforms: 'linux/arm64,linux/386,linux/amd64,linux/arm/v7'
     secrets: inherit
@@ -23,8 +23,8 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: snell-server
-      get_official_version_command: 'curl -s https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell | grep -oP "snell-server-v\K[0-9]+\.[0-9]+\.[0-9]+(?=-linux)" | head -n 1'
-      build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7,linux/386'
+      get_official_version_command: 'curl -s https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell | grep -oP "snell-server-v\K[0-9]+\.[0-9]+\.[0-9]+(?=-linux)" | sed -n "1p"'
+      build_platforms: 'linux/amd64,linux/arm64,linux/386'
       is_latest_tag: true
     secrets: inherit
 
@@ -33,7 +33,7 @@ jobs:
     with:
       image_name: one-api
       build_context: './Docker/one-api'
-      get_official_version_command: 'curl -s https://api.github.com/repos/songquanpeng/one-api/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/songquanpeng/one-api/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64'
     secrets: inherit
@@ -43,7 +43,7 @@ jobs:
   #   with:
   #     image_name: git-sync
   #     build_context: './Docker/git-sync'
-  #     get_official_version_command: 'curl -s https://api.github.com/repos/AkashRajpurohit/git-sync/releases/latest | jq -r ".tag_name // \"no-tags\""'
+  #     get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/AkashRajpurohit/git-sync/releases/latest | jq -r ".tag_name // \"no-tags\""'
   #     is_latest_tag: true
   #     build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7'
   #   secrets: inherit  
@@ -53,7 +53,7 @@ jobs:
     with:
       image_name: ffmpeg-service
       build_context: './Docker/ffmpeg-service'
-      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/ffmpeg-service/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/ffmpeg-service/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7'
     secrets: inherit
@@ -63,7 +63,7 @@ jobs:
     with:
       image_name: weread-bot
       build_context: './Docker/weread-bot'
-      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/weread-bot/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/weread-bot/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
@@ -73,7 +73,7 @@ jobs:
     with:
       image_name: mtranserver
       build_context: './Docker/mtranserver'
-      get_official_version_command: 'curl -s https://api.github.com/repos/xxnuo/MTranServer/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/xxnuo/MTranServer/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
@@ -83,7 +83,7 @@ jobs:
     with:
       image_name: reqtap
       build_context: './Docker/reqtap'
-      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/reqtap/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/reqtap/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/s390x,linux/ppc64le,linux/riscv64'
     secrets: inherit
@@ -94,7 +94,7 @@ jobs:
     with:
       image_name: ai-goofish-monitor
       build_context: './Docker/ai-goofish-monitor'
-      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/ai-goofish-monitor/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/ai-goofish-monitor/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
@@ -104,17 +104,20 @@ jobs:
     with:
       image_name: nezha-dashboard
       build_context: './Docker/nezha/nezha-dashboard'
-      get_official_version_command: 'curl -s https://api.github.com/repos/nezhahq/nezha/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/nezhahq/nezha/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
 
+  # Upstream is private. Do not publish it through the public image pipeline.
+  # Re-enable only after a separate access and distribution review.
   watch_brt_data_forwarder_release:
+    if: false
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: brt-data-forwarder
       build_context: './Docker/brt-data-forwarder'
-      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/brt-data-forwarder/tags | jq -r ".[0].name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/brt-data-forwarder/tags | jq -r ".[0].name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
@@ -123,7 +126,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: vcards
-      get_official_version_command: 'curl -s https://api.github.com/repos/metowolf/vCards/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/metowolf/vCards/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
@@ -132,7 +135,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: certimate
-      get_official_version_command: 'curl -s https://api.github.com/repos/certimate-go/certimate/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/certimate-go/certimate/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7'
     secrets: inherit
@@ -142,7 +145,7 @@ jobs:
     with:
       image_name: libreoffice-rest-api
       build_context: './Docker/libreoffice-rest-api'
-      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/libreoffice-rest-api/releases/latest | jq -r ".tag_name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/libreoffice-rest-api/releases/latest | jq -r ".tag_name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
@@ -151,7 +154,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       image_name: watermark
-      get_official_version_command: 'curl -s https://api.github.com/repos/funnyzak/watermark/tags | jq -r ".[0].name // \"no-tags\""'
+      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/watermark/tags | jq -r ".[0].name // \"no-tags\""'
       is_latest_tag: true
       build_platforms: 'linux/amd64,linux/arm64,linux/arm/v7,linux/arm64/v8,linux/ppc64le'
     secrets: inherit
@@ -160,7 +163,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       build_context: './Docker/canal/canal-adapter'
-      get_official_version_command: "curl -s https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
+      get_official_version_command: "curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
       image_name: canal-adapter
       is_latest_tag: false
       build_args: CANAL_NAME=adapter
@@ -171,7 +174,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       build_context: './Docker/canal/canal-adapter'
-      get_official_version_command: "curl -s https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
+      get_official_version_command: "curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
       image_name: canal-admin
       is_latest_tag: false
       build_args: CANAL_NAME=admin
@@ -182,7 +185,7 @@ jobs:
     uses: ./.github/workflows/check-offical-release.yml
     with:
       build_context: './Docker/canal/canal-adapter'
-      get_official_version_command: "curl -s https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
+      get_official_version_command: "curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/alibaba/canal/releases/latest | jq -r \".tag_name\" | sed 's/^canal-//'"
       image_name: canal-deployer
       is_latest_tag: false
       build_args: CANAL_NAME=deployer

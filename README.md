@@ -163,3 +163,17 @@ This project is licensed under the [MIT License](https://github.com/funnyzak/doc
 ---
 
 **Built with ❤️ for the container community**
+
+### Scheduled release maintenance
+
+The release probe validates upstream tags and distinguishes Docker Hub HTTP 200
+(existing) from 404 (new); other HTTP failures stop the probe rather than silently
+skipping a release. Run `bash .github/scripts/tests/check-release-test.sh` before
+changing it. Scheduled Snell 6.x builds exclude ARMv7 because upstream no longer
+provides that binary. The brt-data-forwarder watch is intentionally disabled while
+its source is private; restoring it requires an explicit source-access and image
+distribution review, not a token embedded in the Dockerfile.
+
+GitHub may disable scheduled workflows in inactive public repositories. Check the
+workflow state in Actions after long inactive periods; a final scheduled run does
+not prove the schedule remains enabled.

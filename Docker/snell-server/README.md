@@ -7,7 +7,7 @@
 
 Snell Server is a lean encrypted proxy protocol. It is designed to be simple, lightweight.
 
-This image is build from the latest source code of [Snell Server](https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell). It supports `linux/amd64`, `linux/arm64`, `linux/arm/v7`, `linux/386` architecture.
+This image is build from the latest source code of [Snell Server](https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell). The current 6.x release supports `linux/amd64`, `linux/arm64` and `linux/386`. Upstream does not provide a 6.0.0 ARMv7 binary, so ARMv7 is excluded from scheduled builds; use a verified older version tag where available.
 
 ## Docker Pull
 
@@ -78,3 +78,9 @@ Proxy = snell, 1.2.3.4, 6333, psk=RANDOM_KEY_HERE, version=4
 ## Reference
 
 - [Snell Knowledge](https://kb.nssurge.com/surge-knowledge-base/zh/release-notes/snell)
+## Build verification
+
+```bash
+docker buildx build --platform linux/amd64,linux/arm64,linux/386 --build-arg VERSION=6.0.0 .
+docker run --rm --entrypoint /opt/snell-server/snell-server <image> --version
+```

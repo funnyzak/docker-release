@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM alpine AS builder
 
-ARG VERSION=5.0.0b1
+ARG VERSION=6.0.0
 ARG TARGETPLATFORM
 
 WORKDIR /opt/snell-server
@@ -13,13 +13,13 @@ RUN apk add --no-cache wget unzip && \
         "linux/386") ARCH="i386" ;; \
         *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
     esac && \
-    wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${VERSION}-linux-${ARCH}.zip" && \
+    wget -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${VERSION}-linux-${ARCH}.zip" && \
     unzip snell.zip
 
 FROM debian:stable-slim
 
 ARG BUILD_DATE
-ARG VERSION=5.0.0b1
+ARG VERSION=6.0.0
 ARG VCS_REF
 
 LABEL org.label-schema.name="snell-server" \

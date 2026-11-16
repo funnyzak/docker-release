@@ -1,4 +1,4 @@
-FROM node:22-alpine3.22 AS builder
+FROM --platform=$BUILDPLATFORM oven/bun:1.4.4-alpine AS builder
 
 ARG VERSION
 
@@ -16,7 +16,7 @@ RUN git init . \
     && git checkout --detach FETCH_HEAD \
     && echo "${VERSION:-$(git rev-parse HEAD)}" > VERSION
 
-RUN npm ci && npm run radicale
+RUN bun install --frozen-lockfile && bun run radicale
 
 FROM alpine:3.22
 
