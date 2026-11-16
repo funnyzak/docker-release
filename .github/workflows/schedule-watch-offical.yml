@@ -109,19 +109,6 @@ jobs:
       build_platforms: 'linux/amd64,linux/arm64'
     secrets: inherit
 
-  # Upstream is private. Do not publish it through the public image pipeline.
-  # Re-enable only after a separate access and distribution review.
-  watch_brt_data_forwarder_release:
-    if: false
-    uses: ./.github/workflows/check-offical-release.yml
-    with:
-      image_name: brt-data-forwarder
-      build_context: './Docker/brt-data-forwarder'
-      get_official_version_command: 'curl -fsSL --retry 3 --connect-timeout 15 --max-time 60 https://api.github.com/repos/funnyzak/brt-data-forwarder/tags | jq -r ".[0].name // \"no-tags\""'
-      is_latest_tag: true
-      build_platforms: 'linux/amd64,linux/arm64'
-    secrets: inherit
-  
   watch_vcards_release:
     uses: ./.github/workflows/check-offical-release.yml
     with:

@@ -32,7 +32,6 @@
 - [**libreoffice-rest-api**](https://github.com/funnyzak/docker-release/tree/main/Docker/libreoffice-rest-api): A lightweight Go-based document conversion service that wraps LibreOffice command-line capabilities with a REST API.
 - [**Watermark**](https://github.com/funnyzak/docker-release/tree/main/Docker/watermark): Image watermarking service
 - [**Environment Mock Data**](https://github.com/funnyzak/docker-release/tree/main/Docker/other): Configurable mock data generation service
-- [**brt-data-forwarder**](https://github.com/funnyzak/docker-release/tree/main/Docker/brt-data-forwarder): A brt data forward service.
 - [**reqtap**](https://github.com/funnyzak/docker-release/tree/main/Docker/reqtap): HTTP request debugging and proxy tool
 
 ### 🛠️ Development Tools & Utilities
@@ -100,7 +99,6 @@
 | [libreoffice-rest-api](https://github.com/funnyzak/docker-release/tree/main/Docker/libreoffice-rest-api/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/libreoffice-rest-api?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-rest-api) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/libreoffice-rest-api)](https://hub.docker.com/r/funnyzak/libreoffice-rest-api) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/libreoffice-rest-api.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/libreoffice-rest-api) |
 | [Watermark](https://github.com/funnyzak/docker-release/tree/main/Docker/watermark/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/watermark?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/watermark) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/watermark)](https://hub.docker.com/r/funnyzak/watermark) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/watermark.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/watermark) |
 | [vCards](https://github.com/funnyzak/docker-release/tree/main/Docker/vcards/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/vcards?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/vcards) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/vcards)](https://hub.docker.com/r/funnyzak/vcards) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/vcards.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/vcards) |
-| [brt-data-forwarder](https://github.com/funnyzak/docker-release/tree/main/Docker/brt-data-forwarder/README.md) | [![Docker Tag](https://img.shields.io/docker/v/funnyzak/brt-data-forwarder?sort=semver&style=flat-square)](https://hub.docker.com/r/funnyzak/brt-data-forwarder) | [![Docker Image Size](https://img.shields.io/docker/image-size/funnyzak/brt-data-forwarder)](https://hub.docker.com/r/funnyzak/brt-data-forwarder) | [![Docker Pulls](https://img.shields.io/docker/pulls/funnyzak/brt-data-forwarder.svg?style=flat-square)](https://hub.docker.com/r/funnyzak/brt-data-forwarder) |
 
 
 </details>
@@ -170,9 +168,7 @@ The release probe validates upstream tags and distinguishes Docker Hub HTTP 200
 (existing) from 404 (new); other HTTP failures stop the probe rather than silently
 skipping a release. Run `bash .github/scripts/tests/check-release-test.sh` before
 changing it. Scheduled Snell 6.x builds exclude ARMv7 because upstream no longer
-provides that binary. The brt-data-forwarder watch is intentionally disabled while
-its source is private; restoring it requires an explicit source-access and image
-distribution review, not a token embedded in the Dockerfile.
+provides that binary.
 
 GitHub may disable scheduled workflows in inactive public repositories. Check the
 workflow state in Actions after long inactive periods; a final scheduled run does
