@@ -1,5 +1,5 @@
 {
   "version": "5.0.1",
-  "digest": "sha256:2390d7d68fd7e7411b079bb6eb7fac3737f544d6c76459984c114d3a80aaa491",
+  "digest": "sha256:ac8a544db4a3e4d861309ebf6a6d0034d0103706664d805e150da7d468409564",
   "platforms": ["linux/amd64", "linux/arm64", "linux/arm/v7", "linux/386"]
 }
